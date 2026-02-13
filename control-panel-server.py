@@ -24,15 +24,49 @@ def index():
 
 @app.route('/api/config', methods=['GET'])
 def get_config():
-    """Get current configuration"""
+    """Get current configuration - flatten events from active collection"""
     with open(CONFIG_FILE) as f:
         config = json.load(f)
+
+    # Flatten structure: pull active collection's events to top level for backward compatibility
+    active_collection = config.get('active_collection', 'default')
+    collections = config.get('collections', {})
+
+    if active_collection in collections and 'events' in collections[active_collection]:
+        # Return flattened config with events from active collection
+        flat_config = {
+            'version': config.get('version'),
+            'focus_mode': config.get('focus_mode'),
+            'active_collection': active_collection,
+            'collections': collections,
+            'events': collections[active_collection]['events']
+        }
+        return jsonify(flat_config)
+
+    # Fallback for old structure
     return jsonify(config)
 
 @app.route('/api/config', methods=['POST'])
 def save_config():
-    """Save configuration"""
-    config = request.json
+    """Save configuration - save events to active collection"""
+    incoming = request.json
+
+    # Read current config to preserve structure
+    with open(CONFIG_FILE) as f:
+        config = json.load(f)
+
+    # Update top-level fields
+    if 'focus_mode' in incoming:
+        config['focus_mode'] = incoming['focus_mode']
+    if 'version' in incoming:
+        config['version'] = incoming['version']
+
+    # Save events to active collection
+    active_collection = config.get('active_collection', 'default')
+    if active_collection in config.get('collections', {}):
+        if 'events' in incoming:
+            config['collections'][active_collection]['events'] = incoming['events']
+
     with open(CONFIG_FILE, 'w') as f:
         json.dump(config, f, indent=2)
         f.write('\n')

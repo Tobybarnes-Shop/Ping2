@@ -52,14 +52,20 @@ for cid, coll in collections.items():
     marker = '→' if cid == active else ' '
     print(f'  {marker} {cid}: {coll.get(\"name\", \"Unknown\")}')
 
+# Get events from active collection (new structure) or top-level (old structure)
+if active in collections and 'events' in collections[active]:
+    events = collections[active]['events']
+else:
+    events = c.get('events', {})
+
 print('\\nEnabled events:')
-for n,e in c.get('events',{}).items():
+for n,e in events.items():
     if e.get('enabled'):
         s = e.get('sound','none')
         d = e.get('description','')
         print(f'  ✓ {n:20} → {s:25} # {d}')
 print('\\nDisabled events:')
-for n,e in c.get('events',{}).items():
+for n,e in events.items():
     if not e.get('enabled'):
         s = e.get('sound','none')
         d = e.get('description','')
@@ -153,11 +159,18 @@ while IFS= read -r EVENT; do
   read -r ENABLED SOUND_FILE SOUNDS_DIR_PATH <<< $(python3 -c "
 import sys, json, os
 with open('$CONFIG_FILE') as f: config = json.load(f)
-event = config.get('events', {}).get('$EVENT', {})
 
-# Get active collection path
+# Get active collection
 active = config.get('active_collection', 'default')
 collections = config.get('collections', {})
+
+# Get event from active collection's events (new structure) or fallback to top-level (old structure)
+if active in collections and 'events' in collections[active]:
+    event = collections[active]['events'].get('$EVENT', {})
+else:
+    event = config.get('events', {}).get('$EVENT', {})
+
+# Get active collection path
 if active in collections:
     sounds_path = collections[active]['path']
 else:
