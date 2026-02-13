@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick-Ping 2 - Professional Sound Notifications for Claude Code</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-bg: #0A0A0A;
+            --color-panel: #1A1A1A;
+            --color-text: #FFFFFF;
+            --color-text-dim: rgba(255, 255, 255, 0.6);
+            --color-accent: #00FF00;
+            --color-border: rgba(255, 255, 255, 0.1);
+            --font-mono: 'IBM Plex Mono', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-mono);
+            background: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 64px 24px;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 96px;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--color-text-dim);
+            margin-bottom: 48px;
+        }
+
+        .led-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background: var(--color-accent);
+            border-radius: 50%;
+            margin: 0 8px;
+            box-shadow: 0 0 8px var(--color-accent), 0 0 16px var(--color-accent);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .demo-frame {
+            background: var(--color-panel);
+            border: 1px solid var(--color-border);
+            padding: 32px;
+            margin-bottom: 64px;
+            text-align: center;
+        }
+
+        .demo-screenshot {
+            width: 100%;
+            max-width: 900px;
+            height: 500px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border: 1px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text-dim);
+            font-size: 14px;
+            margin: 0 auto;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 32px;
+            margin-bottom: 64px;
+        }
+
+        .feature {
+            background: var(--color-panel);
+            border: 1px solid var(--color-border);
+            padding: 32px;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 16px;
+        }
+
+        .feature-title {
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 12px;
+        }
+
+        .feature-desc {
+            color: var(--color-text-dim);
+            font-size: 0.875rem;
+        }
+
+        .cta-section {
+            background: var(--color-panel);
+            border: 2px solid var(--color-accent);
+            padding: 48px;
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .cta-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 24px;
+        }
+
+        .install-command {
+            background: #0A0A0A;
+            border: 1px solid var(--color-border);
+            padding: 24px;
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+            color: var(--color-accent);
+            margin: 24px 0;
+            text-align: left;
+            overflow-x: auto;
+            white-space: pre;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 32px;
+        }
+
+        .btn {
+            padding: 16px 32px;
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            border: 2px solid var(--color-accent);
+            background: transparent;
+            color: var(--color-accent);
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 150ms ease;
+        }
+
+        .btn:hover {
+            background: var(--color-accent);
+            color: var(--color-bg);
+        }
+
+        .btn-primary {
+            background: var(--color-accent);
+            color: var(--color-bg);
+        }
+
+        .btn-primary:hover {
+            background: transparent;
+            color: var(--color-accent);
+        }
+
+        .specs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            margin-bottom: 64px;
+        }
+
+        .spec {
+            text-align: center;
+        }
+
+        .spec-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--color-accent);
+            margin-bottom: 8px;
+        }
+
+        .spec-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--color-text-dim);
+        }
+
+        .design-philosophy {
+            background: var(--color-panel);
+            border-left: 4px solid var(--color-accent);
+            padding: 32px;
+            margin-bottom: 64px;
+        }
+
+        .design-philosophy h2 {
+            font-size: 1.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 16px;
+        }
+
+        .design-philosophy blockquote {
+            font-size: 1.125rem;
+            font-style: italic;
+            color: var(--color-text-dim);
+            margin: 24px 0;
+            padding-left: 24px;
+            border-left: 2px solid var(--color-border);
+        }
+
+        .tech-stack {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 64px;
+        }
+
+        .tech-badge {
+            padding: 8px 16px;
+            background: var(--color-panel);
+            border: 1px solid var(--color-border);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        footer {
+            text-align: center;
+            padding: 48px 24px;
+            border-top: 1px solid var(--color-border);
+            color: var(--color-text-dim);
+            font-size: 0.875rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .specs {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <div class="led-indicator"></div>
+            <h1 class="hero-title">Quick-Ping 2</h1>
+            <p class="hero-subtitle">Professional Sound Notifications for Claude Code</p>
+            <p class="hero-subtitle" style="font-size: 0.875rem;">Hardware-Inspired Design × Dieter Rams Philosophy × Teenage Engineering Aesthetic</p>
+        </div>
+
+        <div class="demo-frame">
+            <div class="demo-screenshot">
+                [Screenshot: Dark steel control panel with green LED indicators]
+                <br><br>
+                Control Panel Interface Preview
+            </div>
+        </div>
+
+        <div class="specs">
+            <div class="spec">
+                <div class="spec-value">40+</div>
+                <div class="spec-label">Event Types</div>
+            </div>
+            <div class="spec">
+                <div class="spec-value">∞</div>
+                <div class="spec-label">Sound Collections</div>
+            </div>
+            <div class="spec">
+                <div class="spec-value">100%</div>
+                <div class="spec-label">WCAG AAA</div>
+            </div>
+            <div class="spec">
+                <div class="spec-value">4px</div>
+                <div class="spec-label">Grid System</div>
+            </div>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🎚️</div>
+                <div class="feature-title">Audio Equipment Aesthetic</div>
+                <div class="feature-desc">Dark steel theme with bright green LEDs in steel bezels. Looks like a professional SSL console in a dark studio.</div>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">📚</div>
+                <div class="feature-title">Collections System</div>
+                <div class="feature-desc">Manage multiple sound libraries. Switch between collections instantly. Add any folder as a sound source.</div>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">✨</div>
+                <div class="feature-title">AI-Powered Mapping</div>
+                <div class="feature-desc">Claude suggests sound-to-event assignments based on filenames. 70+ keyword patterns with confidence scoring.</div>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <div class="feature-title">40+ Event Types</div>
+                <div class="feature-desc">Git operations, tests, builds, teams, streaks, time-of-day alerts. Every Claude Code action can have a sound.</div>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">♿</div>
+                <div class="feature-title">Accessibility First</div>
+                <div class="feature-desc">WCAG AAA compliant. Full keyboard navigation. Screen reader support. High contrast. Focus indicators.</div>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">🎯</div>
+                <div class="feature-title">Focus Modes</div>
+                <div class="feature-desc">Smart mode: sounds only when unfocused. Always mode: sounds regardless of focus. Perfect for multi-monitor setups.</div>
+            </div>
+        </div>
+
+        <div class="design-philosophy">
+            <h2>Design Philosophy</h2>
+            <blockquote>"Weniger, aber besser" — Less, but better.</blockquote>
+            <p>Quick-Ping 2 follows <strong>Dieter Rams' 10 principles of good design</strong> and <strong>Teenage Engineering's</strong> hardware-inspired aesthetic. Every pixel serves a purpose. No decoration without function. The interface recedes to let you focus on your work.</p>
+            <br>
+            <p><strong>Visual References:</strong> OP-1 Field synthesizer, TX-6 mixer, SSL mixing consoles, Braun ET66 calculator, Neve rack equipment, Ableton Live dark theme.</p>
+        </div>
+
+        <div class="cta-section">
+            <h2 class="cta-title">Quick Installation</h2>
+            <p style="color: var(--color-text-dim); margin-bottom: 24px;">Copy and paste this command into your terminal:</p>
+
+            <div class="install-command">curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/quick-ping-2/main/install.sh | bash</div>
+
+            <p style="color: var(--color-text-dim); font-size: 0.875rem; margin-top: 16px;">
+                Installs to ~/Documents/MyEP/projects/quick-ping-2<br>
+                Includes 147 Sims sound files<br>
+                Auto-configures Claude Code hooks<br>
+                Takes ~30 seconds
+            </p>
+
+            <div class="buttons">
+                <a href="https://github.com/YOUR_USERNAME/quick-ping-2" class="btn btn-primary">View on GitHub</a>
+                <a href="./control-panel.html" class="btn" target="_blank">Live Demo (Read-Only)</a>
+                <a href="#docs" class="btn">Documentation</a>
+            </div>
+        </div>
+
+        <div class="tech-stack">
+            <div class="tech-badge">Python Flask</div>
+            <div class="tech-badge">Vanilla JavaScript</div>
+            <div class="tech-badge">IBM Plex Mono</div>
+            <div class="tech-badge">CSS Grid</div>
+            <div class="tech-badge">REST API</div>
+            <div class="tech-badge">macOS</div>
+        </div>
+
+        <div id="docs" style="margin-bottom: 64px;">
+            <h2 style="font-size: 1.5rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 32px; text-align: center;">Documentation</h2>
+
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-title">Getting Started</div>
+                    <div class="feature-desc">
+                        <ol style="list-style-position: inside; color: var(--color-text-dim);">
+                            <li>Run the installer command</li>
+                            <li>Launch control panel</li>
+                            <li>Configure your events</li>
+                            <li>Start coding with sound!</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-title">Adding Collections</div>
+                    <div class="feature-desc">
+                        Click "Add Collection" → Enter folder path → Scan → Claude Suggests → Save. Switch between collections via dropdown.
+                    </div>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-title">Event Types</div>
+                    <div class="feature-desc">
+                        Core, Git, Testing, Building, Teams, Performance, Context, Streaks, Time-of-day, Skills, and more.
+                    </div>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-title">Requirements</div>
+                    <div class="feature-desc">
+                        macOS, Python 3, Claude Code, audio files (WAV/MP3/AIFF/M4A).
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Built with Claude Code × Designed by Dieter Rams' Philosophy × Inspired by Teenage Engineering</p>
+            <p style="margin-top: 16px;">Quick-Ping 2 © 2026 · MIT License</p>
+        </footer>
+    </div>
+</body>
+</html>
