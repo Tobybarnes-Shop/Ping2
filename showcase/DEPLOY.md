@@ -88,38 +88,17 @@ The showcase site is a different project with different concerns (marketing, des
 
 ```
 quick-ping-site/
-  index.html              # Main showcase page
-  css/
-    styles.css            # Site styles
-  js/
-    main.js               # Interactions and sound playback
-    audio-player.js       # Web Audio API wrapper for demos
-  assets/
-    images/               # Screenshots, mockups, icons
-    sounds/               # Selected sound samples for web preview
-      mgs/                # Curated MGS sounds (small subset)
-      sims2/              # Curated Sims 2 sounds (small subset)
+  index.html              # The entire showcase site (single file, < 50KB)
   favicon.ico
   CNAME                   # Custom domain (if applicable)
   README.md               # Repo README
 ```
 
-## Audio Asset Strategy
+The site is a single HTML file with all CSS and JS inline. No external stylesheets, scripts, or images. The only external dependency is Google Fonts (IBM Plex Mono). This makes deployment trivially simple.
 
-The full sound collections are too large for a web demo. Strategy:
+## No Audio on the Showcase Site
 
-1. **Curate a subset** -- Pick 8-12 most iconic sounds per collection for web preview
-2. **Convert to web format** -- Use MP3 or OGG for smaller file sizes (WAV is too large for web)
-3. **Lazy load** -- Don't load audio until user interacts with the demo section
-4. **Total audio budget** -- Keep all web audio under 2MB total
-
-Conversion command:
-```bash
-# Convert WAV to MP3 (128kbps, good enough for short notification sounds)
-for f in *.wav; do
-  ffmpeg -i "$f" -codec:a libmp3lame -b:a 128k "${f%.wav}.mp3"
-done
-```
+The showcase site deliberately does not include sound playback. This is an intentional creative decision (see CREATIVE-BRIEF.md: "No sound on the website itself. The irony is intentional. Let them imagine the sounds."). No audio assets need to be managed, converted, or deployed.
 
 ## Custom Domain (Optional)
 
@@ -135,22 +114,22 @@ If a custom domain is desired:
 ## Deployment Checklist
 
 ### Pre-Deploy
-- [ ] All HTML validates (W3C validator)
-- [ ] CSS is minified (or small enough not to matter)
-- [ ] Images are optimized (WebP where possible, compressed PNG/JPG fallbacks)
-- [ ] Audio files converted to web-friendly formats
-- [ ] All links work (no broken hrefs)
+- [ ] HTML validates (W3C validator)
+- [ ] Total page weight under 50KB (excluding font files)
+- [ ] All links work (no broken hrefs, GitHub URL correct)
 - [ ] Favicon in place
-- [ ] Meta tags set (title, description, og:image for social sharing)
-- [ ] Responsive design tested on mobile viewports
-- [ ] Accessibility audit passes (contrast, keyboard nav, screen reader)
+- [ ] Meta tags set (title, description, og:title, og:description, twitter:card)
+- [ ] Responsive design tested at 1200px, 768px, 375px
+- [ ] Accessibility audit passes (contrast, keyboard nav, skip-to-content, reduced motion)
+- [ ] No terminal green (#00FF41) outside MGS-themed areas
+- [ ] Collection card contrast is visually obvious
 
 ### Deploy
 - [ ] Push to main branch
 - [ ] Verify GitHub Pages build succeeds (Actions tab)
 - [ ] Test live URL in Chrome, Safari, Firefox
-- [ ] Test sound playback on live site
 - [ ] Verify HTTPS works
+- [ ] Copy buttons work on live site
 
 ### Post-Deploy
 - [ ] Update main Quick-Ping repo README with link to showcase site
@@ -162,11 +141,11 @@ If a custom domain is desired:
 
 | Metric | Target |
 |--------|--------|
-| First Contentful Paint | < 1.5s |
-| Largest Contentful Paint | < 2.5s |
-| Total page weight (no audio) | < 500KB |
-| Total page weight (with audio) | < 3MB |
-| Lighthouse Performance | > 90 |
+| First Contentful Paint | < 1.0s |
+| Largest Contentful Paint | < 1.5s |
+| Total page weight (excluding fonts) | < 50KB |
+| Total page weight (including fonts) | < 200KB |
+| Lighthouse Performance | > 95 |
 | Lighthouse Accessibility | > 95 |
 
 ## Monitoring
