@@ -1,12 +1,15 @@
 {
-  "version": "2.0",
-  "focus_mode": "always",
   "active_collection": "default",
   "collections": {
     "default": {
+      "description": "Original Sims 2 game sounds",
       "name": "Sims 2 Sounds",
-      "path": "/Users/tobybarnes_shop/Documents/MyEP/projects/quick-ping-2/sounds/Sims2",
-      "description": "Original Sims 2 game sounds"
+      "path": "/Users/tobybarnes_shop/Documents/MyEP/Projects/quick-ping-2/sounds/Sims2"
+    },
+    "mgs": {
+      "description": "Metal Gear Solid game sounds - tactical espionage audio",
+      "name": "MGS Sounds",
+      "path": "/Users/tobybarnes_shop/Documents/MyEP/Projects/quick-ping-2/sounds/MGS"
     }
   },
   "events": {
@@ -240,5 +243,7 @@
       "enabled": false,
       "sound": "fSTORY0.wav"
     }
-  }
+  },
+  "focus_mode": "always",
+  "version": "2.0"
 }
