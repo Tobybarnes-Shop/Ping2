@@ -272,4 +272,64 @@ UI change -- in `createEventCard()` (line 1228 of control-panel.html), add a `<s
 
 ---
 
+## DEC-011: Master power switch for instant silence
+
+**Date**: 2026-02-13
+**Status**: Decided
+**Decider**: User / Team Lead
+
+**Context**: Users on a sudden call or in a meeting need to silence Quick-Ping instantly without disabling individual event settings. Currently the only options are: disable events one by one, mute system volume, or kill the process.
+
+**Decision**: Add a master power switch -- a single toggle that silences all sounds while preserving individual event configuration. When powered off, no sounds play. When powered back on, all previously enabled events resume.
+
+**Implementation (4 touch points):**
+
+1. **config.json** -- Add `"master_enabled": true` at top level (alongside `focus_mode`, `active_collection`):
+```json
+{
+  "version": "2.0",
+  "master_enabled": true,
+  "focus_mode": "always",
+  "active_collection": "mgs"
+}
+```
+
+2. **quick-ping-v2.sh** -- Add master check immediately after the focus mode check (after line ~152, before the event loop). Early exit if `master_enabled` is `false`:
+```bash
+# Check master switch
+MASTER=$(python3 -c "
+import json
+with open('$CONFIG_FILE') as f: config = json.load(f)
+print(config.get('master_enabled', True))
+" 2>/dev/null) || MASTER="True"
+
+if [ "$MASTER" = "False" ]; then exit 0; fi
+```
+This is the cheapest possible check -- a single JSON read before any event processing.
+
+3. **control-panel.html** -- Skeuomorphic power switch in header, between `<h1>` title and stats section (lines 1163-1166). Distinct from the small LED event toggles -- should look like a physical hardware power button:
+   - Larger than event toggles (hardware-scale, not UI-scale)
+   - Prominent placement (top-right of header or next to title)
+   - Visual feedback: body gets `opacity: 0.5` or similar dimming when powered off
+   - Optional: Cmd+Shift+M keyboard shortcut
+   - Updates `master_enabled` in config via existing `POST /api/config`
+
+4. **control-panel-server.py** -- No changes needed. The existing `POST /api/config` endpoint writes arbitrary config fields.
+
+**Rationale**:
+- Solves a real, urgent user scenario (sudden calls)
+- One click/shortcut to silence, one click to restore
+- Preserves all event configuration -- no tedious re-enabling
+- Fits the hardware rack aesthetic (power switches are standard on audio equipment)
+- Minimal implementation surface (4 files, lightweight changes)
+
+**Relationship to focus_mode**: The master switch is independent of focus mode. Focus mode controls *when* sounds play (smart vs always). The master switch controls *whether* sounds play at all. Master off = silence regardless of focus mode.
+
+**Alternatives considered**:
+- System volume mute: Works but affects all system audio, not just Quick-Ping
+- "Mute" button without persistence: Risk of unmuting accidentally on restart
+- Focus mode "silent": Overloads an existing concept with a different meaning
+
+---
+
 *Add new decisions below as they arise during the project.*

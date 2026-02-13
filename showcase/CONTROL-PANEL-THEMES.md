@@ -665,10 +665,433 @@ Additionally, a lookup table of sound-file-to-description mappings should exist 
 
 ---
 
+## Master Power Switch
+
+### Purpose
+
+User scenario: "I'm suddenly on a call and need to silence Quick-Ping instantly without losing my configuration." The master power switch is a single-click kill switch that mutes all sounds while preserving every individual event toggle, sound assignment, and setting. One click off, one click back on. Like pulling the master fader on a mixing console.
+
+### Placement
+
+The power switch lives in the header title row, right-aligned. It is the most visually prominent interactive element on the page -- larger than any other toggle, and positioned where the user's eye naturally scans.
+
+```
++------------------------------------------------------------------+
+| QUICK-PING 2                                [PWR SWITCH] [LED]   |
+| Sound Event Configuration Interface                              |
++------------------------------------------------------------------+
+```
+
+### Design: Skeuomorphic Rocker Switch
+
+The switch is a vertical rocker with a physical toggle feel. It resembles a rack-mount power switch: a recessed housing with a pivoting rocker inside. Not a slider, not a checkbox -- a toggle that "clicks" between two physical positions.
+
+```
+  OFF state:                    ON state:
+
+  +----------+                  +----------+
+  |          |                  |##########|  <- top half pressed (illuminated)
+  |  [OFF]   |                  |  [ ON ]  |
+  |----------|                  |----------|
+  |##########|  <- bottom half  |          |
+  |  pressed |                  |          |
+  +----------+                  +----------+
+       |                             |
+     [LED off]                   [LED on, glowing]
+```
+
+### Dimensions
+
+```
+Total component width:  48px
+Total component height: 72px (switch 56px + LED 16px below)
+Switch housing:         48px wide x 56px tall
+Rocker face:            40px wide x 24px tall (the movable part)
+LED indicator:          8px diameter (standard LED component)
+Housing-to-LED gap:     8px
+```
+
+### HTML Structure
+
+```html
+<div class="master-power" role="region" aria-label="Master power switch">
+    <button
+        class="power-switch active"
+        id="masterPower"
+        role="switch"
+        aria-checked="true"
+        aria-label="Master power: sounds enabled. Press to mute all sounds."
+    >
+        <span class="power-switch__housing">
+            <span class="power-switch__rocker">
+                <span class="power-switch__label" aria-hidden="true">I</span>
+            </span>
+        </span>
+    </button>
+    <div class="power-led led" aria-hidden="true"></div>
+    <span class="power-label">PWR</span>
+</div>
+```
+
+### CSS -- MGS Theme (Dark)
+
+```css
+/* Container */
+.master-power {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-1);        /* 4px */
+    flex-shrink: 0;
+}
+
+/* Switch Button (full clickable area) */
+.power-switch {
+    width: 48px;
+    height: 56px;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Housing -- the recessed panel the rocker sits in */
+.power-switch__housing {
+    display: flex;
+    flex-direction: column;
+    width: 48px;
+    height: 56px;
+    background: #0A0A0A;
+    border: 2px solid var(--color-led-bezel);   /* #4A4A4A */
+    box-shadow:
+        inset 0 2px 4px rgba(0, 0, 0, 0.6),    /* Deep recess shadow */
+        0 1px 0 rgba(255, 255, 255, 0.05);      /* Subtle highlight on bezel */
+    position: relative;
+    overflow: hidden;
+}
+
+/* Rocker -- the toggle piece that moves */
+.power-switch__rocker {
+    position: absolute;
+    left: 3px;
+    right: 3px;
+    height: 24px;
+    background: #2A2A2A;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: top 80ms ease, background 80ms ease, box-shadow 80ms ease;
+    /* OFF position: rocker is at the bottom */
+    top: 26px;
+}
+
+/* Rocker label */
+.power-switch__label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-tertiary);
+    letter-spacing: 0.08em;
+    user-select: none;
+}
+
+/* ON state: rocker slides to top */
+.power-switch.active .power-switch__rocker {
+    top: 3px;
+    background: #3A3A3A;
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.power-switch.active .power-switch__label {
+    color: var(--color-text-primary);
+}
+
+/* LED below the switch */
+.power-led {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-led-off);
+    outline: 2px solid var(--color-led-bezel);
+    outline-offset: 1px;
+    transition: background 80ms ease, box-shadow 80ms ease;
+}
+
+.power-switch.active ~ .power-led {
+    background: var(--color-led-on);
+    box-shadow: var(--color-led-glow);
+}
+
+/* Label below LED */
+.power-label {
+    font-size: var(--font-size-micro);          /* 10px */
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    color: var(--color-text-tertiary);
+    user-select: none;
+}
+
+/* Hover state */
+.power-switch:hover .power-switch__housing {
+    border-color: #6A6A6A;
+}
+
+/* Focus state */
+.power-switch:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+/* Active (press) state -- slight recess */
+.power-switch:active .power-switch__rocker {
+    box-shadow: none;
+    background: #222222;
+}
+```
+
+### CSS -- Sims Theme Override
+
+```css
+[data-theme="sims"] .power-switch__housing {
+    background: #E0E4E0;
+    border-color: var(--color-led-bezel);      /* #B0B8B4 */
+    box-shadow:
+        inset 0 2px 4px rgba(0, 0, 0, 0.10),
+        0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+[data-theme="sims"] .power-switch__rocker {
+    background: #FFFFFF;
+    border-color: rgba(0, 0, 0, 0.10);
+}
+
+[data-theme="sims"] .power-switch.active .power-switch__rocker {
+    background: #F5F5F0;
+    border-color: rgba(0, 0, 0, 0.12);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="sims"] .power-switch__label {
+    color: var(--color-text-tertiary);
+}
+
+[data-theme="sims"] .power-switch.active .power-switch__label {
+    color: var(--color-text-primary);
+}
+
+[data-theme="sims"] .power-switch:hover .power-switch__housing {
+    border-color: #8A928E;
+}
+
+[data-theme="sims"] .power-switch:active .power-switch__rocker {
+    background: #E8E8E4;
+}
+```
+
+### Header Layout Integration
+
+The header title row becomes a flex container with the power switch on the right:
+
+```css
+.header-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--space-1);
+}
+```
+
+```html
+<!-- Updated header structure -->
+<header class="header" role="banner">
+    <div class="header-title-row">
+        <div>
+            <h1 class="header-title">QUICK-PING 2</h1>
+            <p class="header-subtitle">Sound Event Configuration Interface</p>
+        </div>
+        <div class="master-power" role="region" aria-label="Master power switch">
+            <!-- power switch component -->
+        </div>
+    </div>
+    <!-- rest of header: stats, collections, controls, search -->
+</header>
+```
+
+### Powered-Off State (UI Dimming)
+
+When the master switch is OFF, the entire control panel below the header dims. The header itself stays fully visible so the user can find the switch to turn it back on.
+
+```css
+/* Applied to the body or container when powered off */
+body.powered-off main {
+    opacity: 0.35;
+    pointer-events: none;           /* Prevent interaction with dimmed events */
+    filter: grayscale(40%);
+    transition: opacity 300ms ease, filter 300ms ease;
+}
+
+/* Header always stays interactive */
+body.powered-off .header {
+    opacity: 1;
+    pointer-events: auto;
+    filter: none;
+}
+
+/* All LED strips turn off */
+body.powered-off .event-led-strip {
+    background: var(--color-led-off) !important;
+    box-shadow: none !important;
+}
+
+/* Stats update to show "MUTED" or similar */
+body.powered-off .stat-value#enabledEvents::after {
+    content: ' (MUTED)';
+    font-size: var(--font-size-micro);
+    color: var(--color-text-tertiary);
+    font-weight: var(--font-weight-regular);
+}
+```
+
+**Sims theme override for powered-off:**
+
+```css
+[data-theme="sims"] body.powered-off main {
+    opacity: 0.40;                  /* Slightly higher since light bg has less contrast range */
+    filter: grayscale(30%);
+}
+```
+
+### Visual Comparison: ON vs OFF
+
+```
+POWERED ON:                              POWERED OFF:
++----------------------------------+     +----------------------------------+
+| QUICK-PING 2    [ON] [LED=green] |     | QUICK-PING 2    [OFF] [LED=off] |
+| Sound Event Configuration...     |     | Sound Event Configuration...     |
+|  [40]  [35]  [124]               |     |  [40]  [35 (MUTED)]  [124]      |
+|  Collection: [MGS Default    v]  |     |  Collection: [MGS Default    v]  |
+|----------------------------------|     |----------------------------------|
+| CORE EVENTS                      |     |                                  |
+| +--SESSION START----------+      |     |  (dimmed to 35% opacity,         |
+| | [green LED] enabled [*] |      |     |   grayscale, no interaction)     |
+| +-------------------------+      |     |                                  |
++----------------------------------+     +----------------------------------+
+  ^ Full color, interactive               ^ Dimmed, non-interactive below header
+```
+
+### JavaScript Integration
+
+```javascript
+// Toggle master power
+function toggleMasterPower() {
+    const isOn = config.master_enabled;
+    config.master_enabled = !isOn;
+
+    const btn = document.getElementById('masterPower');
+    btn.classList.toggle('active', !isOn);
+    btn.setAttribute('aria-checked', !isOn);
+    btn.setAttribute('aria-label',
+        !isOn
+            ? 'Master power: sounds enabled. Press to mute all sounds.'
+            : 'Master power: sounds muted. Press to enable all sounds.'
+    );
+
+    document.body.classList.toggle('powered-off', isOn);
+
+    // Save immediately -- this is an emergency action
+    saveConfig();
+}
+
+// Keyboard shortcut: Cmd+Shift+M (Mac) / Ctrl+Shift+M (other)
+document.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'm') {
+        e.preventDefault();
+        toggleMasterPower();
+        showToast(config.master_enabled ? 'SOUNDS ENABLED' : 'ALL SOUNDS MUTED');
+    }
+});
+
+// Event listener
+document.getElementById('masterPower').addEventListener('click', () => {
+    toggleMasterPower();
+    showToast(config.master_enabled ? 'SOUNDS ENABLED' : 'ALL SOUNDS MUTED');
+});
+```
+
+### Config Schema Addition
+
+```json
+{
+  "master_enabled": true,
+  "focus_mode": "smart",
+  "events": { ... }
+}
+```
+
+The `quick-ping-v2.sh` script checks `master_enabled` before playing any sound:
+
+```bash
+# At the top of the play function
+master_enabled=$(python3 -c "import json; print(json.load(open('config.json')).get('master_enabled', True))")
+if [ "$master_enabled" = "False" ]; then
+    exit 0
+fi
+```
+
+### Accessibility
+
+| Aspect | Implementation |
+|--------|---------------|
+| Role | `role="switch"` on the button |
+| State | `aria-checked="true"` / `"false"` |
+| Label | Dynamic: describes current state and what pressing will do |
+| Focus | 2px accent-colored outline, 2px offset |
+| Touch target | 48x56px switch housing exceeds 44x44px WCAG minimum |
+| Keyboard | Space/Enter toggles. Cmd+Shift+M global shortcut. |
+| Screen reader | Announces "Master power: sounds enabled/muted" on toggle |
+| Reduced motion | Rocker transition set to `0ms` under `prefers-reduced-motion` |
+
+```css
+@media (prefers-reduced-motion: reduce) {
+    .power-switch__rocker {
+        transition: none;
+    }
+    body.powered-off main {
+        transition: none;
+    }
+}
+```
+
+### Mobile Adaptation
+
+On mobile, the power switch stays in the header title row but the layout stacks slightly:
+
+```css
+@media (max-width: 768px) {
+    .header-title-row {
+        gap: var(--space-2);
+    }
+    /* Switch stays right-aligned, doesn't shrink */
+    .master-power {
+        flex-shrink: 0;
+    }
+}
+```
+
+The 48x56px switch is already large enough for mobile touch targets.
+
+---
+
 ## Files Modified
 
-- `control-panel.html` -- CSS additions + minor HTML template change in `createEventCard()`
-- Collection config schema gains `sound_description` per event and `sound_descriptions` lookup per collection
+- `control-panel.html` -- CSS additions + minor HTML template change in `createEventCard()` + new header structure with power switch
+- Collection config schema gains `sound_description` per event, `sound_descriptions` lookup per collection, and `master_enabled` boolean
+- `quick-ping-v2.sh` -- Add master_enabled check before playing sounds
 
 ---
 

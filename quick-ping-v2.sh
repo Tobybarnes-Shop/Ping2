@@ -28,16 +28,34 @@ c['focus_mode'] = 'smart'
 with open(p,'w') as f: json.dump(c,f,indent=2); f.write('\\n')
 print('Focus mode: smart')
 "; exit 0 ;;
+  --mute) python3 -c "
+import json, os
+p = os.path.join(os.environ.get('QUICK_PING_DIR', os.path.expanduser('~/Documents/MyEP/projects/quick-ping-2')), 'config.json')
+with open(p) as f: c = json.load(f)
+c['master_enabled'] = False
+with open(p,'w') as f: json.dump(c,f,indent=2); f.write('\n')
+print('Master power: OFF (all sounds muted)')
+"; exit 0 ;;
+  --unmute) python3 -c "
+import json, os
+p = os.path.join(os.environ.get('QUICK_PING_DIR', os.path.expanduser('~/Documents/MyEP/projects/quick-ping-2')), 'config.json')
+with open(p) as f: c = json.load(f)
+c['master_enabled'] = True
+with open(p,'w') as f: json.dump(c,f,indent=2); f.write('\n')
+print('Master power: ON (sounds active)')
+"; exit 0 ;;
   --status) python3 -c "
 import json, os
 p = os.path.join(os.environ.get('QUICK_PING_DIR', os.path.expanduser('~/Documents/MyEP/projects/quick-ping-2')), 'config.json')
 with open(p) as f: c = json.load(f)
 m = c.get('focus_mode','smart')
 v = c.get('version','1.0')
+master = c.get('master_enabled', True)
 active = c.get('active_collection', 'default')
 collections = c.get('collections', {})
 
 print(f'quick-ping v{v}')
+print(f'Master power: {\"ON\" if master else \"OFF (muted)\"}')
 print(f'Focus mode: {m}')
 print(f'\\nActive collection: {active}')
 if active in collections:
@@ -135,6 +153,15 @@ if [ -z "$EVENTS" ]; then
 fi
 
 if [ ! -f "$CONFIG_FILE" ]; then exit 1; fi
+
+# Check master power switch
+MASTER_ENABLED=$(python3 -c "
+import json
+with open('$CONFIG_FILE') as f: config = json.load(f)
+print(config.get('master_enabled', True))
+" 2>/dev/null) || MASTER_ENABLED="True"
+
+if [ "$MASTER_ENABLED" != "True" ]; then exit 0; fi
 
 # Get focus mode
 FOCUS_MODE=$(python3 -c "

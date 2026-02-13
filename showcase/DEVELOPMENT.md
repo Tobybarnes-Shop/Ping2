@@ -34,217 +34,163 @@ Visit http://localhost:8080
 
 ```
 quick-ping-site/
-  index.html              # The showcase page (single page)
-  css/
-    styles.css            # All styles
-  js/
-    main.js               # Page interactions, scroll effects
-    audio-player.js       # Web Audio API for sound demos
-  assets/
-    images/               # Screenshots, icons, graphics
-    sounds/
-      mgs/                # Curated MGS sound samples (MP3)
-      sims2/              # Curated Sims 2 sound samples (MP3)
+  index.html              # The entire showcase site (single file)
   favicon.ico
   CNAME                   # Custom domain config (if applicable)
+  README.md               # Repo README
 ```
+
+The site is a **single HTML file** with all CSS inline in `<style>` and all JS inline at the bottom of `<body>`. No external CSS, JS, or image files. All visual elements are CSS-generated (LEDs, borders, grids, gradients). The only external dependency is Google Fonts (IBM Plex Mono).
+
+The working prototype is at `showcase-site.html` in the main Quick-Ping repo.
 
 ### Key Conventions
 
-- **Single page**: Everything lives in `index.html`. No routing, no multi-page setup.
-- **Vanilla JS**: No frameworks. Use modern browser APIs (Web Audio, Intersection Observer, etc.)
-- **CSS custom properties**: Use variables for colors, spacing, fonts. Defined at `:root`.
-- **No build step**: What you edit is what gets deployed. No compilation, no transpilation.
-- **Semantic HTML**: Use appropriate elements (`<section>`, `<nav>`, `<article>`, `<button>`, etc.)
+- **Single HTML file**: Everything -- markup, styles, scripts -- lives in one file. No routing, no imports.
+- **Vanilla JS only**: IntersectionObserver for scroll reveal + clipboard API for copy buttons. Under 50 lines total.
+- **CSS custom properties**: All design tokens defined at `:root` in the inline `<style>` block.
+- **No build step**: What you edit is what gets deployed.
+- **No images**: All visual elements (LEDs, cards, grids, mockups) are pure CSS.
+- **No sound on the website**: The showcase page deliberately has no audio playback.
+- **No `border-radius`**: Sharp corners everywhere. Only exception: LED circles (`border-radius: 50%`).
+- **Semantic HTML**: `<section>` with `aria-label`, one `<h1>`, proper heading hierarchy, `role="article"` for collection cards.
 
 ### Design System Reference
 
-The showcase site uses a **neutral-framework** approach: the base site is clean and collection-agnostic, while each collection section gets its own distinct visual treatment.
+The showcase site uses a **neutral-framework** approach ("The Player"): the base site is clean and collection-agnostic, while each collection section gets its own distinct visual treatment.
 
-#### Base / Neutral Tokens (used for hero, nav, footer, install section, control panel preview)
+**Full design specs**: See `showcase/DESIGN-SPECS.md` for the complete component library, section-by-section specs, responsive breakpoints, and accessibility requirements. This section summarizes the key tokens.
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| Background (dark) | `#1A1A1A` | Page background |
-| Background (mid) | `#2A2A2A` | Sections, panels |
-| Text (primary) | `#E0E0E0` | Body text |
-| Text (secondary) | `#888888` | Labels, captions |
-| Accent (neutral) | `#FFFFFF` or subtle blue | CTAs, links, interactive elements |
-| Font (mono) | `IBM Plex Mono` | Headlines, code, labels |
-| Font (sans) | `IBM Plex Sans` or system sans-serif | Body text |
-| Spacing unit | `4px` | Base grid unit (use multiples: 8, 12, 16, 24, 32) |
-| Border radius | `2px` | Tight, hardware-inspired corners |
+**Critical rule**: Terminal green (`#00FF41`) is NOT a framework color. It belongs exclusively to the MGS aesthetic. The neutral framework uses white (`#FFFFFF`).
 
-#### MGS Collection Section Tokens
+#### Framework / Neutral Tokens (hero, event map, installation, CTA, footer)
 
 | Token | Value | Usage |
 |-------|-------|-------|
-| Background | `#0A0A0A` to `#1A1A1A` | Dark, tactical feel |
-| Accent (primary) | `#00FF00` | Radar green, LEDs, active states |
-| Accent (secondary) | `#FFB800` | Amber alerts, warnings |
-| Text highlight | `#00FF00` | Key phrases, event names |
-| Vibe | Dark, tactical, military | Espionage briefing aesthetic |
+| `--bg-page` | `#0A0A0A` | Page background (not pure black) |
+| `--bg-surface` | `#141414` | Cards, panels, content blocks |
+| `--bg-elevated` | `#1A1A1A` | Hover states, elevated panels |
+| `--bg-inset` | `#0D0D0D` | Code blocks, deepest recesses |
+| `--accent` | `#FFFFFF` | Framework accent -- white, NOT green |
+| `--text-primary` | `#FFFFFF` | Headlines, key values |
+| `--text-secondary` | `rgba(255,255,255,0.65)` | Body text, descriptions |
+| `--text-tertiary` | `rgba(255,255,255,0.40)` | Labels, captions, metadata |
+| `--border-default` | `rgba(255,255,255,0.08)` | Panel edges, dividers |
+| `--led-on` | `#FFFFFF` | Neutral white LED |
+| Font | `IBM Plex Mono` (400, 500, 700) | One font, no secondary |
+| Spacing | `4px` base grid | Use multiples: 8, 12, 16, 24, 32, 48, 64, 80, 96 |
+| Border radius | `0` | Sharp corners everywhere. Only exception: LED circles. |
 
-#### Sims 2 Collection Section Tokens
+#### MGS Collection Tokens (MGS card, MGS deep-dive section)
 
 | Token | Value | Usage |
 |-------|-------|-------|
-| Background | `#F0F8F0` to `#E8F5E9` | Light, warm, playful |
-| Accent (primary) | `#00BFA5` | Teal / plumbob green |
-| Accent (secondary) | `#4CAF50` | Sims-style green |
-| Text (primary) | `#2D2D2D` | Dark text on light background |
-| Text highlight | `#00BFA5` | Key phrases, event names |
-| Vibe | Light, warm, chaotic-friendly | Simlish household energy |
+| `--mgs-primary` | `#FFB800` | Codec amber -- headings, borders, stats |
+| `--mgs-secondary` | `#00FF41` | Terminal green -- code/event names within MGS |
+| `--mgs-bg` | `#0D0D0A` | Slightly warm near-black |
+| `--mgs-surface` | `#141410` | Slightly warm dark surface |
+| `--mgs-border` | `rgba(255,184,0,0.15)` | Amber-tinted borders |
+| `--mgs-glow` | `0 0 12px rgba(255,184,0,0.4)` | Amber LED glow |
+| LED color | `#FFB800` (amber) | Not green -- amber is the MGS LED color |
 
-**Important**: The visual transition between the MGS and Sims 2 sections should be deliberate and dramatic. The contrast between dark-tactical and light-playful IS the product's value proposition -- it shows that Quick-Ping adapts to your mood.
+#### Sims 2 Collection Tokens (Sims card, Sims deep-dive section)
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--sims-primary` | `#00D4AA` | Plumbob teal -- headings, borders, stats |
+| `--sims-bg` | `#0F1413` | Slightly cool near-black (on showcase site) |
+| `--sims-surface` | `#141A18` | Slightly cool dark surface |
+| `--sims-border` | `rgba(0,212,170,0.15)` | Teal-tinted borders |
+| `--sims-glow` | `0 0 12px rgba(0,212,170,0.4)` | Teal LED glow |
+| LED color | `#00D4AA` (teal) | Plumbob teal |
+| Sims bg (Control Panel light theme) | `#F4F1EC` | Warm off-white for the light UI theme |
+| Sims text on light | `#1A1A1A` | Near-black text on light background |
+| Sims teal on light | `#009B7D` | Darker teal for contrast on white |
+
+#### Color Usage Quick Reference (from DESIGN-SPECS.md Appendix D)
+
+| Section | Accent | LED | Button BG | Code Text | Borders |
+|---------|--------|-----|-----------|-----------|---------|
+| Hero | White | White | White | -- | `rgba(255,255,255,0.08)` |
+| Collections intro | White | White | -- | -- | `rgba(255,255,255,0.08)` |
+| MGS card | `#FFB800` | Amber | Amber | `#00FF41` | `rgba(255,184,0,0.12)` |
+| Sims card | `#00D4AA` | Teal | Teal | `#00D4AA` | `rgba(0,212,170,0.12)` |
+| Control Panel | White | White | White | `rgba(255,255,255,0.80)` | `rgba(255,255,255,0.08)` |
+| Event Map | White | White | -- | `rgba(255,255,255,0.80)` | `rgba(255,255,255,0.08)` |
+| CTA | White | -- | White | `rgba(255,255,255,0.80)` | `rgba(255,255,255,0.25)` |
 
 #### Control Panel Theming (Product Feature)
 
-The Quick-Ping Control Panel (`control-panel.html`) itself now supports collection-aware themes. This is a product feature, not just a showcase site concern.
+The Control Panel (`control-panel.html`) supports adaptive themes via `body.theme-mgs` and `body.theme-sims` CSS classes. The `switchCollection()` function toggles the class when collections change.
 
-**How it works**: The control panel uses CSS custom properties (`:root` variables defined at the top of the `<style>` block). A second theme is defined via `[data-theme="sims"]` selector overriding the same variables. The `switchCollection()` function (around line 1689) toggles `data-theme` on the `<html>` element when collections change.
+The showcase site demonstrates both themes side-by-side in the Control Panel section using CSS-only mini mockups (no screenshots needed -- all CSS-generated).
 
-**Theme mapping:**
-- `active_collection === "mgs"` or default: Dark theme (current, no `data-theme` attribute)
-- `active_collection === "default"` (Sims 2): Light theme (`data-theme="sims"`)
+#### Master Power Switch (Product Feature -- Implemented)
 
-**Showcase site implication**: The site should include side-by-side screenshots or mockups of both Control Panel themes. This is a key selling point -- "even the UI adapts to your collection."
+`master_enabled` field in config.json. CLI: `--mute` / `--unmute`. Keyboard shortcut: Cmd+Shift+M. Shell script checks `master_enabled` before playing any sound (line ~140 in `quick-ping-v2.sh`). Independent of focus_mode.
 
-**Key CSS variables that change between themes:**
+#### Sound Description Labels (Product Feature -- Implemented)
 
-| Variable | MGS (Dark) | Sims (Light) |
-|----------|-----------|--------------|
-| `--color-bg-primary` | `#1A1A1A` | `#F5F5F5` (or similar light) |
-| `--color-bg-panel` | `#151515` | `#FFFFFF` |
-| `--color-text-primary` | `#FFFFFF` | `#2D2D2D` |
-| `--color-led-on` | `#00FF00` | Dayglow / teal / plumbob green |
-| `--color-border` | `rgba(255,255,255,0.1)` | `rgba(0,0,0,0.1)` |
+`sound_label` field on all 76 events in config.json. Displayed beneath the sound dropdown in the Control Panel. Key examples:
 
-Full Sims theme token values TBD by creative director.
+| Event | MGS Sound | MGS Label | Sims Sound | Sims Label |
+|-------|-----------|-----------|------------|------------|
+| session_start | 0x1a.wav | Codec ring | mGREETING.wav | Cheerful greeting |
+| context_90 | 0x01.wav | Alert (!) | fHUNGRY2.wav | Hungry complaint |
+| git_commit | 0x67.wav | Item pickup | Good Shot M.wav | Enthusiastic approval |
+| git_pr_create | 0x44.wav | Mission milestone | fCELEB0.wav | Celebration |
+| plan_mode_enter | 0x40.wav | Cardboard box | mBENCH0.wav | Sitting down to think |
 
-#### Sound Description Labels (Product Feature)
+### JavaScript (Inline)
 
-Each event in config.json now includes a `sound_description` field that tells users what the sound IS before they press play. This is especially important for the MGS collection where filenames are hex codes (e.g., "0x01.wav" tells you nothing, but "Alert (!)" tells you everything).
+The site uses only two JS features, both inline at the bottom of `<body>`:
 
-**Config structure:**
-```json
-{
-  "session_start": {
-    "description": "When Claude Code session starts",
-    "enabled": true,
-    "sound": "0x1a.wav",
-    "sound_description": "Codec ring"
-  }
-}
-```
+1. **Scroll reveal** -- IntersectionObserver adds `.visible` to `.reveal` elements as they enter the viewport. One-shot (unobserves after trigger).
 
-**UI location**: In `createEventCard()` (line 1228 of control-panel.html), the description displays beneath the sound select dropdown. Styled as a secondary label -- small, muted, informational.
+2. **Code copy** -- Clipboard API writes the code block text, toggles `.copied` class for 1500ms visual feedback.
 
-**Key MGS descriptions for reference:**
-
-| Event | Sound File | Description |
-|-------|-----------|-------------|
-| session_start | 0x1a.wav | Codec ring |
-| context_90 | 0x01.wav | Alert (!) |
-| git_commit | 0x67.wav | Item pickup chime |
-| git_push | 0x09.wav | Area transition |
-| test_pass | 0x73.wav | Sneak success |
-| test_fail | 0x15.wav | Guard alert (?) |
-| plan_mode_enter | 0x40.wav | Cardboard box |
-| git_pr_create | 0x44.wav | Mission milestone |
-| streak_10 | 0x5D.wav | Boss defeated |
-| subagent_start | 0x06.wav | Codec frequency dial |
-
-**Key Sims 2 descriptions for reference:**
-
-| Event | Sound File | Description |
-|-------|-----------|-------------|
-| session_start | mGREETING.wav | Cheerful greeting |
-| git_commit | Good Shot M.wav | Enthusiastic approval |
-| git_error | Bad Shot M.wav | Disappointed grumble |
-| git_pr_create | fCELEB0.wav | Celebration |
-| late_night | mTIRED.wav | Sleepy yawn |
-| context_75 | fHUNGRY.wav | Hungry complaint |
-| permission | fWAITING0.wav | Impatient waiting |
-| plan_mode_enter | mBENCH0.wav | Sitting down to think |
-
-**Showcase site implication**: The demo sections can use these descriptions as labels in the interactive sound preview grid, making the page more informative even before visitors click play.
-
-### Sound Demo Implementation
-
-Use the Web Audio API for interactive sound previews:
-
-```javascript
-// Basic audio player pattern
-const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
-async function playSound(url) {
-  const response = await fetch(url);
-  const arrayBuffer = await response.arrayBuffer();
-  const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-  const source = audioContext.createBufferSource();
-  source.buffer = audioBuffer;
-  source.connect(audioContext.destination);
-  source.start(0);
-}
-
-// Must be triggered by user interaction (click/tap) due to browser autoplay policies
-document.querySelector('.play-btn').addEventListener('click', () => {
-  playSound('/assets/sounds/mgs/alert.mp3');
-});
-```
-
-Note: Browsers require user interaction before playing audio. Design the demo to encourage a click/tap before any sound plays.
-
-### Audio File Preparation
-
-To convert WAV files from the Quick-Ping repo to web-friendly MP3:
-
-```bash
-# Convert single file
-ffmpeg -i input.wav -codec:a libmp3lame -b:a 128k output.mp3
-
-# Batch convert a folder
-for f in *.wav; do
-  ffmpeg -i "$f" -codec:a libmp3lame -b:a 128k "${f%.wav}.mp3"
-done
-```
-
-Curated sounds to include (suggested -- final list depends on Creative Director):
-
-**MGS Collection picks:**
-- `0x01.wav` -- The "!" alert (most iconic)
-- `0x1a.wav` -- Codec call (session start)
-- `0x67.wav` -- Item pickup (git commit)
-- `0x06.wav` -- Codec frequency dial
-- `0x40.wav` -- Cardboard box moment
-- `0x44.wav` -- Mission milestone
-- `0x4F.wav` -- Radar blip (frequent tool use)
-- `0x73.wav` -- Sneak success (tests pass)
-
-**Sims 2 Collection picks:**
-- A greeting sound (session start)
-- A celebration sound (git commit)
-- A frustrated sound (test failure)
-- A cheerful exclamation (test pass)
-- (Exact filenames TBD based on curation)
+Total JS: under 50 lines. No frameworks, no libraries, no external scripts.
 
 ### Testing
 
 No test framework. Manual testing checklist:
 
+**Core:**
 - [ ] Page loads without console errors
-- [ ] All sound demos play on click
-- [ ] Sound demos work after first user interaction (autoplay policy)
-- [ ] Page is responsive at 320px, 768px, 1024px, 1440px viewports
-- [ ] All links work
-- [ ] Images load and have alt text
+- [ ] All sections render correctly
+- [ ] Copy buttons copy text to clipboard and show "Copied" feedback
+- [ ] Scroll reveal animations trigger once per section
+- [ ] All links work (GitHub, anchor scrolls)
+
+**Design:**
+- [ ] MGS and Sims cards have visibly different color temperatures side-by-side
+- [ ] LED colors match context: white (neutral), amber (MGS), teal (Sims)
+- [ ] No terminal green (`#00FF41`) appears outside MGS-themed areas
+- [ ] Control Panel mockups clearly show dark vs light theme contrast
+- [ ] Visual transition between MGS and Sims sections is deliberate and dramatic
+- [ ] No `border-radius` except on LED circles
+
+**Responsive (test at 1200px, 768px, 375px):**
+- [ ] Collection cards stack to single column on mobile
+- [ ] Hero headline scales down appropriately
+- [ ] CTAs go full-width on mobile
+- [ ] Code blocks scroll horizontally on small screens
+- [ ] Touch targets are minimum 44px on mobile
+
+**Accessibility:**
 - [ ] Keyboard navigation works (Tab through all interactive elements)
-- [ ] Color contrast passes WCAG AA in neutral sections (use browser dev tools audit)
-- [ ] Color contrast passes WCAG AA in MGS section (green/amber on dark)
-- [ ] Color contrast passes WCAG AA in Sims section (teal on light)
-- [ ] Visual transition between MGS and Sims sections is clean and deliberate
-- [ ] Page weight is under 500KB (excluding lazy-loaded audio)
+- [ ] Focus rings visible on all interactive elements
+- [ ] Skip-to-content link works
+- [ ] Color contrast passes WCAG AA in neutral sections
+- [ ] Color contrast passes WCAG AA in MGS section (amber/green on dark)
+- [ ] Color contrast passes WCAG AA in Sims section (teal on cool dark)
+- [ ] `prefers-reduced-motion` disables all animations
+- [ ] Screen reader can navigate section hierarchy
+
+**Performance:**
+- [ ] Total page weight under 50KB (excluding font files)
+- [ ] Lighthouse Performance score > 90
+- [ ] Lighthouse Accessibility score > 95
 
 ### Browser Testing
 
@@ -252,14 +198,6 @@ Test in the latest versions of:
 - Chrome / Edge (Chromium)
 - Safari (macOS and iOS)
 - Firefox
-
-### Performance
-
-- Inline critical CSS if needed (probably not for a single-page site)
-- Lazy-load images below the fold with `loading="lazy"`
-- Lazy-load audio files (don't fetch until user scrolls to demo section or clicks play)
-- Optimize images: use WebP with PNG/JPG fallbacks, compress aggressively
-- Keep total JS under 50KB (should be easy with vanilla JS)
 
 ## Deployment
 

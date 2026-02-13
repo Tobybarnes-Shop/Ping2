@@ -1217,7 +1217,7 @@ The control panel section demonstrates that Quick-Ping is more than sound swappi
 |                                                                |
 |  +--MGS THEME (dark mock)--+  +--SIMS THEME (light mock)-+   |
 |  | [dark bg #1A1A1A]       |  | [light bg #F5F5F0]       |   |
-|  | QUICK-PING 2            |  | QUICK-PING 2              |   |
+|  | QUICK-PING 2  [PWR][*]  |  | QUICK-PING 2   [PWR][*]  |   |
 |  | [green LED strip]       |  | [teal LED strip]          |   |
 |  |                         |  |                            |   |
 |  | SESSION START     [*]   |  | SESSION START     [*]     |   |
@@ -1231,7 +1231,7 @@ The control panel section demonstrates that Quick-Ping is more than sound swappi
 |                                                                |
 |  localhost:5050 -- One URL, two worlds.                        |
 |                                                                |
-|  [TOGGLE ON/OFF] [PREVIEW SOUNDS] [AI-MAPPED] [THEME ADAPTS] |
+|  [MASTER POWER] [PREVIEW SOUNDS] [AI-MAPPED] [THEME ADAPTS]  |
 |                                                                |
 +================================================================+
 ```

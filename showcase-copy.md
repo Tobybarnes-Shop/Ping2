@@ -200,6 +200,7 @@ Toggle events. Swap sounds. Preview before you commit. Search, filter, bulk enab
 Pure HTML/CSS/JS. No build step. Runs on localhost:5050.
 
 **Feature bullets:**
+- Master power switch -- one click to silence everything, one click to restore
 - Adaptive UI theme -- switches with your active collection
 - Sound description labels -- know what every sound is at a glance
 - 40+ event types across 10 categories
@@ -233,7 +234,25 @@ Smart defaults, not busy defaults.
 
 ---
 
-### 7D. Bring Your Own Sounds
+### 7D. Master Power Switch
+
+**Headline:** One switch. Instant silence.
+
+**Body:**
+You're on a call. Your teammate just screenshared. The client is in the room. You need every sound off, right now, without losing your carefully tuned event configuration.
+
+Hit the master switch. Everything goes silent. The control panel dims. Your settings stay exactly where they are.
+
+Hit it again. Everything comes back. Exactly as it was.
+
+Cmd+Shift+M if your hands are already on the keyboard.
+
+**UI note:**
+Skeuomorphic hardware power switch in the control panel header. Visually distinct from the small LED event toggles. When powered off, the entire control panel drops to half opacity -- unmistakable at a glance.
+
+---
+
+### 7E. Bring Your Own Sounds
 
 **Headline:** Any folder. Any sounds. One scan.
 
@@ -340,11 +359,19 @@ macOS (uses afplay), Python 3, Flask. That's it.
 - "macOS"
 - "2 COLLECTIONS"
 
+### Master power switch labels (control panel UI)
+- ON state: "POWER" (with green LED glow)
+- OFF state: "POWER" (LED dark, panel dimmed)
+- Tooltip on hover: "Master switch -- silence all sounds instantly (Cmd+Shift+M)"
+- Toast on power off: "All sounds muted. Your settings are preserved."
+- Toast on power on: "Sounds restored."
+
 ### Tooltip / hover states
 - "Hear it instead of checking for it"
 - "Smart Mode: sounds only when you're away"
 - "Every commit. Every test. Every warning."
 - "Switch collections in one click"
+- "One switch to silence everything"
 
 ### Footer tagline
 Built for developers who alt-tab. Powered by nostalgia.
