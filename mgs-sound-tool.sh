@@ -3,7 +3,7 @@
 # Plays, analyzes, tags, and maps MGS sounds for quick-ping events
 set -euo pipefail
 
-QUICK_PING_DIR="${QUICK_PING_DIR:-$HOME/Documents/MyEP/Projects/quick-ping-2}"
+QUICK_PING_DIR="${QUICK_PING_DIR:-$HOME/Documents/MyEP/Projects/noisy-claude}"
 MGS_DIR="$QUICK_PING_DIR/sounds/MGS"
 CONFIG_FILE="$QUICK_PING_DIR/config.json"
 TAGS_FILE="$QUICK_PING_DIR/.state/mgs-tags.json"

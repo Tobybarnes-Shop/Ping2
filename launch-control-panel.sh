@@ -3,7 +3,7 @@
 
 set -euo pipefail
 
-QUICK_PING_DIR="$HOME/Documents/MyEP/Projects/quick-ping-2"
+QUICK_PING_DIR="$HOME/Documents/MyEP/Projects/noisy-claude"
 
 echo "🔊 Quick-Ping Control Panel Launcher"
 echo ""

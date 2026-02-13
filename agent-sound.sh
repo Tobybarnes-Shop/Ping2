@@ -1,6 +1,6 @@
 #!/bin/bash
 # Agent Sound Trigger Script
-# Usage: ~/Documents/MyEP/projects/quick-ping-2/agent-sound.sh <action>
+# Usage: ~/Documents/MyEP/projects/noisy-claude/agent-sound.sh <action>
 # Allows sub-agents to trigger sounds for specific actions
 
 QUICK_PING_DIR="${QUICK_PING_DIR:-$HOME/.quick-ping}"
@@ -176,9 +176,9 @@ case "$1" in
         echo "  play <filename>               - Play specific sound"
         echo ""
         echo "Examples:"
-        echo "  ~/Documents/MyEP/projects/quick-ping-2/agent-sound.sh test_passed"
-        echo "  ~/Documents/MyEP/projects/quick-ping-2/agent-sound.sh agent_handoff"
-        echo "  ~/Documents/MyEP/projects/quick-ping-2/agent-sound.sh play 'Good Shot FM.wav'"
+        echo "  ~/Documents/MyEP/projects/noisy-claude/agent-sound.sh test_passed"
+        echo "  ~/Documents/MyEP/projects/noisy-claude/agent-sound.sh agent_handoff"
+        echo "  ~/Documents/MyEP/projects/noisy-claude/agent-sound.sh play 'Good Shot FM.wav'"
         ;;
 
     *)

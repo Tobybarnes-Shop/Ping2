@@ -24,7 +24,7 @@ New structure:
 import json
 from pathlib import Path
 
-QUICK_PING_DIR = Path.home() / 'Documents/MyEP/Projects/quick-ping-2'
+QUICK_PING_DIR = Path.home() / 'Documents/MyEP/Projects/noisy-claude'
 CURRENT_CONFIG = QUICK_PING_DIR / 'config.json'
 SIMS2_BACKUP = QUICK_PING_DIR / 'config.json.pre-mgs-mapping'
 

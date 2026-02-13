@@ -2,7 +2,7 @@
 # detect-event.sh — Enhanced event detection for quick-ping v2.0
 set -euo pipefail
 
-QUICK_PING_DIR="${QUICK_PING_DIR:-$HOME/Documents/MyEP/Projects/quick-ping-2}"
+QUICK_PING_DIR="${QUICK_PING_DIR:-$HOME/Documents/MyEP/Projects/noisy-claude}"
 STATE_DIR="$QUICK_PING_DIR/.state"
 mkdir -p "$STATE_DIR"
 

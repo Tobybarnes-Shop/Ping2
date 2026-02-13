@@ -14,7 +14,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-QUICK_PING_DIR = Path(os.environ.get('QUICK_PING_DIR', Path.home() / 'Documents/MyEP/projects/quick-ping-2'))
+QUICK_PING_DIR = Path(os.environ.get('QUICK_PING_DIR', Path.home() / 'Documents/MyEP/projects/noisy-claude'))
 CONFIG_FILE = QUICK_PING_DIR / 'config.json'
 SOUNDS_DIR = QUICK_PING_DIR / 'sounds'
 

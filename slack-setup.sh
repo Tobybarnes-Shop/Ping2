@@ -45,15 +45,15 @@ echo ""
 cat <<'HOOKS'
 {
   "hooks": {
-    "SessionStart": "~/Documents/MyEP/projects/quick-ping-2/slack-notify.sh",
-    "SessionEnd": "~/Documents/MyEP/projects/quick-ping-2/slack-notify.sh",
-    "SubagentStart": "~/Documents/MyEP/projects/quick-ping-2/slack-notify.sh",
-    "SubagentStop": "~/Documents/MyEP/projects/quick-ping-2/slack-notify.sh",
-    "Stop": "~/Documents/MyEP/projects/quick-ping-2/slack-notify.sh",
-    "TaskCompleted": "~/Documents/MyEP/projects/quick-ping-2/slack-notify.sh",
-    "PostToolUse": "~/Documents/MyEP/projects/quick-ping-2/slack-notify.sh",
-    "PostToolUseFailure": "~/Documents/MyEP/projects/quick-ping-2/slack-notify.sh",
-    "PermissionRequest": "~/Documents/MyEP/projects/quick-ping-2/slack-notify.sh"
+    "SessionStart": "~/Documents/MyEP/projects/noisy-claude/slack-notify.sh",
+    "SessionEnd": "~/Documents/MyEP/projects/noisy-claude/slack-notify.sh",
+    "SubagentStart": "~/Documents/MyEP/projects/noisy-claude/slack-notify.sh",
+    "SubagentStop": "~/Documents/MyEP/projects/noisy-claude/slack-notify.sh",
+    "Stop": "~/Documents/MyEP/projects/noisy-claude/slack-notify.sh",
+    "TaskCompleted": "~/Documents/MyEP/projects/noisy-claude/slack-notify.sh",
+    "PostToolUse": "~/Documents/MyEP/projects/noisy-claude/slack-notify.sh",
+    "PostToolUseFailure": "~/Documents/MyEP/projects/noisy-claude/slack-notify.sh",
+    "PermissionRequest": "~/Documents/MyEP/projects/noisy-claude/slack-notify.sh"
   }
 }
 HOOKS
@@ -80,15 +80,15 @@ if 'hooks' not in settings:
 
 # Add Slack notification hooks
 slack_hooks = {
-    "SessionStart": "~/Documents/MyEP/projects/quick-ping-2/slack-notify.sh",
-    "SessionEnd": "~/Documents/MyEP/projects/quick-ping-2/slack-notify.sh",
-    "SubagentStart": "~/Documents/MyEP/projects/quick-ping-2/slack-notify.sh",
-    "SubagentStop": "~/Documents/MyEP/projects/quick-ping-2/slack-notify.sh",
-    "Stop": "~/Documents/MyEP/projects/quick-ping-2/slack-notify.sh",
-    "TaskCompleted": "~/Documents/MyEP/projects/quick-ping-2/slack-notify.sh",
-    "PostToolUse": "~/Documents/MyEP/projects/quick-ping-2/slack-notify.sh",
-    "PostToolUseFailure": "~/Documents/MyEP/projects/quick-ping-2/slack-notify.sh",
-    "PermissionRequest": "~/Documents/MyEP/projects/quick-ping-2/slack-notify.sh"
+    "SessionStart": "~/Documents/MyEP/projects/noisy-claude/slack-notify.sh",
+    "SessionEnd": "~/Documents/MyEP/projects/noisy-claude/slack-notify.sh",
+    "SubagentStart": "~/Documents/MyEP/projects/noisy-claude/slack-notify.sh",
+    "SubagentStop": "~/Documents/MyEP/projects/noisy-claude/slack-notify.sh",
+    "Stop": "~/Documents/MyEP/projects/noisy-claude/slack-notify.sh",
+    "TaskCompleted": "~/Documents/MyEP/projects/noisy-claude/slack-notify.sh",
+    "PostToolUse": "~/Documents/MyEP/projects/noisy-claude/slack-notify.sh",
+    "PostToolUseFailure": "~/Documents/MyEP/projects/noisy-claude/slack-notify.sh",
+    "PermissionRequest": "~/Documents/MyEP/projects/noisy-claude/slack-notify.sh"
 }
 
 settings['hooks'].update(slack_hooks)

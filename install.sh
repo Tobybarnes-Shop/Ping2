@@ -21,7 +21,7 @@ if ! command -v python3 &> /dev/null; then
 fi
 
 # Installation directory
-INSTALL_DIR="$HOME/Documents/MyEP/Projects/quick-ping-2"
+INSTALL_DIR="$HOME/Documents/MyEP/Projects/noisy-claude"
 
 echo "📁 Installing to: $INSTALL_DIR"
 echo ""
@@ -69,7 +69,7 @@ if [ -f "$CLAUDE_SETTINGS" ]; then
       "matcher": ".*",
       "hooks": [{
         "type": "command",
-        "command": "~/Documents/MyEP/projects/quick-ping-2/quick-ping-v2.sh",
+        "command": "~/Documents/MyEP/projects/noisy-claude/quick-ping-v2.sh",
         "async": true,
         "timeout": 5
       }]
@@ -78,7 +78,7 @@ if [ -f "$CLAUDE_SETTINGS" ]; then
       "matcher": ".*",
       "hooks": [{
         "type": "command",
-        "command": "~/Documents/MyEP/projects/quick-ping-2/quick-ping-v2.sh",
+        "command": "~/Documents/MyEP/projects/noisy-claude/quick-ping-v2.sh",
         "async": true,
         "timeout": 5
       }]
@@ -86,7 +86,7 @@ if [ -f "$CLAUDE_SETTINGS" ]; then
     "Stop": [{
       "hooks": [{
         "type": "command",
-        "command": "~/Documents/MyEP/projects/quick-ping-2/quick-ping-v2.sh",
+        "command": "~/Documents/MyEP/projects/noisy-claude/quick-ping-v2.sh",
         "async": true,
         "timeout": 5
       }]
@@ -107,7 +107,7 @@ echo ""
 echo "🚀 Next steps:"
 echo ""
 echo "   1. Launch control panel:"
-echo "      ~/Documents/MyEP/projects/quick-ping-2/launch-control-panel.sh"
+echo "      ~/Documents/MyEP/projects/noisy-claude/launch-control-panel.sh"
 echo ""
 echo "   2. Open in browser:"
 echo "      http://localhost:5050"
