@@ -4,9 +4,9 @@
   "active_collection": "default",
   "collections": {
     "default": {
-      "name": "Sims Sounds",
-      "path": "/Users/tobybarnes_shop/.quick-ping/sounds",
-      "description": "Original Sims game sounds"
+      "name": "Sims 2 Sounds",
+      "path": "/Users/tobybarnes_shop/Documents/MyEP/projects/quick-ping-2/sounds/Sims2",
+      "description": "Original Sims 2 game sounds"
     }
   },
   "events": {
