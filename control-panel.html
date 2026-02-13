@@ -1697,6 +1697,7 @@
 
                 activeCollection = collectionId;
                 await loadSounds();
+                await loadConfig();  // CRITICAL: Reload config to get new collection's events
                 renderEvents();
                 showToast('COLLECTION SWITCHED');
             } catch (error) {
