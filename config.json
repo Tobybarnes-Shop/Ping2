@@ -15,17 +15,17 @@
   "events": {
     "afternoon": {
       "description": "Afternoon session (12pm-5pm)",
-      "enabled": true,
+      "enabled": false,
       "sound": "0x25.wav"
     },
     "agent_response": {
       "description": "When Claude responds",
-      "enabled": true,
+      "enabled": false,
       "sound": "0x03.wav"
     },
     "background_task_done": {
       "description": "When async task completes",
-      "enabled": true,
+      "enabled": false,
       "sound": "0x15.wav"
     },
     "build_complete": {
@@ -40,34 +40,34 @@
     },
     "context_50": {
       "description": "50% context usage",
-      "enabled": true,
-      "sound": "0x17.wav"
+      "enabled": false,
+      "sound": "0x0E.wav"
     },
     "context_75": {
       "description": "75% context usage",
       "enabled": true,
-      "sound": "0x67.wav"
+      "sound": "0x0D.wav"
     },
     "context_90": {
       "description": "90% context usage - time to wrap up!",
       "enabled": true,
-      "sound": "0x1a.wav"
+      "sound": "0x01.wav"
     },
     "error_threshold": {
       "description": "Multiple tool failures in sequence",
-      "enabled": true,
+      "enabled": false,
       "sound": "0x7A.wav",
       "threshold_count": 3
     },
     "evening": {
       "description": "Evening session (5pm-10pm)",
-      "enabled": true,
-      "sound": "0x33.wav"
+      "enabled": false,
+      "sound": "0x76.wav"
     },
     "git_commit": {
       "description": "When a git commit succeeds",
       "enabled": true,
-      "sound": "0x07.wav"
+      "sound": "0x67.wav"
     },
     "git_error": {
       "description": "When a git operation fails",
@@ -77,7 +77,7 @@
     "git_pr_create": {
       "description": "When a PR is created",
       "enabled": true,
-      "sound": "0x66.wav"
+      "sound": "0x44.wav"
     },
     "git_push": {
       "description": "When a git push succeeds",
@@ -91,7 +91,7 @@
     },
     "long_task": {
       "description": "When a task takes >30 seconds",
-      "enabled": true,
+      "enabled": false,
       "sound": "0x30.wav",
       "threshold_seconds": 30
     },
@@ -108,11 +108,11 @@
     "plan_mode_enter": {
       "description": "When entering plan mode",
       "enabled": true,
-      "sound": "0x3A.wav"
+      "sound": "0x40.wav"
     },
     "plan_mode_exit": {
       "description": "When exiting plan mode",
-      "enabled": true,
+      "enabled": false,
       "sound": "0x2B.wav"
     },
     "session_end": {
@@ -123,31 +123,31 @@
     "session_start": {
       "description": "When Claude Code session starts",
       "enabled": true,
-      "sound": "0x0F.wav"
+      "sound": "0x1a.wav"
     },
     "skill_commit": {
       "description": "When /commit skill runs",
-      "enabled": true,
+      "enabled": false,
       "sound": "0x05.wav"
     },
     "skill_deploy": {
       "description": "When /deploy-weekly skill runs",
-      "enabled": true,
+      "enabled": false,
       "sound": "0x4B.wav"
     },
     "skill_gsd": {
       "description": "When /gsd review skill runs",
-      "enabled": true,
+      "enabled": false,
       "sound": "0x10.wav"
     },
     "skill_newday": {
       "description": "When /newday skill runs",
-      "enabled": true,
+      "enabled": false,
       "sound": "0x12.wav"
     },
     "skill_publish": {
       "description": "When /publish skill runs",
-      "enabled": true,
+      "enabled": false,
       "sound": "0x6b.wav"
     },
     "streak_10": {
@@ -157,8 +157,8 @@
     },
     "streak_3": {
       "description": "3 successful operations in a row",
-      "enabled": true,
-      "sound": "0x1E.wav"
+      "enabled": false,
+      "sound": "0x27.wav"
     },
     "streak_5": {
       "description": "5 successful operations in a row",
@@ -168,11 +168,11 @@
     "subagent_start": {
       "description": "When a subagent launches",
       "enabled": true,
-      "sound": "0x06.wav"
+      "sound": "0x13.wav"
     },
     "subagent_stop": {
       "description": "When a subagent completes",
-      "enabled": true,
+      "enabled": false,
       "sound": "0x2E.wav"
     },
     "task_complete": {
@@ -182,7 +182,7 @@
     },
     "team_created": {
       "description": "When a team is created",
-      "enabled": true,
+      "enabled": false,
       "sound": "0x7B.wav"
     },
     "team_deleted": {
@@ -192,13 +192,13 @@
     },
     "teammate_message": {
       "description": "When a teammate sends a message",
-      "enabled": true,
+      "enabled": false,
       "sound": "0x1C.wav"
     },
     "test_fail": {
       "description": "When tests fail",
       "enabled": true,
-      "sound": "0x0D.wav"
+      "sound": "0x15.wav"
     },
     "test_pass": {
       "description": "When tests pass",
@@ -207,40 +207,40 @@
     },
     "thinking_long": {
       "description": "Deep thinking (>15s)",
-      "enabled": true,
+      "enabled": false,
       "sound": "0x56.wav",
       "threshold_seconds": 15
     },
     "thinking_medium": {
       "description": "Medium thinking (5-15s)",
-      "enabled": true,
+      "enabled": false,
       "sound": "0x50.wav",
       "threshold_seconds": 15
     },
     "thinking_short": {
       "description": "Quick thinking (<5s)",
-      "enabled": true,
-      "sound": "0x4F.wav",
+      "enabled": false,
+      "sound": "0x17.wav",
       "threshold_seconds": 5
     },
     "tool_failure": {
       "description": "When a tool fails",
-      "enabled": true,
-      "sound": "0x0A.wav"
+      "enabled": false,
+      "sound": "0x36.wav"
     },
     "tool_pre": {
       "description": "Before any tool executes",
-      "enabled": true,
+      "enabled": false,
       "sound": "0x4A.wav"
     },
     "tool_success": {
       "description": "When a tool executes successfully",
-      "enabled": true,
-      "sound": "0x55.wav"
+      "enabled": false,
+      "sound": "0x4F.wav"
     },
     "user_prompt": {
       "description": "When you send a message",
-      "enabled": true,
+      "enabled": false,
       "sound": "0x68.wav"
     }
   },
