@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUICK-PING 2</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* DESIGN TOKENS - AUDIO RACK AESTHETIC */
+        :root {
+            /* Colors - Dark Steel Studio Equipment Palette */
+            --color-bg-primary: #1A1A1A;
+            --color-bg-panel: #151515;
+            --color-bg-meter: #0D0D0D;
+            --color-text-primary: #FFFFFF;
+            --color-text-secondary: rgba(255, 255, 255, 0.65);
+            --color-text-tertiary: rgba(255, 255, 255, 0.45);
+            --color-accent: #D63500;
+            --color-accent-dim: rgba(214, 53, 0, 0.15);
+            --color-border: rgba(255, 255, 255, 0.1);
+            --color-border-heavy: rgba(255, 255, 255, 0.15);
+            --color-led-off: rgba(255, 255, 255, 0.1);
+            --color-led-on: #00FF00;
+            --color-led-bezel: #4A4A4A;
+
+            /* Typography - Technical Readouts */
+            --font-mono: 'IBM Plex Mono', 'SF Mono', 'Monaco', 'Courier New', monospace;
+            --font-size-micro: 0.625rem;
+            --font-size-small: 0.6875rem;
+            --font-size-body: 0.75rem;
+            --font-size-label: 0.8125rem;
+            --font-size-display: 1.25rem;
+            --font-weight-regular: 400;
+            --font-weight-medium: 500;
+            --font-weight-bold: 700;
+
+            /* Spacing - 4px Base Grid (Audio Rack Tight) */
+            --space-1: 0.25rem;   /* 4px */
+            --space-2: 0.5rem;    /* 8px */
+            --space-3: 0.75rem;   /* 12px */
+            --space-4: 1rem;      /* 16px */
+            --space-5: 1.25rem;   /* 20px */
+            --space-6: 1.5rem;    /* 24px */
+            --space-8: 2rem;      /* 32px */
+
+            /* Borders - Clean Technical Lines */
+            --border-width: 1px;
+            --border-width-heavy: 2px;
+            --border-radius: 1px;
+
+            /* Transitions */
+            --transition-fast: 80ms ease;
+            --transition-normal: 150ms ease;
+        }
+
+        /* RESET */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* BASE */
+        body {
+            font-family: var(--font-mono);
+            background: var(--color-bg-primary);
+            color: var(--color-text-primary);
+            font-size: var(--font-size-body);
+            line-height: 1.4;
+            padding: var(--space-4);
+            min-height: 100vh;
+        }
+
+        /* LAYOUT */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* HEADER - RACK PANEL STYLE */
+        .header {
+            border: var(--border-width) solid var(--color-border);
+            padding: var(--space-4);
+            margin-bottom: var(--space-4);
+            background: var(--color-bg-panel);
+        }
+
+        .header-title {
+            font-size: var(--font-size-display);
+            font-weight: var(--font-weight-bold);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: var(--space-1);
+            line-height: 1.2;
+        }
+
+        .header-subtitle {
+            font-size: var(--font-size-small);
+            color: var(--color-text-secondary);
+            font-weight: var(--font-weight-regular);
+            margin-bottom: var(--space-4);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* STATS - VU METER STYLE READOUTS */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-3);
+            margin-bottom: var(--space-4);
+            padding: var(--space-3) 0;
+            border-top: var(--border-width) solid var(--color-border);
+            border-bottom: var(--border-width) solid var(--color-border);
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-1);
+        }
+
+        .stat-value {
+            font-size: var(--font-size-display);
+            font-weight: var(--font-weight-bold);
+            color: var(--color-text-primary);
+            line-height: 1;
+            font-feature-settings: 'tnum';
+            font-variant-numeric: tabular-nums;
+            position: relative;
+        }
+
+        .stat-label {
+            font-size: var(--font-size-micro);
+            color: var(--color-text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: var(--font-weight-medium);
+        }
+
+        /* REMOVED: Level meter bars under stats */
+
+        /* CONTROLS - MIXER BOARD STYLE */
+        .header-controls {
+            display: flex;
+            gap: var(--space-2);
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        /* BUTTONS - RACK UNIT STYLE */
+        .btn {
+            padding: var(--space-2) var(--space-3);
+            border: var(--border-width) solid var(--color-border);
+            cursor: pointer;
+            font-size: var(--font-size-small);
+            font-weight: var(--font-weight-medium);
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            transition: all var(--transition-fast);
+            background: var(--color-bg-primary);
+            color: var(--color-text-primary);
+        }
+
+        .btn:hover {
+            background: var(--color-bg-panel);
+            border-color: var(--color-border-heavy);
+        }
+
+        .btn:active {
+            background: var(--color-accent-dim);
+            transform: translateY(1px);
+        }
+
+        .btn:focus {
+            outline: var(--border-width-heavy) solid var(--color-accent);
+            outline-offset: 1px;
+        }
+
+        .btn-primary {
+            background: var(--color-accent);
+            color: #FFFFFF;
+            border-color: var(--color-accent);
+        }
+
+        .btn-primary:hover {
+            background: #E53500;
+            border-color: #E53500;
+        }
+
+        .btn-primary:disabled {
+            background: var(--color-border);
+            border-color: var(--color-border);
+            color: var(--color-text-tertiary);
+            cursor: not-allowed;
+        }
+
+        /* FOCUS MODE - RADIO STYLE SWITCHES */
+        .focus-mode {
+            display: flex;
+            gap: var(--space-2);
+            align-items: center;
+        }
+
+        .focus-mode-label {
+            font-size: var(--font-size-micro);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: var(--font-weight-medium);
+            color: var(--color-text-tertiary);
+        }
+
+        .focus-toggle {
+            display: flex;
+            gap: 0;
+            border: var(--border-width) solid var(--color-border);
+        }
+
+        .focus-option {
+            padding: var(--space-2) var(--space-3);
+            font-size: var(--font-size-small);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            background: var(--color-bg-primary);
+            border: none;
+            border-right: var(--border-width) solid var(--color-border);
+            font-family: var(--font-mono);
+            font-weight: var(--font-weight-medium);
+            color: var(--color-text-secondary);
+        }
+
+        .focus-option:last-child {
+            border-right: none;
+        }
+
+        .focus-option:hover {
+            background: var(--color-bg-panel);
+        }
+
+        .focus-option.active {
+            background: var(--color-accent);
+            color: #FFFFFF;
+        }
+
+        .focus-option:focus {
+            outline: var(--border-width-heavy) solid var(--color-accent);
+            outline-offset: -2px;
+            z-index: 1;
+        }
+
+        /* SEARCH - TECHNICAL INPUT */
+        .search-box {
+            width: 100%;
+            padding: var(--space-2);
+            border: var(--border-width) solid var(--color-border);
+            font-size: var(--font-size-small);
+            font-family: var(--font-mono);
+            background: var(--color-bg-primary);
+            color: var(--color-text-primary);
+            margin-top: var(--space-3);
+            letter-spacing: 0.05em;
+        }
+
+        .search-box::placeholder {
+            color: var(--color-text-tertiary);
+            letter-spacing: 0.08em;
+        }
+
+        .search-box:hover {
+            border-color: var(--color-border-heavy);
+        }
+
+        .search-box:focus {
+            outline: none;
+            border: var(--border-width-heavy) solid var(--color-accent);
+        }
+
+        /* CATEGORY HEADER - CHANNEL STRIP STYLE */
+        .category-header {
+            font-size: var(--font-size-label);
+            font-weight: var(--font-weight-bold);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin: var(--space-6) 0 var(--space-3) 0;
+            padding: var(--space-2);
+            background: #2A2A2A;
+            color: var(--color-text-primary);
+            border: var(--border-width) solid var(--color-border-heavy);
+        }
+
+        .category-header:first-child {
+            margin-top: 0;
+        }
+
+        /* EVENTS GRID - COMPACT RACK LAYOUT */
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: var(--space-2);
+            margin-bottom: var(--space-4);
+        }
+
+        @media (max-width: 768px) {
+            .events-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* EVENT CARD - MODULAR UNIT */
+        .event-card {
+            border: var(--border-width) solid var(--color-border);
+            padding: var(--space-3);
+            background: var(--color-bg-panel);
+            position: relative;
+        }
+
+        .event-card.disabled {
+            opacity: 0.4;
+        }
+
+        /* LED INDICATOR STRIP - HARDWARE RACK STYLE */
+        .event-led-strip {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--color-led-off);
+            transition: background var(--transition-fast);
+        }
+
+        .event-card:not(.disabled) .event-led-strip {
+            background: var(--color-led-on);
+            box-shadow: 0 0 4px var(--color-led-on);
+        }
+
+        .event-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--space-2);
+            gap: var(--space-2);
+        }
+
+        .event-name {
+            font-weight: var(--font-weight-bold);
+            font-size: var(--font-size-body);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            line-height: 1.2;
+        }
+
+        .event-description {
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-micro);
+            margin-bottom: var(--space-3);
+            line-height: 1.4;
+            letter-spacing: 0.02em;
+        }
+
+        .event-controls {
+            display: flex;
+            gap: var(--space-2);
+            align-items: center;
+        }
+
+        /* CHECKBOX SWITCH - HARDWARE RACK LED STYLE */
+        .switch {
+            width: 14px;
+            height: 14px;
+            border: var(--border-width-heavy) solid var(--color-led-bezel);
+            cursor: pointer;
+            position: relative;
+            background: #0D0D0D;
+            transition: all var(--transition-fast);
+            flex-shrink: 0;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .switch:hover {
+            border-color: #6A6A6A;
+        }
+
+        .switch:focus {
+            outline: var(--border-width-heavy) solid var(--color-accent);
+            outline-offset: 1px;
+        }
+
+        .switch.active {
+            background: #0D0D0D;
+            border-color: var(--color-led-bezel);
+        }
+
+        .switch.active::after {
+            content: '';
+            position: absolute;
+            top: 1px;
+            left: 1px;
+            width: 8px;
+            height: 8px;
+            background: var(--color-led-on);
+            box-shadow: 0 0 4px var(--color-led-on), 0 0 8px var(--color-led-on);
+        }
+
+        /* REMOVED: Waveform level indicator */
+
+        /* SELECT DROPDOWN - PRO AUDIO STYLE */
+        .sound-select {
+            flex: 1;
+            padding: var(--space-2);
+            border: var(--border-width) solid var(--color-border);
+            font-size: var(--font-size-small);
+            font-family: var(--font-mono);
+            cursor: pointer;
+            background: var(--color-bg-primary);
+            color: var(--color-text-primary);
+            letter-spacing: 0.02em;
+        }
+
+        .sound-select:hover {
+            border-color: var(--color-border-heavy);
+        }
+
+        .sound-select:focus {
+            outline: none;
+            border: var(--border-width-heavy) solid var(--color-accent);
+        }
+
+        /* PLAY BUTTON - TRANSPORT CONTROL */
+        .btn-play {
+            background: #2A2A2A;
+            color: var(--color-text-primary);
+            border: var(--border-width) solid var(--color-border);
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+            font-size: 8px;
+            flex-shrink: 0;
+            padding-left: 2px;
+        }
+
+        .btn-play:hover {
+            background: var(--color-accent);
+            border-color: var(--color-accent);
+        }
+
+        .btn-play:active {
+            transform: scale(0.9);
+        }
+
+        .btn-play:focus {
+            outline: var(--border-width-heavy) solid var(--color-accent);
+            outline-offset: 1px;
+        }
+
+        /* LOADING - SIGNAL PROCESSING */
+        .loading {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--color-bg-primary);
+            padding: var(--space-6);
+            border: var(--border-width-heavy) solid var(--color-accent);
+            z-index: 1000;
+            text-align: center;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 2px solid var(--color-border);
+            border-top: 2px solid var(--color-accent);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto var(--space-2);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: var(--font-size-micro);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: var(--font-weight-medium);
+        }
+
+        /* TOAST - STATUS INDICATOR */
+        .toast {
+            position: fixed;
+            bottom: var(--space-4);
+            right: var(--space-4);
+            background: #252525;
+            color: var(--color-text-primary);
+            padding: var(--space-2) var(--space-3);
+            border-left: 3px solid var(--color-accent);
+            border: var(--border-width) solid var(--color-border-heavy);
+            border-left: 3px solid var(--color-accent);
+            transform: translateX(400px);
+            transition: transform 200ms ease;
+            z-index: 1000;
+            font-size: var(--font-size-small);
+            max-width: 300px;
+            letter-spacing: 0.05em;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            body {
+                padding: var(--space-2);
+            }
+
+            .header {
+                padding: var(--space-3);
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+                gap: var(--space-2);
+            }
+
+            .header-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        /* ACCESSIBILITY */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        *:focus-visible {
+            outline: var(--border-width-heavy) solid var(--color-accent);
+            outline-offset: 1px;
+        }
+
+        /* REMOVED: Spectrum analyzer animations */
+
+        /* COLLECTIONS SECTION */
+        .collections-section {
+            padding: var(--space-3) 0;
+            border-top: var(--border-width) solid var(--color-border);
+            border-bottom: var(--border-width) solid var(--color-border);
+            margin-bottom: var(--space-4);
+            display: flex;
+            gap: var(--space-2);
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .collections-label {
+            font-size: var(--font-size-micro);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: var(--font-weight-medium);
+            color: var(--color-text-tertiary);
+        }
+
+        .collection-select {
+            flex: 1;
+            min-width: 200px;
+            padding: var(--space-2);
+            border: var(--border-width) solid var(--color-border);
+            font-size: var(--font-size-small);
+            font-family: var(--font-mono);
+            cursor: pointer;
+            background: var(--color-bg-primary);
+            color: var(--color-text-primary);
+            letter-spacing: 0.02em;
+        }
+
+        .collection-select:hover {
+            border-color: var(--color-border-heavy);
+        }
+
+        .collection-select:focus {
+            outline: none;
+            border: var(--border-width-heavy) solid var(--color-accent);
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            padding: var(--space-4);
+            overflow-y: auto;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--color-bg-panel);
+            border: var(--border-width-heavy) solid var(--color-border-heavy);
+            max-width: 600px;
+            width: 100%;
+            padding: var(--space-6);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+        }
+
+        .modal-title {
+            font-size: var(--font-size-label);
+            font-weight: var(--font-weight-bold);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--color-text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            color: var(--color-accent);
+        }
+
+        .form-group {
+            margin-bottom: var(--space-4);
+        }
+
+        .form-label {
+            display: block;
+            font-size: var(--font-size-micro);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: var(--font-weight-medium);
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-2);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: var(--space-2);
+            border: var(--border-width) solid var(--color-border);
+            font-size: var(--font-size-small);
+            font-family: var(--font-mono);
+            background: var(--color-bg-primary);
+            color: var(--color-text-primary);
+            letter-spacing: 0.02em;
+        }
+
+        .form-input:hover {
+            border-color: var(--color-border-heavy);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border: var(--border-width-heavy) solid var(--color-accent);
+        }
+
+        .form-input::placeholder {
+            color: var(--color-text-tertiary);
+        }
+
+        .form-textarea {
+            min-height: 60px;
+            resize: vertical;
+        }
+
+        .scan-results {
+            display: none;
+            padding: var(--space-3);
+            background: var(--color-bg-meter);
+            border: var(--border-width) solid var(--color-border);
+            margin-top: var(--space-3);
+        }
+
+        .scan-results.show {
+            display: block;
+        }
+
+        .scan-count {
+            font-size: var(--font-size-body);
+            font-weight: var(--font-weight-bold);
+            color: var(--color-accent);
+            margin-bottom: var(--space-2);
+        }
+
+        .suggestions-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: var(--border-width) solid var(--color-border);
+            background: var(--color-bg-primary);
+        }
+
+        .suggestion-item {
+            padding: var(--space-2);
+            border-bottom: var(--border-width) solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: var(--font-size-small);
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .suggestion-filename {
+            color: var(--color-text-primary);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .suggestion-mapping {
+            color: var(--color-text-secondary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .suggestion-arrow {
+            color: var(--color-accent);
+        }
+
+        .suggestion-event {
+            color: var(--color-text-primary);
+        }
+
+        .suggestion-confidence {
+            color: var(--color-accent);
+            font-weight: var(--font-weight-bold);
+            font-size: var(--font-size-micro);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: var(--space-2);
+            margin-top: var(--space-4);
+        }
+
+        .btn-secondary {
+            background: var(--color-bg-primary);
+            color: var(--color-text-primary);
+            border: var(--border-width) solid var(--color-border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-bg-panel);
+            border-color: var(--color-border-heavy);
+        }
+
+        .btn-accent {
+            background: #2A2A2A;
+            color: var(--color-accent);
+            border: var(--border-width) solid var(--color-accent);
+        }
+
+        .btn-accent:hover {
+            background: var(--color-accent-dim);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header" role="banner">
+            <h1 class="header-title">QUICK-PING 2</h1>
+            <p class="header-subtitle">Sound Event Configuration Interface</p>
+
+            <div class="stats" role="region" aria-label="Statistics">
+                <div class="stat">
+                    <div class="stat-value" id="totalEvents" aria-live="polite">0</div>
+                    <div class="stat-label">Total Events</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="enabledEvents" aria-live="polite">0</div>
+                    <div class="stat-label">Enabled</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="soundCount" aria-live="polite">0</div>
+                    <div class="stat-label">Sounds</div>
+                </div>
+            </div>
+
+            <div class="collections-section" role="region" aria-label="Sound collections">
+                <label for="collectionSelect" class="collections-label">Collection</label>
+                <select class="collection-select" id="collectionSelect" aria-label="Select active sound collection">
+                    <option value="">Loading...</option>
+                </select>
+                <button class="btn" id="addCollection" aria-label="Add new collection">Add Collection</button>
+            </div>
+
+            <div class="header-controls" role="group" aria-label="Control panel actions">
+                <div class="focus-mode">
+                    <label for="focus-toggle" class="focus-mode-label">Focus Mode</label>
+                    <div class="focus-toggle" id="focusToggle" role="group" aria-label="Focus mode selector">
+                        <button class="focus-option" data-mode="smart" aria-pressed="false">Smart</button>
+                        <button class="focus-option" data-mode="always" aria-pressed="false">Always</button>
+                    </div>
+                </div>
+                <button class="btn btn-primary" id="claudeSuggests" aria-label="Apply Claude's suggestions">Claude Suggests</button>
+                <button class="btn btn-primary" id="saveConfig" aria-label="Save configuration changes">Save Changes</button>
+                <button class="btn" id="enableAll" aria-label="Enable all events">Enable All</button>
+                <button class="btn" id="disableAll" aria-label="Disable all events">Disable All</button>
+            </div>
+
+            <label for="searchBox" class="sr-only">Search events</label>
+            <input
+                type="text"
+                class="search-box"
+                id="searchBox"
+                placeholder="SEARCH EVENTS..."
+                aria-label="Search events by name or description"
+            >
+        </header>
+
+        <main id="eventsContainer" role="main"></main>
+    </div>
+
+    <div class="loading" id="loading" role="status" aria-live="assertive" aria-label="Loading">
+        <div class="spinner" aria-hidden="true"></div>
+        <div class="loading-text">PROCESSING...</div>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <!-- Add Collection Modal -->
+    <div class="modal" id="addCollectionModal" role="dialog" aria-labelledby="modalTitle" aria-modal="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Add Sound Collection</h2>
+                <button class="modal-close" id="modalClose" aria-label="Close modal">&times;</button>
+            </div>
+
+            <form id="collectionForm">
+                <div class="form-group">
+                    <label for="collectionName" class="form-label">Collection Name</label>
+                    <input
+                        type="text"
+                        class="form-input"
+                        id="collectionName"
+                        placeholder="My Custom Sounds"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="collectionPath" class="form-label">Folder Path</label>
+                    <input
+                        type="text"
+                        class="form-input"
+                        id="collectionPath"
+                        placeholder="/Users/username/Music/notifications"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="collectionDescription" class="form-label">Description (Optional)</label>
+                    <textarea
+                        class="form-input form-textarea"
+                        id="collectionDescription"
+                        placeholder="Custom notification sounds for quick-ping"
+                    ></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="scanFolder">Scan Folder</button>
+                </div>
+
+                <div class="scan-results" id="scanResults">
+                    <div class="scan-count" id="scanCount">Found 0 audio files</div>
+                    <div id="suggestionsContainer"></div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-accent" id="claudeSuggestMappings">Claude Suggests Mappings</button>
+                    </div>
+                </div>
+
+                <div class="modal-actions" style="margin-top: var(--space-4);">
+                    <button type="submit" class="btn btn-primary">Save Collection</button>
+                    <button type="button" class="btn btn-secondary" id="cancelModal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let config = {};
+        let sounds = [];
+        let collections = {};
+        let activeCollection = 'default';
+        let scannedFiles = [];
+        let suggestedMappings = {};
+        let categories = {
+            'Core Events': ['session_start', 'session_end', 'task_complete', 'permission', 'tool_success', 'tool_failure'],
+            'Agent & Teams': ['subagent_start', 'subagent_stop', 'team_created', 'team_deleted', 'teammate_message'],
+            'Git Operations': ['git_commit', 'git_push', 'git_pr_create', 'git_error'],
+            'Testing & Building': ['test_pass', 'test_fail', 'build_complete', 'build_error'],
+            'Plan Mode': ['plan_mode_enter', 'plan_mode_exit'],
+            'Performance': ['long_task', 'error_threshold', 'background_task_done'],
+            'Thinking Depth': ['thinking_short', 'thinking_medium', 'thinking_long'],
+            'Context Usage': ['context_50', 'context_75', 'context_90'],
+            'Streaks': ['streak_3', 'streak_5', 'streak_10'],
+            'Time of Day': ['morning', 'afternoon', 'evening', 'late_night'],
+            'Skills': ['skill_commit', 'skill_newday', 'skill_publish', 'skill_deploy', 'skill_gsd'],
+            'Other': ['tool_pre', 'user_prompt', 'agent_response']
+        };
+
+        async function loadConfig() {
+            showLoading(true);
+            const response = await fetch('/api/config');
+            config = await response.json();
+            updateStats();
+            updateFocusMode();
+            showLoading(false);
+        }
+
+        async function loadCollections() {
+            const response = await fetch('/api/collections');
+            const data = await response.json();
+            collections = data.collections;
+            activeCollection = data.active_collection;
+            updateCollectionSelect();
+        }
+
+        function updateCollectionSelect() {
+            const select = document.getElementById('collectionSelect');
+            select.innerHTML = '';
+
+            Object.entries(collections).forEach(([id, collection]) => {
+                const option = document.createElement('option');
+                option.value = id;
+                option.textContent = collection.name;
+                option.selected = id === activeCollection;
+                select.appendChild(option);
+            });
+        }
+
+        async function loadSounds() {
+            const response = await fetch('/api/sounds');
+            sounds = await response.json();
+            document.getElementById('soundCount').textContent = sounds.length;
+        }
+
+        function updateStats() {
+            const events = config.events || {};
+            const total = Object.keys(events).length;
+            const enabled = Object.values(events).filter(e => e.enabled).length;
+
+            document.getElementById('totalEvents').textContent = total;
+            document.getElementById('enabledEvents').textContent = enabled;
+        }
+
+        function updateFocusMode() {
+            const mode = config.focus_mode || 'smart';
+            document.querySelectorAll('.focus-option').forEach(opt => {
+                const isActive = opt.dataset.mode === mode;
+                opt.classList.toggle('active', isActive);
+                opt.setAttribute('aria-pressed', isActive);
+            });
+        }
+
+        function renderEvents() {
+            const container = document.getElementById('eventsContainer');
+            const searchTerm = document.getElementById('searchBox').value.toLowerCase();
+            container.innerHTML = '';
+
+            Object.entries(categories).forEach(([category, eventIds]) => {
+                const categoryEvents = eventIds.filter(id => {
+                    const event = config.events[id];
+                    if (!event) return false;
+                    if (searchTerm) {
+                        return id.toLowerCase().includes(searchTerm) ||
+                               event.description.toLowerCase().includes(searchTerm);
+                    }
+                    return true;
+                });
+
+                if (categoryEvents.length === 0) return;
+
+                const categoryHeader = document.createElement('h2');
+                categoryHeader.className = 'category-header';
+                categoryHeader.textContent = category;
+                container.appendChild(categoryHeader);
+
+                const grid = document.createElement('div');
+                grid.className = 'events-grid';
+                grid.setAttribute('role', 'region');
+                grid.setAttribute('aria-label', category + ' events');
+
+                categoryEvents.forEach(eventId => {
+                    const event = config.events[eventId];
+                    const card = createEventCard(eventId, event);
+                    grid.appendChild(card);
+                });
+
+                container.appendChild(grid);
+            });
+        }
+
+        function createEventCard(eventId, event) {
+            const card = document.createElement('article');
+            card.className = `event-card ${event.enabled ? '' : 'disabled'}`;
+            card.setAttribute('aria-label', formatEventName(eventId) + ' event');
+
+            const switchId = `switch-${eventId}`;
+            const selectId = `select-${eventId}`;
+            const playId = `play-${eventId}`;
+
+            card.innerHTML = `
+                <div class="event-led-strip" aria-hidden="true"></div>
+                <div class="event-header">
+                    <h3 class="event-name">${formatEventName(eventId)}</h3>
+                    <button
+                        class="switch ${event.enabled ? 'active' : ''}"
+                        id="${switchId}"
+                        data-event="${eventId}"
+                        role="switch"
+                        aria-checked="${event.enabled}"
+                        aria-label="Toggle ${formatEventName(eventId)}"
+                    ></button>
+                </div>
+                <p class="event-description">${event.description || ''}</p>
+                <div class="event-controls">
+                    <label for="${selectId}" class="sr-only">Select sound for ${formatEventName(eventId)}</label>
+                    <select
+                        class="sound-select"
+                        id="${selectId}"
+                        data-event="${eventId}"
+                        aria-label="Sound selection for ${formatEventName(eventId)}"
+                    >
+                        ${sounds.map(sound => `
+                            <option value="${sound}" ${sound === event.sound ? 'selected' : ''}>
+                                ${sound}
+                            </option>
+                        `).join('')}
+                    </select>
+                    <button
+                        class="btn-play"
+                        id="${playId}"
+                        data-sound="${event.sound}"
+                        aria-label="Play sound preview for ${formatEventName(eventId)}"
+                    >▶</button>
+                </div>
+            `;
+
+            // Toggle event
+            card.querySelector('.switch').addEventListener('click', (e) => {
+                const switchEl = e.currentTarget;
+                const eventId = switchEl.dataset.event;
+                config.events[eventId].enabled = !config.events[eventId].enabled;
+                const isEnabled = config.events[eventId].enabled;
+                switchEl.classList.toggle('active');
+                switchEl.setAttribute('aria-checked', isEnabled);
+                card.classList.toggle('disabled');
+                updateStats();
+            });
+
+            // Change sound
+            card.querySelector('.sound-select').addEventListener('change', (e) => {
+                const eventId = e.target.dataset.event;
+                const sound = e.target.value;
+                config.events[eventId].sound = sound;
+                card.querySelector('.btn-play').dataset.sound = sound;
+            });
+
+            // Play sound
+            card.querySelector('.btn-play').addEventListener('click', (e) => {
+                playSound(e.target.dataset.sound);
+            });
+
+            return card;
+        }
+
+        function formatEventName(name) {
+            return name.split('_').map(word =>
+                word.charAt(0).toUpperCase() + word.slice(1)
+            ).join(' ');
+        }
+
+        async function playSound(soundFile) {
+            await fetch('/api/play-sound', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ sound: soundFile })
+            });
+        }
+
+        async function saveConfig() {
+            showLoading(true);
+            await fetch('/api/config', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(config)
+            });
+            showLoading(false);
+            showToast('CONFIG SAVED');
+        }
+
+        async function claudeSuggests() {
+            showLoading(true);
+            const response = await fetch('/api/claude-suggests');
+            const suggestions = await response.json();
+
+            // Apply suggestions
+            Object.entries(suggestions.events).forEach(([eventId, settings]) => {
+                if (config.events[eventId]) {
+                    config.events[eventId] = { ...config.events[eventId], ...settings };
+                }
+            });
+
+            renderEvents();
+            showLoading(false);
+            showToast('SUGGESTIONS APPLIED');
+        }
+
+        function showLoading(show) {
+            const loading = document.getElementById('loading');
+            loading.classList.toggle('show', show);
+            if (show) {
+                loading.setAttribute('aria-busy', 'true');
+            } else {
+                loading.removeAttribute('aria-busy');
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        // Event listeners
+        document.getElementById('focusToggle').addEventListener('click', (e) => {
+            if (e.target.classList.contains('focus-option')) {
+                config.focus_mode = e.target.dataset.mode;
+                updateFocusMode();
+            }
+        });
+
+        document.getElementById('saveConfig').addEventListener('click', saveConfig);
+        document.getElementById('claudeSuggests').addEventListener('click', claudeSuggests);
+
+        document.getElementById('enableAll').addEventListener('click', () => {
+            Object.keys(config.events).forEach(key => {
+                config.events[key].enabled = true;
+            });
+            renderEvents();
+            updateStats();
+            showToast('ALL ENABLED');
+        });
+
+        document.getElementById('disableAll').addEventListener('click', () => {
+            Object.keys(config.events).forEach(key => {
+                config.events[key].enabled = false;
+            });
+            renderEvents();
+            updateStats();
+            showToast('ALL DISABLED');
+        });
+
+        document.getElementById('searchBox').addEventListener('input', renderEvents);
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Ctrl/Cmd + S to save
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                saveConfig();
+            }
+            // Ctrl/Cmd + F to focus search
+            if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+                e.preventDefault();
+                document.getElementById('searchBox').focus();
+            }
+        });
+
+        // Collections modal handling
+        function openCollectionModal() {
+            document.getElementById('addCollectionModal').classList.add('show');
+            document.getElementById('collectionName').focus();
+        }
+
+        function closeCollectionModal() {
+            document.getElementById('addCollectionModal').classList.remove('show');
+            document.getElementById('collectionForm').reset();
+            document.getElementById('scanResults').classList.remove('show');
+            scannedFiles = [];
+            suggestedMappings = {};
+        }
+
+        async function scanFolder() {
+            const path = document.getElementById('collectionPath').value.trim();
+            if (!path) {
+                showToast('ENTER FOLDER PATH');
+                return;
+            }
+
+            showLoading(true);
+            try {
+                const response = await fetch('/api/collections/scan', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ path })
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'error') {
+                    showToast(data.message.toUpperCase());
+                    showLoading(false);
+                    return;
+                }
+
+                scannedFiles = data.files;
+                document.getElementById('scanCount').textContent = `Found ${data.count} audio files`;
+                document.getElementById('scanResults').classList.add('show');
+                showToast(`FOUND ${data.count} FILES`);
+            } catch (error) {
+                showToast('SCAN FAILED');
+            }
+            showLoading(false);
+        }
+
+        async function suggestMappings() {
+            if (scannedFiles.length === 0) {
+                showToast('SCAN FOLDER FIRST');
+                return;
+            }
+
+            showLoading(true);
+            try {
+                const response = await fetch('/api/collections/suggest', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ files: scannedFiles })
+                });
+
+                const data = await response.json();
+                suggestedMappings = data.suggestions;
+
+                // Display suggestions
+                const container = document.getElementById('suggestionsContainer');
+                if (Object.keys(suggestedMappings).length === 0) {
+                    container.innerHTML = '<div style="padding: var(--space-2); color: var(--color-text-secondary); font-size: var(--font-size-small);">No automatic mappings found. You can manually assign sounds after saving.</div>';
+                } else {
+                    const listHtml = `
+                        <div class="suggestions-list">
+                            ${Object.entries(suggestedMappings).map(([filename, suggestion]) => `
+                                <div class="suggestion-item">
+                                    <span class="suggestion-filename">${filename}</span>
+                                    <span class="suggestion-mapping">
+                                        <span class="suggestion-arrow">→</span>
+                                        <span class="suggestion-event">${formatEventName(suggestion.event)}</span>
+                                        <span class="suggestion-confidence">(${suggestion.confidence}%)</span>
+                                    </span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                    container.innerHTML = listHtml;
+                }
+
+                showToast(`${data.matched_count} MAPPINGS FOUND`);
+            } catch (error) {
+                showToast('SUGGESTION FAILED');
+            }
+            showLoading(false);
+        }
+
+        async function saveCollection(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('collectionName').value.trim();
+            const path = document.getElementById('collectionPath').value.trim();
+            const description = document.getElementById('collectionDescription').value.trim();
+
+            if (!name || !path) {
+                showToast('MISSING REQUIRED FIELDS');
+                return;
+            }
+
+            // Generate collection ID from name
+            const id = name.toLowerCase().replace(/[^a-z0-9]+/g, '_');
+
+            showLoading(true);
+            try {
+                const response = await fetch('/api/collections', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id, name, path, description })
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'error') {
+                    showToast(data.message.toUpperCase());
+                    showLoading(false);
+                    return;
+                }
+
+                // Apply suggested mappings if any
+                if (Object.keys(suggestedMappings).length > 0) {
+                    Object.entries(suggestedMappings).forEach(([filename, suggestion]) => {
+                        if (config.events[suggestion.event]) {
+                            config.events[suggestion.event].sound = filename;
+                        }
+                    });
+                    await saveConfig();
+                }
+
+                await loadCollections();
+                closeCollectionModal();
+                showToast('COLLECTION ADDED');
+            } catch (error) {
+                showToast('SAVE FAILED');
+            }
+            showLoading(false);
+        }
+
+        async function switchCollection(collectionId) {
+            showLoading(true);
+            try {
+                await fetch('/api/collections/active', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ collection_id: collectionId })
+                });
+
+                activeCollection = collectionId;
+                await loadSounds();
+                renderEvents();
+                showToast('COLLECTION SWITCHED');
+            } catch (error) {
+                showToast('SWITCH FAILED');
+            }
+            showLoading(false);
+        }
+
+        // Collection event listeners
+        document.getElementById('addCollection').addEventListener('click', openCollectionModal);
+        document.getElementById('modalClose').addEventListener('click', closeCollectionModal);
+        document.getElementById('cancelModal').addEventListener('click', closeCollectionModal);
+        document.getElementById('scanFolder').addEventListener('click', scanFolder);
+        document.getElementById('claudeSuggestMappings').addEventListener('click', suggestMappings);
+        document.getElementById('collectionForm').addEventListener('submit', saveCollection);
+        document.getElementById('collectionSelect').addEventListener('change', (e) => {
+            switchCollection(e.target.value);
+        });
+
+        // Close modal on outside click
+        document.getElementById('addCollectionModal').addEventListener('click', (e) => {
+            if (e.target.id === 'addCollectionModal') {
+                closeCollectionModal();
+            }
+        });
+
+        // Initialize
+        async function init() {
+            await loadCollections();
+            await loadSounds();
+            await loadConfig();
+            renderEvents();
+        }
+
+        init();
+    </script>
+</body>
+</html>

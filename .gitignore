@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+*.egg-info/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Logs
+*.log
+/tmp/
+.afplay.pid
+
+# State files
+.state/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Quick-Ping specific
+config.json.backup
+*.output
