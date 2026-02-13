@@ -159,4 +159,117 @@ See DEPLOY.md for the full comparison matrix.
 
 ---
 
+## DEC-008: Neutral-framework site design (direction change)
+
+**Date**: 2026-02-13
+**Status**: Decided (supersedes aspects of earlier creative direction)
+**Decider**: User / Team Lead
+
+**Context**: The initial creative direction committed the entire site to a dark, MGS-inspired tactical aesthetic. However, the Sims 2 collection has a completely different personality -- light, playful, Simlish. The Control Panel itself is neutral to collections. A site themed entirely to one collection misrepresents the product.
+
+**Decision**: The site uses a neutral-framework approach. The base site (hero, nav, install, footer) is clean and collection-agnostic. Each collection showcase section gets its own distinct visual treatment:
+- MGS section: Dark, tactical, amber/green palette
+- Sims 2 section: Light, playful, teal/plumbob colors
+
+Think Spotify showcasing different playlists -- the player is neutral, but each playlist has its own visual world.
+
+**Rationale**:
+- Quick-Ping is a platform for collections, not an MGS-branded tool
+- The contrast between collections IS the value proposition
+- A neutral frame lets both collections express their unique character
+- Users who prefer Sims 2 shouldn't feel like the site is selling them something else
+- Mirrors the actual product experience: the Control Panel is neutral, collections bring the personality
+
+**Alternatives considered**:
+- Full dark/MGS theme (previous direction): Visually striking but alienates half the product
+- Full light/Sims theme: Same problem in reverse
+- Two completely separate pages: Too much work, fragments the narrative
+
+**Impact on existing docs**:
+- PROJECT.md: Design Direction section updated
+- DEVELOPMENT.md: Design System Reference updated with neutral + per-collection token tables
+- Copy (showcase-copy.md): Already has per-collection tone shifts built in -- no changes needed
+
+---
+
+## DEC-009: Control Panel UI adapts theme to active collection
+
+**Date**: 2026-02-13
+**Status**: Decided
+**Decider**: User / Team Lead
+
+**Context**: With DEC-008 establishing that the showcase site uses a neutral framework with per-collection visual treatments, the user raised the logical next step: the Control Panel itself (the actual product, not just the showcase site) should also adapt its UI to match the active collection. Currently the Control Panel has one fixed dark-steel theme.
+
+**Decision**: The Control Panel (`control-panel.html`) will support collection-specific themes that switch automatically when the user changes the active collection:
+- **MGS active**: Dark UI, green LEDs, tactical aesthetic (current default)
+- **Sims active**: Light/white UI, dayglow colors, playful Sims-like interface
+- **Default/other**: Current dark theme as fallback
+
+**Implementation approach**: The existing CSS uses custom properties (`:root` variables) extensively. Add a second theme via `[data-theme="sims"]` selector overriding the same variables. Toggle `data-theme` attribute on `<html>` inside the existing `switchCollection()` function (line 1689 of control-panel.html).
+
+**Rationale**:
+- Strengthens the product's value proposition: "the entire experience adapts, not just the sounds"
+- Natural extension of the neutral-framework philosophy
+- Technically clean -- CSS custom properties make this a variable swap, not a rewrite
+- The showcase site can now show both UI themes side-by-side as proof of the feature
+
+**Alternatives considered**:
+- Keep one theme: Simpler but misses the opportunity to delight users
+- Per-collection CSS files: Unnecessary complexity -- custom property overrides are sufficient
+- User-selectable theme independent of collection: Adds UI complexity for low value
+
+**Scope note**: This is a product change to `control-panel.html`, not just a showcase site change. It should be built and tested before the showcase site reflects it in screenshots.
+
+**Impact on existing work**:
+- Showcase site should show both Control Panel themes side-by-side
+- showcase-copy.md may want a line about the UI adapting ("even the Control Panel changes")
+- DEVELOPMENT.md updated with implementation guidance
+
+---
+
+## DEC-010: Add sound description labels to the Control Panel
+
+**Date**: 2026-02-13
+**Status**: Decided
+**Decider**: User / Team Lead
+
+**Context**: The Control Panel event cards currently show the event description ("When a git commit succeeds") and the sound filename ("0x67.wav"). Filenames like "0x67.wav" tell the user nothing about what the sound actually is. Users must click play to learn that it's an "Item pickup chime."
+
+**Decision**: Add a `sound_description` field to each event entry in config.json. Display it in the Control Panel UI beneath the sound filename dropdown. Each collection provides its own descriptions since the same event maps to different sounds per collection.
+
+**Implementation approach**:
+
+Config structure change -- add `sound_description` per event, per collection:
+```json
+{
+  "events": {
+    "session_start": {
+      "description": "When Claude Code session starts",
+      "enabled": true,
+      "sound": "0x1a.wav",
+      "sound_description": "Codec ring"
+    }
+  }
+}
+```
+
+UI change -- in `createEventCard()` (line 1228 of control-panel.html), add a `<span>` beneath the sound select dropdown showing the description. The existing `.event-description` (line 1250) shows the event description; the new label shows what the sound IS.
+
+**Why `sound_description` per event, not a separate sound metadata map:**
+- Simpler: follows the existing flat event structure
+- A sound might serve different "roles" in different event contexts
+- No need to create and maintain a separate sound database
+- When the user changes the sound dropdown, the description should update (may require a lookup or manual update)
+
+**Trade-off**: When users swap a sound, the description becomes stale unless they also update it. Acceptable for v1 -- descriptions are primarily useful for the curated defaults.
+
+**Alternatives considered**:
+- Separate `sound_metadata` object keyed by filename: More normalized but adds complexity and a second data structure to maintain
+- Tooltip on hover only: Discoverable but not visible at a glance
+- No descriptions, just better filenames: Not feasible for MGS hex-coded filenames
+
+**Scope**: Product change to `config.json` and `control-panel.html`. Both MGS and Sims 2 collections need descriptions populated.
+
+---
+
 *Add new decisions below as they arise during the project.*

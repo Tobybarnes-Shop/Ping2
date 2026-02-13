@@ -46,11 +46,19 @@ Users manage everything through a dark-steel Control Panel (localhost:5050) insp
 
 ## Design Direction
 
-See Task #1 (Creative Vision) for the full creative brief. Key constraints:
-- Must feel like it belongs in the Quick-Ping ecosystem (dark, precise, hardware-inspired)
-- Gaming culture references should feel earned, not forced
-- Typography: technical/monospace primary, clean sans for body
-- The site itself should feel like a well-crafted tool, not a generic marketing page
+**REVISED**: The site uses a neutral-framework approach. Think Spotify showcasing different playlists -- the player itself is neutral, but each playlist has its own visual identity.
+
+Key principles:
+- **Base site**: Clean, neutral, developer-tool modern (aligned with the Control Panel aesthetic). Not committed to any single collection's vibe.
+- **Collection sections get their own visual treatment**: Each collection showcase section uses colors, imagery, and tone specific to that collection.
+- **MGS section**: Dark, tactical. Amber/green palette. Military/espionage aesthetic.
+- **Sims 2 section**: Light, playful, warm. Teal/plumbob colors. Simlish charm.
+- **The contrast IS the feature**: The site should celebrate how different the two collections are. Switching between them is the product's value proposition.
+
+Typography: technical/monospace primary, clean sans for body.
+The site itself should feel like a well-crafted developer tool, not a marketing page themed to one collection.
+
+**NEW -- Control Panel theming**: The actual Quick-Ping Control Panel (`control-panel.html`) now adapts its UI theme to match the active collection. MGS active = dark/tactical UI. Sims active = light/playful UI. The showcase site should demonstrate both UI themes side-by-side to sell this feature.
 
 ## Source Material
 
@@ -63,7 +71,7 @@ The showcase site should reference and draw content from these existing files in
 | `COLLECTIONS.md` | Collections system documentation |
 | `IMPLEMENTATION_SUMMARY.md` | Technical implementation details |
 | `config.json` | Event definitions, collection structure |
-| `control-panel.html` | The actual Control Panel UI (for screenshots/reference) |
+| `control-panel.html` | The actual Control Panel UI -- now with collection-aware theming (screenshots needed for both MGS and Sims themes) |
 | `sounds/MGS/` | 124 MGS sound files |
 | `sounds/Sims2/` | 140+ Sims 2 sound files |
 
@@ -71,7 +79,7 @@ The showcase site should reference and draw content from these existing files in
 
 - Visitor can hear Quick-Ping sounds within 5 seconds of page load (auto-play or one-click)
 - Installation path is clear and takes under 2 minutes to follow
-- MGS narrative is compelling enough to make someone switch collections
+- Both collections feel distinct and appealing -- the contrast sells the product
 - Site loads in under 2 seconds on broadband
 - Works in Chrome, Safari, Firefox (latest versions)
 - Passes basic accessibility audit (color contrast, keyboard nav, alt text)

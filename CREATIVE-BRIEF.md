@@ -5,7 +5,7 @@
 **Product**: Quick-Ping v2 -- Sound notifications for Claude Code
 **Deliverable**: A single-page showcase website that sells the experience of coding with game audio feedback
 **Audience**: Developers who grew up on gaming and want their terminal to feel alive
-**Goal**: Make visitors hear the site in their head before they ever install it
+**Goal**: Show two completely different sound experiences and let the visitor choose their vibe
 
 ---
 
@@ -13,43 +13,42 @@
 
 **"Your terminal has a soundtrack now."**
 
-Quick-Ping turns every Claude Code session into a game. Git commits are item pickups. Test failures are alert stings. Context warnings escalate like MGS alert phases. The showcase site should make this *feel* inevitable -- like of course your terminal should sound like Shadow Moses.
+Quick-Ping turns every Claude Code session into a game. Git commits trigger sounds. Test failures trigger different sounds. Context warnings escalate. The showcase site should make this *feel* inevitable -- like of course your terminal should have audio feedback.
 
-The site does not sell a utility. It sells a vibe. The copy, the visuals, the interactions -- everything should make the visitor feel what it is like to code with Quick-Ping running. By the time they reach the install command, it should feel like they are already late to the party.
+The site does not sell a utility. It sells a vibe -- or rather, two vibes. The MGS collection turns your session into a stealth operation. The Sims collection turns it into a cheerful household. The site must celebrate both equally, letting each collection express its own character within a neutral frame.
 
 ---
 
-## Creative Direction: "Dark Ops Studio"
+## Creative Direction: "The Player" (Neutral Frame, Distinct Collections)
 
-Three aesthetics fused into one coherent visual language:
+Think of the site like Spotify showcasing playlists, or a record player displaying album art. The player itself is neutral and clean. The albums it showcases are vivid and distinct.
 
-### 1. Retro Gaming Layer (the soul)
-The emotional core. MGS codec screens, Sims 2 UI chrome, PS1-era pixel artifacts, CRT scanlines as subtle texture. Not cosplay -- references. A developer who played these games will feel a quiet recognition without the site screaming "NOSTALGIA" at them.
-
-**Key references:**
-- MGS codec call screen (dark green on black, character portraits, frequency readout)
-- MGS item pickup overlay (clean, centered, brief)
-- Sims 2 needs/mood panels (colorful bars, expressive icons, playful status readouts)
-- PS1 memory card save screen (the quiet tension of waiting)
-- Game HUD elements: health bars, ammo counters, radar blips
-
-### 2. Studio Equipment Layer (the craft)
-The existing control panel already nails this: gunmetal surfaces, green LEDs, IBM Plex Mono, 4px grids. The showcase site inherits this DNA but loosens it slightly for marketing context. Think "the studio where the sounds were designed" rather than "the rack unit itself."
+### The Neutral Frame (the site itself)
+The hero, navigation, control panel, event map, installation, and CTA sections all use a clean, modern developer-tool aesthetic. No collection-specific theming bleeds into these shared sections. The frame is confident, minimal, and professional.
 
 **Key references:**
-- SSL mixing console -- dark faders, VU meters, channel strips
-- Teenage Engineering OP-1 -- high-contrast OLED, playful precision
-- Ableton Live session view -- dark grid, colored clips, minimal chrome
-- Neve 1073 preamp -- warm steel, purposeful knobs, serious craft
-
-### 3. Modern Dev Tools Layer (the polish)
-The site needs to feel like it belongs next to Vercel, Linear, Raycast. Clean type, generous whitespace, smooth scroll, confident copy. This is the layer that prevents the retro/hardware aesthetics from feeling like a novelty project. It says: this is a real tool that real developers use.
-
-**Key references:**
-- Vercel homepage -- dramatic dark mode, code-first hero, sharp typography
-- Linear landing page -- smooth scroll sections, feature spotlights, understated confidence
+- Vercel homepage -- clean dark mode, code-first hero, sharp typography
+- Linear landing page -- smooth scroll sections, understated confidence
 - Raycast -- product screenshots floating in space, keyboard-first appeal
-- Warp terminal -- dark UI, developer-focused, premium feel
+- The existing Quick-Ping control panel -- dark steel, green LEDs, IBM Plex Mono
+
+### The MGS World (dark, tactical, tense)
+When the visitor scrolls into the MGS section, the entire visual environment shifts. The background darkens. Amber light bleeds in. The typography tightens. The content reads like a mission briefing. This is a self-contained world within the page.
+
+**Key references:**
+- MGS codec call screen (dark green on black, frequency readout)
+- MGS item pickup overlay (clean, centered, brief)
+- PS1-era 8-bit aesthetic -- lo-fi, sharp, monochromatic
+- Military briefing documents -- structured data, codenames, mission phases
+
+### The Sims World (warm, playful, expressive)
+When the visitor scrolls into the Sims section, the environment shifts again -- but in the opposite direction. The background warms up. Teal and soft colors appear. The tone loosens. The content feels like a mood board for a cheerful household. This section should feel like opening The Sims 2 for the first time.
+
+**Key references:**
+- Sims 2 UI chrome -- plumbob green, need bars, mood panels
+- Sims 2 loading screens -- warm backgrounds, playful typography
+- The Sims "build mode" catalog -- organized, colorful, inviting
+- Simlish itself -- cheerful, expressive, slightly chaotic
 
 ---
 
@@ -64,14 +63,25 @@ The site needs to feel like it belongs next to Vercel, Linear, Raycast. Clean ty
 | Surface elevated | Gunmetal | `#1A1A1A` | Hover states, elevated panels |
 | Border | Subtle white | `rgba(255,255,255,0.08)` | Panel edges, dividers |
 
-### Accent System -- One color per collection theme
+### Accent System -- Neutral frame + distinct collection palettes
 
 | Accent | Color | Hex | Context |
 |--------|-------|-----|---------|
-| System green | Terminal green | `#00FF41` | LEDs, active states, primary accent across the site |
-| MGS amber | Codec amber | `#FFB800` | MGS collection section, alert states |
-| Sims blue | Plumbob teal | `#00D4AA` | Sims collection section, playful moments |
-| Danger red | Alert red | `#FF3333` | Error states, context_90 warning, the "!" moment |
+| System green | Terminal green | `#00FF41` | Neutral frame: LEDs, active states, CTAs, code blocks |
+| MGS amber | Codec amber | `#FFB800` | MGS section only: headings, borders, stats, glow |
+| Sims teal | Plumbob teal | `#00D4AA` | Sims section only: headings, borders, stats, glow |
+| Danger red | Alert red | `#FF3333` | Shared: error states, context_90 warning |
+
+### Sims Section Extended Palette (warm environment)
+
+The Sims section breaks from the dark frame to create its own warm micro-environment:
+
+| Role | Color | Hex | Usage |
+|------|-------|-----|-------|
+| Sims background | Warm dark | `#0F1412` | Section background, slight green-warm tint |
+| Sims surface | Warm panel | `#141A17` | Cards within the Sims section |
+| Sims text | Warm white | `#F0F5F2` | Headings in Sims section |
+| Sims secondary | Soft sage | `rgba(0, 212, 170, 0.65)` | Body text in Sims section |
 
 ### Glow Effects
 
@@ -153,66 +163,69 @@ First-class Claude Code integration. Hooks into the lifecycle. Works with agents
 
 ## Site Structure
 
-A single-page scroll, structured like a mission briefing that builds excitement.
+A single-page scroll. The neutral frame holds the product story. The collection sections are immersive worlds that break from the frame to express their own character.
 
-### Section 1: HERO -- "Your Terminal Has a Soundtrack"
-- Full-viewport dark section
-- Product name "QUICK-PING" in large display type
-- Tagline: "Sound notifications for Claude Code"
-- Subline: "Every commit is an item pickup. Every test failure is an alert sting. Every session has an arc."
-- Animated green LED pulses slowly (the site is "on")
-- Two CTAs: "View on GitHub" (primary green) and "See how it works" (ghost)
-- Subtle background: very faint grid pattern or scanline texture (2-3% opacity)
+### Section 1: HERO (Neutral Frame)
+- Full-viewport, clean dark background
+- "YOUR CODE HAS A SOUNDTRACK NOW" in display type
+- Tagline mentioning both collections equally
+- Green LED pulse -- the universal "Quick-Ping is on" signal
+- Two CTAs: "Get Quick-Ping" (primary green) and "See the collections" (ghost)
 
-### Section 2: THE EXPERIENCE -- "Choose Your Mission"
-- Side-by-side collection showcase cards
-- **MGS Card**: Amber accent, codec-screen-inspired layout
-  - "TACTICAL ESPIONAGE AUDIO" subtitle
-  - Table showing the mission arc (session_start -> session_end mapped to MGS moments)
-  - "124 sounds from the PS1 era"
-  - Quote: "You hear *that* sound at context_90. You know the one."
-- **Sims Card**: Teal accent, playful layout
-  - "SIMLISH SOUND DESIGN" subtitle
-  - Grid of event -> Simlish exclamation mappings
-  - "140+ sounds. Every emotion covered."
-  - Quote: "Your codebase is a household. Commits are promotions."
-- Both cards should feel like selecting a character/mission at a game menu
+### Section 2: THE GAP (Neutral Frame)
+- Problem statement: "You're not watching your terminal"
+- Clean, minimal, body-text-driven section
 
-### Section 3: THE CONTROL PANEL -- "Professional-Grade Control"
-- Large screenshot or styled representation of the control panel UI
-- Floating callout annotations pointing to key features:
-  - Collection switcher dropdown
-  - LED toggles per event
-  - Sound preview buttons
-  - Claude Suggests button
-- Caption: "localhost:5050 -- Your mission control."
-- Show the dark steel, green LEDs, IBM Plex Mono aesthetic in its native habitat
+### Section 3: COLLECTIONS OVERVIEW (Neutral Frame)
+- "Two iconic sound packs. Ready on install."
+- Side-by-side cards -- equal size, equal weight
+- **MGS Card**: Amber accent border, amber stats, dark tone
+- **Sims Card**: Teal accent border, teal stats, warmer tone
+- Both cards are entry points that tease their respective deep-dive sections
 
-### Section 4: EVENT MAP -- "40+ Events. Every Moment Covered."
-- Compact grid or table showing event categories
-- Categories displayed as "modules" in a rack (Core, Git, Testing, Building, Context, Streaks, Time, Agent, Thinking, Skills)
-- Each category shows 2-3 representative events with their descriptions
-- Visual language: channel strips on a mixer, each category is a channel
-- Stats bar: "40+ EVENTS / 2 COLLECTIONS / 264+ SOUNDS / ZERO BUILD STEP"
+### Section 4: MGS DEEP DIVE (MGS World)
+- Background shifts to amber-tinted darkness
+- Full mission arc narrative table
+- The context_90 alert row highlighted in red
+- Closing with sound design philosophy
+- Visually contained -- clearly "you have entered the MGS zone"
 
-### Section 5: HOW IT WORKS -- "Three Commands. That's It."
-- Clean numbered steps with code blocks:
-  1. Install: `curl -fsSL ... | bash`
-  2. Launch: `quick-ping-v2.sh --control-panel`
-  3. Code: "Open Claude Code. Every event has a sound."
-- Architecture diagram showing: Claude Code -> Hooks -> quick-ping-v2.sh -> afplay
-- Technology badges: Python Flask, Vanilla JS, REST API, macOS, Zero Dependencies
+### Section 5: SIMS DEEP DIVE (Sims World)
+- Background shifts to warm teal-tinted environment
+- **Equal depth to MGS** -- not a brief afterthought
+- Sims-specific event mapping table showing Simlish sounds
+- Mood-based narrative: how different events map to Sims emotions
+- Event -> sound name examples (fCELEB0.wav, fOOPS0.wav, mGREETING.wav)
+- Closing with the "household" metaphor
+- Visually contained -- clearly "you have entered the Sims zone"
 
-### Section 6: CTA -- "Start Your Mission"
-- Green-bordered panel (echo of the hero)
-- Install command in a code block with copy button
-- "View on GitHub" primary button
-- Small print: "macOS only. Requires Python 3 and Claude Code."
-- Final line: "Because coding in silence was always the real bug."
+### Section 6: CONTROL PANEL (Neutral Frame)
+- "SSL console meets dev tools" -- the neutral instrument
+- Mockup should NOT show MGS-specific sounds
+- Instead show generic event names with neutral sound references
+- Or show a collection switcher dropdown as the highlighted feature
+- Feature bullets for capabilities
 
-### Section 7: FOOTER
-- Minimal. Project credit line. MIT License. Year.
-- Design credit: "Dark ops studio aesthetic. Dieter Rams philosophy. Teenage Engineering precision."
+### Section 7: FEATURES ROW (Neutral Frame)
+- Claude Suggests, Focus Modes, Bring Your Own Sounds
+- Three equal feature cards, no collection-specific theming
+
+### Section 8: EVENT MAP (Neutral Frame)
+- 10 category modules in a grid
+- Stats bar with totals
+- Pure information design, no collection flavor
+
+### Section 9: INSTALLATION (Neutral Frame)
+- Three steps, code blocks, architecture diagram
+- Clean and functional
+
+### Section 10: CTA (Neutral Frame)
+- "Your terminal is too quiet"
+- Install command with copy button
+- GitHub link
+
+### Section 11: FOOTER
+- Minimal credits, MIT license, year
 
 ---
 
@@ -229,7 +242,7 @@ A single-page scroll, structured like a mission briefing that builds excitement.
 - No sound on the website itself. The irony is intentional. Let them imagine the sounds.
 - No heavy animations. The aesthetic is "precision instrument" not "gaming montage."
 - No emoji in headings or body copy. Emojis are for the README, not the showcase.
-- No light mode toggle. This is a dark studio. The lights stay off.
+- No light mode toggle. The neutral frame stays dark. Collection sections can warm up but never go fully light.
 - No parallax scrolling backgrounds. Keep the scroll physics native.
 - No hamburger menu. It is a single page. Let them scroll.
 
@@ -295,6 +308,8 @@ Section dividers and emphasis use a 2-4px left border in the accent color. Like 
 
 ## Summary
 
-The Quick-Ping showcase site is a dark, precise, single-page experience that sells the feeling of coding with a soundtrack. It fuses retro gaming nostalgia (MGS, Sims 2) with professional audio equipment craft (SSL, Teenage Engineering) and modern developer tool polish (Vercel, Linear). The design is all sharp corners, green LEDs, and IBM Plex Mono. The copy is confident, dry, and developer-native. No gimmicks. No sound on the page. Just a beautifully presented argument that your terminal should not be silent.
+The Quick-Ping showcase site is a neutral, confident frame that hosts two vivid collection worlds. The base site looks like a modern developer tool (Vercel, Linear). The MGS section plunges into dark amber tactical tension. The Sims section opens into warm teal playfulness. The contrast between these worlds is the site's signature moment -- the visitor sees that Quick-Ping is not one vibe but a choice between completely different experiences.
+
+The design uses sharp corners, green LEDs, and IBM Plex Mono for the neutral frame. Collection sections break from the frame with their own color environments. The copy is confident, dry, and developer-native. No gimmicks. No sound on the page. Just a beautifully presented argument that your terminal should not be silent -- and that you should get to choose what it sounds like.
 
 The visitor should leave thinking: "I need this running in five minutes."

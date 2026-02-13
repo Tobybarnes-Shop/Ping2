@@ -1,0 +1,2089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick-Ping -- Sound Notifications for Claude Code</title>
+    <meta name="description" content="Quick-Ping: Sound notifications for Claude Code. 124 Metal Gear Solid sounds and 140+ Sims 2 sounds. Every commit, test, and context warning gets its own sound.">
+    <meta property="og:title" content="Quick-Ping -- Your Code Has a Soundtrack Now">
+    <meta property="og:description" content="Sound notifications for Claude Code. 124 Metal Gear Solid sounds and 140+ Sims 2 sounds. Every commit, test, and context warning gets its own sound. Your terminal has a soundtrack now.">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Quick-Ping -- Sound Notifications for Claude Code">
+    <meta name="twitter:description" content="Your Claude Code sessions just got a soundtrack. Metal Gear Solid alert sounds for context warnings. Simlish celebrations for passing tests. Free and open source.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================
+           DESIGN TOKENS
+           ============================================ */
+        :root {
+            /* Background layers */
+            --bg-deep: #0A0A0A;
+            --bg-surface: #141414;
+            --bg-elevated: #1A1A1A;
+            --bg-code: #0D0D0D;
+
+            /* Borders */
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-medium: rgba(255, 255, 255, 0.12);
+            --border-heavy: rgba(255, 255, 255, 0.18);
+
+            /* Text */
+            --text-primary: #FFFFFF;
+            --text-secondary: rgba(255, 255, 255, 0.65);
+            --text-tertiary: rgba(255, 255, 255, 0.40);
+
+            /* Accents */
+            --green: #00FF41;
+            --green-dim: rgba(0, 255, 65, 0.12);
+            --green-glow: 0 0 12px rgba(0, 255, 65, 0.4);
+
+            --amber: #FFB800;
+            --amber-dim: rgba(255, 184, 0, 0.10);
+            --amber-glow: 0 0 12px rgba(255, 184, 0, 0.35);
+
+            --teal: #00D4AA;
+            --teal-dim: rgba(0, 212, 170, 0.10);
+            --teal-glow: 0 0 12px rgba(0, 212, 170, 0.35);
+
+            --red: #FF3333;
+            --red-dim: rgba(255, 51, 51, 0.10);
+            --red-glow: 0 0 10px rgba(255, 51, 51, 0.4);
+
+            /* Typography */
+            --font: 'IBM Plex Mono', 'SF Mono', 'Menlo', monospace;
+
+            /* Transitions */
+            --ease-fast: 100ms ease;
+            --ease-normal: 200ms ease;
+            --ease-slow: 400ms ease;
+        }
+
+        /* ============================================
+           RESET + BASE
+           ============================================ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            font-size: 16px;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ============================================
+           GRID BACKGROUND TEXTURE
+           ============================================ */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 24px 24px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ============================================
+           LAYOUT
+           ============================================ */
+        .container {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .container--wide {
+            max-width: 1280px;
+        }
+
+        section {
+            padding: 120px 0;
+        }
+
+        /* ============================================
+           TYPOGRAPHY UTILITIES
+           ============================================ */
+        .display {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            line-height: 1.1;
+        }
+
+        .h1 {
+            font-size: clamp(1.75rem, 3vw, 2.25rem);
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            line-height: 1.15;
+        }
+
+        .h2 {
+            font-size: clamp(1.25rem, 2vw, 1.5rem);
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            line-height: 1.2;
+        }
+
+        .h3 {
+            font-size: 1.125rem;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            line-height: 1.3;
+        }
+
+        .body-text {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            max-width: 640px;
+        }
+
+        .label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-tertiary);
+        }
+
+        .micro {
+            font-size: 0.625rem;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        /* ============================================
+           COMPONENTS: LED
+           ============================================ */
+        .led {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: var(--green);
+            border-radius: 50%;
+            box-shadow: var(--green-glow);
+            flex-shrink: 0;
+        }
+
+        .led--amber {
+            background: var(--amber);
+            box-shadow: var(--amber-glow);
+        }
+
+        .led--teal {
+            background: var(--teal);
+            box-shadow: var(--teal-glow);
+        }
+
+        .led--red {
+            background: var(--red);
+            box-shadow: var(--red-glow);
+        }
+
+        .led--pulse {
+            animation: led-pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes led-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* ============================================
+           COMPONENTS: BUTTONS
+           ============================================ */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            font-family: var(--font);
+            font-size: 0.8125rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            text-decoration: none;
+            border: 2px solid var(--green);
+            background: transparent;
+            color: var(--green);
+            cursor: pointer;
+            transition: all var(--ease-normal);
+        }
+
+        .btn:hover {
+            background: var(--green);
+            color: var(--bg-deep);
+        }
+
+        .btn:focus-visible {
+            outline: 2px solid var(--green);
+            outline-offset: 4px;
+        }
+
+        .btn--filled {
+            background: var(--green);
+            color: var(--bg-deep);
+        }
+
+        .btn--filled:hover {
+            background: transparent;
+            color: var(--green);
+        }
+
+        .btn--ghost {
+            border-color: var(--border-heavy);
+            color: var(--text-secondary);
+        }
+
+        .btn--ghost:hover {
+            border-color: var(--text-primary);
+            color: var(--text-primary);
+        }
+
+        /* ============================================
+           COMPONENTS: PANELS
+           ============================================ */
+        .panel {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .panel--elevated {
+            background: var(--bg-elevated);
+        }
+
+        /* ============================================
+           COMPONENTS: CODE BLOCKS
+           ============================================ */
+        .code-block {
+            background: var(--bg-code);
+            border: 1px solid var(--border-subtle);
+            padding: 20px 24px;
+            font-family: var(--font);
+            font-size: 0.875rem;
+            color: var(--green);
+            overflow-x: auto;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .code-block .comment {
+            color: var(--text-tertiary);
+        }
+
+        .code-block .string {
+            color: var(--amber);
+        }
+
+        .code-copy {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 6px 12px;
+            font-family: var(--font);
+            font-size: 0.625rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-medium);
+            color: var(--text-tertiary);
+            cursor: pointer;
+            transition: all var(--ease-fast);
+        }
+
+        .code-copy:hover {
+            color: var(--text-primary);
+            border-color: var(--border-heavy);
+        }
+
+        .code-copy.copied {
+            color: var(--green);
+            border-color: var(--green);
+        }
+
+        /* ============================================
+           COMPONENTS: BADGE
+           ============================================ */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            font-size: 0.625rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-surface);
+        }
+
+        /* ============================================
+           SECTION: HERO
+           ============================================ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 120px 24px;
+            position: relative;
+        }
+
+        .hero__led-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .hero__led-label {
+            font-size: 0.625rem;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-tertiary);
+        }
+
+        .hero__title {
+            margin-bottom: 24px;
+        }
+
+        .hero__tagline {
+            font-size: clamp(1rem, 1.5vw, 1.125rem);
+            color: var(--text-secondary);
+            max-width: 680px;
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+
+        .hero__sub {
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+            margin-bottom: 48px;
+        }
+
+        .hero__actions {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .hero__scroll-hint {
+            position: absolute;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-tertiary);
+            font-size: 0.625rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            animation: scroll-hint 2s ease-in-out infinite;
+        }
+
+        .hero__scroll-line {
+            width: 1px;
+            height: 32px;
+            background: linear-gradient(to bottom, var(--text-tertiary), transparent);
+        }
+
+        @keyframes scroll-hint {
+            0%, 100% { opacity: 0.4; transform: translateX(-50%) translateY(0); }
+            50% { opacity: 0.8; transform: translateX(-50%) translateY(6px); }
+        }
+
+        /* ============================================
+           SECTION: THE GAP (Problem)
+           ============================================ */
+        .gap {
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .gap__content {
+            max-width: 640px;
+        }
+
+        .gap__headline {
+            margin-bottom: 32px;
+        }
+
+        .gap__body p {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+
+        .gap__body strong {
+            color: var(--text-primary);
+        }
+
+        .gap__emphasis {
+            font-style: italic;
+            color: var(--text-primary);
+        }
+
+        /* ============================================
+           SECTION: COLLECTIONS
+           ============================================ */
+        .collections {
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .collections__header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .collections__header .h1 {
+            margin-bottom: 16px;
+        }
+
+        .collections__grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        /* Collection card base */
+        .collection-card {
+            padding: 40px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-surface);
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            transition: border-color var(--ease-normal);
+        }
+
+        .collection-card:hover {
+            border-color: var(--border-medium);
+        }
+
+        .collection-card__header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .collection-card__title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .collection-card__subtitle {
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .collection-card__desc {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            line-height: 1.6;
+        }
+
+        .collection-card__stats {
+            display: flex;
+            gap: 24px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .collection-card__stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .collection-card__stat-label {
+            font-size: 0.625rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-tertiary);
+        }
+
+        .collection-card__quote {
+            font-style: italic;
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+            padding-left: 16px;
+            border-left: 2px solid var(--border-subtle);
+        }
+
+        /* MGS card */
+        .collection-card--mgs {
+            border-color: rgba(255, 184, 0, 0.15);
+        }
+
+        .collection-card--mgs:hover {
+            border-color: rgba(255, 184, 0, 0.3);
+        }
+
+        .collection-card--mgs .collection-card__title {
+            color: var(--amber);
+        }
+
+        .collection-card--mgs .collection-card__subtitle {
+            color: var(--amber);
+        }
+
+        .collection-card--mgs .collection-card__stat-value {
+            color: var(--amber);
+        }
+
+        .collection-card--mgs .collection-card__quote {
+            border-left-color: rgba(255, 184, 0, 0.3);
+        }
+
+        /* Sims card */
+        .collection-card--sims {
+            border-color: rgba(0, 212, 170, 0.15);
+        }
+
+        .collection-card--sims:hover {
+            border-color: rgba(0, 212, 170, 0.3);
+        }
+
+        .collection-card--sims .collection-card__title {
+            color: var(--teal);
+        }
+
+        .collection-card--sims .collection-card__subtitle {
+            color: var(--teal);
+        }
+
+        .collection-card--sims .collection-card__stat-value {
+            color: var(--teal);
+        }
+
+        .collection-card--sims .collection-card__quote {
+            border-left-color: rgba(0, 212, 170, 0.3);
+        }
+
+        /* ============================================
+           SECTION: MGS NARRATIVE
+           ============================================ */
+        .mgs-narrative {
+            border-top: 1px solid var(--border-subtle);
+            background: linear-gradient(180deg, var(--bg-deep) 0%, rgba(255, 184, 0, 0.02) 50%, var(--bg-deep) 100%);
+        }
+
+        .mgs-narrative__header {
+            margin-bottom: 48px;
+        }
+
+        .mgs-narrative__header .h1 {
+            color: var(--amber);
+            margin-bottom: 24px;
+        }
+
+        .mgs-narrative__intro {
+            color: var(--text-secondary);
+            font-size: 1.0625rem;
+            line-height: 1.7;
+            max-width: 640px;
+            margin-bottom: 48px;
+        }
+
+        .mission-arc {
+            display: grid;
+            gap: 2px;
+            margin-bottom: 48px;
+        }
+
+        .mission-arc__row {
+            display: grid;
+            grid-template-columns: 200px 1fr 1fr;
+            gap: 1px;
+            background: var(--border-subtle);
+        }
+
+        .mission-arc__row > * {
+            background: var(--bg-surface);
+            padding: 12px 16px;
+            font-size: 0.8125rem;
+        }
+
+        .mission-arc__row--header > * {
+            background: var(--bg-elevated);
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-size: 0.6875rem;
+            color: var(--amber);
+        }
+
+        .mission-arc__event {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .mission-arc__desc {
+            color: var(--text-secondary);
+        }
+
+        .mission-arc__mgs {
+            color: var(--text-tertiary);
+            font-style: italic;
+        }
+
+        .mission-arc__row--alert .mission-arc__event {
+            color: var(--red);
+        }
+
+        .mission-arc__row--alert .mission-arc__desc {
+            color: var(--red);
+            font-weight: 500;
+        }
+
+        .mgs-narrative__closing {
+            color: var(--text-secondary);
+            max-width: 640px;
+            line-height: 1.7;
+        }
+
+        .mgs-narrative__closing p {
+            margin-bottom: 16px;
+        }
+
+        /* ============================================
+           SECTION: SIMS
+           ============================================ */
+        .sims-section {
+            border-top: 1px solid var(--border-subtle);
+            background: linear-gradient(180deg, var(--bg-deep) 0%, rgba(0, 212, 170, 0.03) 30%, rgba(0, 212, 170, 0.04) 50%, rgba(0, 212, 170, 0.03) 70%, var(--bg-deep) 100%);
+        }
+
+        .sims-section__header {
+            margin-bottom: 48px;
+        }
+
+        .sims-section .h1 {
+            color: var(--teal);
+            margin-bottom: 24px;
+        }
+
+        .sims-section .body-text {
+            margin-bottom: 16px;
+            max-width: 640px;
+        }
+
+        .sims-section__closing {
+            color: var(--text-tertiary);
+            font-size: 0.875rem;
+            font-style: italic;
+        }
+
+        /* Sims mood grid */
+        .sims-mood-grid {
+            display: grid;
+            gap: 2px;
+            margin-bottom: 48px;
+        }
+
+        .sims-mood-row {
+            display: grid;
+            grid-template-columns: 200px 1fr 1fr;
+            gap: 1px;
+            background: var(--border-subtle);
+        }
+
+        .sims-mood-row > * {
+            background: var(--bg-surface);
+            padding: 12px 16px;
+            font-size: 0.8125rem;
+        }
+
+        .sims-mood-row--header > * {
+            background: var(--bg-elevated);
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-size: 0.6875rem;
+            color: var(--teal);
+        }
+
+        .sims-mood-row__event {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .sims-mood-row__sound {
+            color: var(--teal);
+            font-family: var(--font);
+            font-size: 0.75rem;
+        }
+
+        .sims-mood-row__mood {
+            color: var(--text-tertiary);
+            font-style: italic;
+        }
+
+        .sims-narrative {
+            color: var(--text-secondary);
+            max-width: 640px;
+            line-height: 1.7;
+        }
+
+        .sims-narrative p {
+            margin-bottom: 16px;
+        }
+
+        /* ============================================
+           SECTION: CONTROL PANEL
+           ============================================ */
+        .control-panel-section {
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .control-panel-section__header {
+            margin-bottom: 48px;
+        }
+
+        .control-panel-section__header .h1 {
+            margin-bottom: 16px;
+        }
+
+        .control-panel-section__header .body-text {
+            margin-bottom: 8px;
+        }
+
+        .control-panel-section__header .label {
+            color: var(--green);
+        }
+
+        /* Simulated control panel */
+        .cp-mockup {
+            border: 1px solid var(--border-medium);
+            background: var(--bg-surface);
+            overflow: hidden;
+        }
+
+        .cp-mockup__titlebar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: var(--bg-elevated);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .cp-mockup__dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-tertiary);
+        }
+
+        .cp-mockup__dot--red { background: #FF5F57; }
+        .cp-mockup__dot--yellow { background: #FFBD2E; }
+        .cp-mockup__dot--green { background: #28CA42; }
+
+        .cp-mockup__url {
+            flex: 1;
+            text-align: center;
+            font-size: 0.6875rem;
+            color: var(--text-tertiary);
+            letter-spacing: 0.04em;
+        }
+
+        .cp-mockup__body {
+            padding: 24px;
+        }
+
+        .cp-mockup__header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .cp-mockup__title {
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .cp-mockup__controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .cp-mockup__dropdown {
+            padding: 6px 12px;
+            background: var(--bg-code);
+            border: 1px solid var(--border-subtle);
+            color: var(--amber);
+            font-family: var(--font);
+            font-size: 0.6875rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .cp-mockup__btn-small {
+            padding: 6px 12px;
+            background: var(--bg-code);
+            border: 1px solid var(--border-subtle);
+            color: var(--green);
+            font-family: var(--font);
+            font-size: 0.6875rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        /* Simulated event rows */
+        .cp-event-row {
+            display: grid;
+            grid-template-columns: 10px 200px 1fr 60px;
+            gap: 16px;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 0.8125rem;
+        }
+
+        .cp-event-row__led {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .cp-event-row__led--on {
+            background: var(--green);
+            box-shadow: 0 0 6px rgba(0, 255, 65, 0.4);
+        }
+
+        .cp-event-row__led--off {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .cp-event-row__name {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .cp-event-row__sound {
+            color: var(--text-tertiary);
+            font-size: 0.75rem;
+        }
+
+        .cp-event-row__play {
+            color: var(--green);
+            font-size: 0.6875rem;
+            text-align: right;
+            letter-spacing: 0.06em;
+        }
+
+        /* Feature bullets */
+        .feature-bullets {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 40px;
+        }
+
+        .feature-bullet {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .feature-bullet .led {
+            margin-top: 6px;
+            width: 6px;
+            height: 6px;
+        }
+
+        /* ============================================
+           SECTION: FEATURES ROW
+           ============================================ */
+        .features-row {
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .features-row__grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .feature-card {
+            padding: 32px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            transition: border-color var(--ease-normal);
+        }
+
+        .feature-card:hover {
+            border-color: var(--border-medium);
+        }
+
+        .feature-card__title {
+            font-size: 0.875rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-card__desc {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        /* ============================================
+           SECTION: EVENT MAP
+           ============================================ */
+        .event-map {
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .event-map__header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .event-map__header .h1 {
+            margin-bottom: 16px;
+        }
+
+        .event-map__grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 48px;
+        }
+
+        .event-category {
+            padding: 20px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-top: 2px solid var(--green);
+        }
+
+        .event-category__title {
+            font-size: 0.6875rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--green);
+            margin-bottom: 12px;
+        }
+
+        .event-category__list {
+            list-style: none;
+        }
+
+        .event-category__item {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            padding: 4px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .event-category__item::before {
+            content: '';
+            width: 4px;
+            height: 4px;
+            background: var(--green);
+            border-radius: 50%;
+            flex-shrink: 0;
+            opacity: 0.5;
+        }
+
+        /* Stats bar */
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            padding: 32px 0;
+            border-top: 1px solid var(--border-subtle);
+            border-bottom: 1px solid var(--border-subtle);
+            flex-wrap: wrap;
+        }
+
+        .stats-bar__item {
+            text-align: center;
+        }
+
+        .stats-bar__value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--green);
+            font-variant-numeric: tabular-nums;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .stats-bar__label {
+            font-size: 0.625rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-tertiary);
+        }
+
+        /* ============================================
+           SECTION: INSTALLATION
+           ============================================ */
+        .install {
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .install__header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .install__header .h1 {
+            margin-bottom: 16px;
+        }
+
+        .install__steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .install-step {
+            padding: 32px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .install-step__number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--green);
+            line-height: 1;
+            margin-bottom: 16px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .install-step__title {
+            font-size: 0.8125rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .install-step__desc {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .install-step .code-block {
+            font-size: 0.75rem;
+        }
+
+        .install__footnote {
+            text-align: center;
+            color: var(--text-tertiary);
+            font-size: 0.8125rem;
+        }
+
+        /* Architecture diagram */
+        .architecture {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            padding: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .arch-node {
+            padding: 12px 20px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .arch-arrow {
+            padding: 0 12px;
+            color: var(--green);
+            font-size: 0.875rem;
+        }
+
+        /* ============================================
+           SECTION: CTA
+           ============================================ */
+        .cta {
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .cta__panel {
+            padding: 64px;
+            border: 2px solid var(--green);
+            background: var(--bg-surface);
+            text-align: center;
+        }
+
+        .cta__panel .h1 {
+            margin-bottom: 24px;
+        }
+
+        .cta__panel .code-block {
+            max-width: 580px;
+            margin: 24px auto;
+            text-align: left;
+        }
+
+        .cta__panel .body-text {
+            margin: 0 auto 32px;
+            text-align: center;
+        }
+
+        .cta__actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .cta__footnote {
+            color: var(--text-tertiary);
+            font-size: 0.75rem;
+        }
+
+        .cta__closing {
+            margin-top: 32px;
+            color: var(--text-secondary);
+            font-style: italic;
+            font-size: 0.875rem;
+        }
+
+        /* ============================================
+           FOOTER
+           ============================================ */
+        .site-footer {
+            padding: 48px 24px;
+            border-top: 1px solid var(--border-subtle);
+            text-align: center;
+        }
+
+        .site-footer__credit {
+            color: var(--text-tertiary);
+            font-size: 0.75rem;
+            letter-spacing: 0.04em;
+            margin-bottom: 12px;
+        }
+
+        .site-footer__tagline {
+            color: var(--text-secondary);
+            font-size: 0.8125rem;
+        }
+
+        /* ============================================
+           SCROLL REVEAL
+           ============================================ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-width: 1024px) {
+            .collections__grid {
+                grid-template-columns: 1fr;
+            }
+
+            .features-row__grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .install__steps {
+                grid-template-columns: 1fr;
+            }
+
+            .mission-arc__row {
+                grid-template-columns: 140px 1fr 1fr;
+            }
+
+            .sims-mood-row {
+                grid-template-columns: 140px 1fr 1fr;
+            }
+
+            .feature-bullets {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            section {
+                padding: 80px 0;
+            }
+
+            .features-row__grid {
+                grid-template-columns: 1fr;
+            }
+
+            .mission-arc__row {
+                grid-template-columns: 1fr;
+            }
+
+            .mission-arc__row--header {
+                display: none;
+            }
+
+            .mission-arc__row > * {
+                padding: 8px 12px;
+            }
+
+            .sims-mood-row {
+                grid-template-columns: 1fr;
+            }
+
+            .sims-mood-row--header {
+                display: none;
+            }
+
+            .sims-mood-row > * {
+                padding: 8px 12px;
+            }
+
+            .cp-event-row {
+                grid-template-columns: 10px 1fr 60px;
+            }
+
+            .cp-event-row__sound {
+                display: none;
+            }
+
+            .stats-bar {
+                gap: 24px;
+            }
+
+            .cta__panel {
+                padding: 40px 24px;
+            }
+
+            .architecture {
+                flex-direction: column;
+            }
+
+            .arch-arrow {
+                transform: rotate(90deg);
+                padding: 8px 0;
+            }
+
+            .collection-card {
+                padding: 28px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 80px 16px;
+            }
+
+            .hero__actions {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .hero__actions .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .event-map__grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==========================================
+         HERO
+         ========================================== -->
+    <section class="hero">
+        <div class="hero__led-row">
+            <span class="led led--pulse"></span>
+            <span class="hero__led-label">Quick-Ping Active</span>
+        </div>
+
+        <h1 class="display hero__title">Your code has a<br>soundtrack now.</h1>
+
+        <p class="hero__tagline">
+            Sound notifications for Claude Code. 124 Metal Gear Solid sounds.
+            140+ Sims 2 sounds. Every commit, every test, every context warning
+            -- heard, not missed.
+        </p>
+
+        <p class="hero__sub">
+            Because the best notification is the one you don't have to look at.
+        </p>
+
+        <div class="hero__actions">
+            <a href="#install" class="btn btn--filled">Get Quick-Ping</a>
+            <a href="#collections" class="btn btn--ghost">See the collections</a>
+        </div>
+
+        <div class="hero__scroll-hint" aria-hidden="true">
+            <span>Scroll</span>
+            <div class="hero__scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         THE GAP
+         ========================================== -->
+    <section class="gap" id="gap">
+        <div class="container">
+            <div class="gap__content reveal">
+                <h2 class="h1 gap__headline">You're not watching your terminal. Neither are we.</h2>
+                <div class="gap__body">
+                    <p>
+                        You kicked off a Claude Code session. You switched to Slack. Or Figma. Or your phone.
+                        Ten minutes later you switch back and discover Claude finished seven minutes ago.
+                    </p>
+                    <p>
+                        That's dead time. Every day.
+                    </p>
+                    <p>
+                        Quick-Ping closes the loop. When Claude commits, you hear it.
+                        When tests fail, you hear it. When context hits 90% and your session
+                        is about to compress -- you <span class="gap__emphasis">definitely</span> hear it.
+                    </p>
+                    <p>
+                        No browser tabs. No menubar widgets. No polling. <strong>Just sound.</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         COLLECTIONS
+         ========================================== -->
+    <section class="collections" id="collections">
+        <div class="container">
+            <div class="collections__header reveal">
+                <h2 class="h1">Two iconic sound packs. Ready on install.</h2>
+                <p class="body-text" style="margin: 16px auto 0; text-align: center;">
+                    Pick a vibe. Start coding.
+                </p>
+            </div>
+
+            <div class="collections__grid">
+                <!-- MGS Card -->
+                <div class="collection-card collection-card--mgs panel reveal">
+                    <div>
+                        <div class="collection-card__header">
+                            <span class="led led--amber"></span>
+                            <span class="collection-card__subtitle">Tactical Espionage Audio</span>
+                        </div>
+                        <div class="collection-card__title">MGS Collection</div>
+                    </div>
+
+                    <div class="collection-card__desc">
+                        Your coding session becomes a tactical espionage operation.
+                        8-bit mono WAV from the PS1 era -- lo-fi, distinctive,
+                        cuts through anything. 21 events enabled by default.
+                    </div>
+
+                    <div class="collection-card__stats">
+                        <div>
+                            <div class="collection-card__stat-value">124</div>
+                            <div class="collection-card__stat-label">PS1 Sounds</div>
+                        </div>
+                        <div>
+                            <div class="collection-card__stat-value">21</div>
+                            <div class="collection-card__stat-label">Default Events</div>
+                        </div>
+                        <div>
+                            <div class="collection-card__stat-value">8-bit</div>
+                            <div class="collection-card__stat-label">Mono WAV</div>
+                        </div>
+                    </div>
+
+                    <div class="collection-card__quote">
+                        "You hear <em>that</em> sound at context_90. You know the one."
+                    </div>
+                </div>
+
+                <!-- Sims Card -->
+                <div class="collection-card collection-card--sims panel reveal">
+                    <div>
+                        <div class="collection-card__header">
+                            <span class="led led--teal"></span>
+                            <span class="collection-card__subtitle">Simlish Sound Design</span>
+                        </div>
+                        <div class="collection-card__title">Sims 2 Collection</div>
+                    </div>
+
+                    <div class="collection-card__desc">
+                        Simlish exclamations for every occasion. Cheerful celebrations,
+                        grumpy failures, and everything in between. Coding feels like
+                        managing a very productive household.
+                    </div>
+
+                    <div class="collection-card__stats">
+                        <div>
+                            <div class="collection-card__stat-value">140+</div>
+                            <div class="collection-card__stat-label">Simlish Sounds</div>
+                        </div>
+                        <div>
+                            <div class="collection-card__stat-value">40+</div>
+                            <div class="collection-card__stat-label">Events Mapped</div>
+                        </div>
+                        <div>
+                            <div class="collection-card__stat-value">OG</div>
+                            <div class="collection-card__stat-label">Original Pack</div>
+                        </div>
+                    </div>
+
+                    <div class="collection-card__quote">
+                        "If MGS is the mission, Sims is the vibes."
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         MGS NARRATIVE
+         ========================================== -->
+    <section class="mgs-narrative" id="mgs">
+        <div class="container">
+            <div class="mgs-narrative__header reveal">
+                <h2 class="h1">Mission briefing</h2>
+                <p class="mgs-narrative__intro">
+                    The codec rings. Session started. You're in.
+                    Every tool call is a radar blip -- quick, sub-second, peripheral.
+                    You're in flow state, sneaking through Shadow Moses.
+                    The sounds don't interrupt. They orient.
+                </p>
+            </div>
+
+            <div class="mission-arc reveal">
+                <div class="mission-arc__row mission-arc__row--header">
+                    <div>Event</div>
+                    <div>What Happens</div>
+                    <div>MGS Equivalent</div>
+                </div>
+                <div class="mission-arc__row">
+                    <div class="mission-arc__event">session_start</div>
+                    <div class="mission-arc__desc">The codec rings in</div>
+                    <div class="mission-arc__mgs">Mission briefing begins</div>
+                </div>
+                <div class="mission-arc__row">
+                    <div class="mission-arc__event">tool_success</div>
+                    <div class="mission-arc__desc">35ms radar blip</div>
+                    <div class="mission-arc__mgs">Stealth ops -- moving undetected</div>
+                </div>
+                <div class="mission-arc__row">
+                    <div class="mission-arc__event">git_commit</div>
+                    <div class="mission-arc__desc">Item pickup chime</div>
+                    <div class="mission-arc__mgs">Intel secured</div>
+                </div>
+                <div class="mission-arc__row">
+                    <div class="mission-arc__event">test_pass</div>
+                    <div class="mission-arc__desc">Clean pass</div>
+                    <div class="mission-arc__mgs">Sneaked past the guards</div>
+                </div>
+                <div class="mission-arc__row">
+                    <div class="mission-arc__event">test_fail</div>
+                    <div class="mission-arc__desc">The soft "?" sting</div>
+                    <div class="mission-arc__mgs">A guard heard something</div>
+                </div>
+                <div class="mission-arc__row">
+                    <div class="mission-arc__event">plan_mode_enter</div>
+                    <div class="mission-arc__desc">Cardboard box</div>
+                    <div class="mission-arc__mgs">Hiding to think</div>
+                </div>
+                <div class="mission-arc__row">
+                    <div class="mission-arc__event">context_75</div>
+                    <div class="mission-arc__desc">Guards searching</div>
+                    <div class="mission-arc__mgs">Evasion phase</div>
+                </div>
+                <div class="mission-arc__row mission-arc__row--alert">
+                    <div class="mission-arc__event">context_90</div>
+                    <div class="mission-arc__desc">The "!" alert. Handle it now.</div>
+                    <div class="mission-arc__mgs">You've been spotted</div>
+                </div>
+                <div class="mission-arc__row">
+                    <div class="mission-arc__event">git_pr_create</div>
+                    <div class="mission-arc__desc">Mission milestone</div>
+                    <div class="mission-arc__mgs">Objective complete</div>
+                </div>
+                <div class="mission-arc__row">
+                    <div class="mission-arc__event">streak_10</div>
+                    <div class="mission-arc__desc">Full fanfare</div>
+                    <div class="mission-arc__mgs">Boss defeated. Top operative.</div>
+                </div>
+                <div class="mission-arc__row">
+                    <div class="mission-arc__event">session_end</div>
+                    <div class="mission-arc__desc">"Good work, Snake."</div>
+                    <div class="mission-arc__mgs">Mission debrief</div>
+                </div>
+            </div>
+
+            <div class="mgs-narrative__closing reveal">
+                <p>
+                    21 events enabled out of the box. Enough to feel the theme without
+                    notification fatigue. Enable more in the Control Panel for the full
+                    tactical experience.
+                </p>
+                <p>
+                    All 124 sounds are 8-bit mono WAV from the PS1 era. The lo-fi character
+                    is the point -- distinctive, nostalgic, and sharp enough to cut through any mix.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         SIMS SECTION
+         ========================================== -->
+    <section class="sims-section" id="sims">
+        <div class="container">
+            <div class="sims-section__header reveal">
+                <h2 class="h1">Sul sul. Your code is speaking Simlish.</h2>
+                <p class="body-text">
+                    140+ sounds from The Sims 2. Cheerful celebrations when tests pass.
+                    Grumpy muttering when they don't. Enthusiastic gibberish when you
+                    push to main.
+                </p>
+                <p class="body-text">
+                    It's warm. It's chaotic. It makes a 3-hour refactoring session feel
+                    like you're just rearranging furniture in a very productive household.
+                </p>
+            </div>
+
+            <div class="sims-mood-grid reveal">
+                <div class="sims-mood-row sims-mood-row--header">
+                    <div>Event</div>
+                    <div>Sound File</div>
+                    <div>The Vibe</div>
+                </div>
+                <div class="sims-mood-row">
+                    <div class="sims-mood-row__event">session_start</div>
+                    <div class="sims-mood-row__sound">mGREETING.wav</div>
+                    <div class="sims-mood-row__mood">Your Sim waves hello</div>
+                </div>
+                <div class="sims-mood-row">
+                    <div class="sims-mood-row__event">git_commit</div>
+                    <div class="sims-mood-row__sound">Good Shot M.wav</div>
+                    <div class="sims-mood-row__mood">Nailed it. Promotion energy.</div>
+                </div>
+                <div class="sims-mood-row">
+                    <div class="sims-mood-row__event">test_pass</div>
+                    <div class="sims-mood-row__sound">Easy Shot FM.wav</div>
+                    <div class="sims-mood-row__mood">Cheerful approval</div>
+                </div>
+                <div class="sims-mood-row">
+                    <div class="sims-mood-row__event">test_fail</div>
+                    <div class="sims-mood-row__sound">fBADHOLE.wav</div>
+                    <div class="sims-mood-row__mood">Grumpy Simlish muttering</div>
+                </div>
+                <div class="sims-mood-row">
+                    <div class="sims-mood-row__event">git_pr_create</div>
+                    <div class="sims-mood-row__sound">fCELEB0.wav</div>
+                    <div class="sims-mood-row__mood">Full celebration. Party time.</div>
+                </div>
+                <div class="sims-mood-row">
+                    <div class="sims-mood-row__event">tool_failure</div>
+                    <div class="sims-mood-row__sound">fOOPS0.wav</div>
+                    <div class="sims-mood-row__mood">The classic "oops" -- mild panic</div>
+                </div>
+                <div class="sims-mood-row">
+                    <div class="sims-mood-row__event">context_75</div>
+                    <div class="sims-mood-row__sound">fHUNGRY.wav</div>
+                    <div class="sims-mood-row__mood">Need bar is dropping</div>
+                </div>
+                <div class="sims-mood-row">
+                    <div class="sims-mood-row__event">context_90</div>
+                    <div class="sims-mood-row__sound">fHUNGRY2.wav</div>
+                    <div class="sims-mood-row__mood">Desperate. Feed your context.</div>
+                </div>
+                <div class="sims-mood-row">
+                    <div class="sims-mood-row__event">late_night</div>
+                    <div class="sims-mood-row__sound">mTIRED.wav</div>
+                    <div class="sims-mood-row__mood">Your Sim needs sleep</div>
+                </div>
+                <div class="sims-mood-row">
+                    <div class="sims-mood-row__event">streak_10</div>
+                    <div class="sims-mood-row__sound">fCELEB0.wav</div>
+                    <div class="sims-mood-row__mood">Throwing a house party</div>
+                </div>
+                <div class="sims-mood-row">
+                    <div class="sims-mood-row__event">session_end</div>
+                    <div class="sims-mood-row__sound">mOPTIONS.wav</div>
+                    <div class="sims-mood-row__mood">Save game. See you tomorrow.</div>
+                </div>
+            </div>
+
+            <div class="sims-narrative reveal">
+                <p>
+                    The Sims collection maps coding events to emotions. Wins get celebratory
+                    Simlish. Failures get grumpy muttering. Context warnings are need bars
+                    dropping -- your session is hungry, tired, or about to pass out.
+                </p>
+                <p>
+                    The collection that started it all. If MGS is the mission, Sims is the vibes.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         CONTROL PANEL
+         ========================================== -->
+    <section class="control-panel-section" id="panel">
+        <div class="container">
+            <div class="control-panel-section__header reveal">
+                <h2 class="h1">SSL console meets dev tools.</h2>
+                <p class="body-text">
+                    A dark steel, rack-mounted control panel for your sounds. Toggle events.
+                    Swap sounds. Preview before you commit. Search, filter, bulk enable,
+                    bulk disable.
+                </p>
+                <p class="label" style="margin-top: 8px;">localhost:5050</p>
+            </div>
+
+            <!-- Simulated control panel mockup -->
+            <div class="cp-mockup reveal">
+                <div class="cp-mockup__titlebar">
+                    <span class="cp-mockup__dot cp-mockup__dot--red"></span>
+                    <span class="cp-mockup__dot cp-mockup__dot--yellow"></span>
+                    <span class="cp-mockup__dot cp-mockup__dot--green"></span>
+                    <span class="cp-mockup__url">localhost:5050</span>
+                </div>
+                <div class="cp-mockup__body">
+                    <div class="cp-mockup__header-row">
+                        <span class="cp-mockup__title">Quick-Ping 2</span>
+                        <div class="cp-mockup__controls">
+                            <span class="cp-mockup__dropdown">Select Collection</span>
+                            <span class="cp-mockup__btn-small">Claude Suggests</span>
+                        </div>
+                    </div>
+
+                    <div class="cp-event-row">
+                        <span class="cp-event-row__led cp-event-row__led--on"></span>
+                        <span class="cp-event-row__name">session_start</span>
+                        <span class="cp-event-row__sound">When Claude Code session starts</span>
+                        <span class="cp-event-row__play">PLAY</span>
+                    </div>
+                    <div class="cp-event-row">
+                        <span class="cp-event-row__led cp-event-row__led--on"></span>
+                        <span class="cp-event-row__name">git_commit</span>
+                        <span class="cp-event-row__sound">When a git commit succeeds</span>
+                        <span class="cp-event-row__play">PLAY</span>
+                    </div>
+                    <div class="cp-event-row">
+                        <span class="cp-event-row__led cp-event-row__led--on"></span>
+                        <span class="cp-event-row__name">test_pass</span>
+                        <span class="cp-event-row__sound">When tests pass</span>
+                        <span class="cp-event-row__play">PLAY</span>
+                    </div>
+                    <div class="cp-event-row">
+                        <span class="cp-event-row__led cp-event-row__led--on"></span>
+                        <span class="cp-event-row__name">test_fail</span>
+                        <span class="cp-event-row__sound">When tests fail</span>
+                        <span class="cp-event-row__play">PLAY</span>
+                    </div>
+                    <div class="cp-event-row">
+                        <span class="cp-event-row__led cp-event-row__led--on" style="background: var(--red); box-shadow: var(--red-glow);"></span>
+                        <span class="cp-event-row__name" style="color: var(--red);">context_90</span>
+                        <span class="cp-event-row__sound">90% context -- time to wrap up</span>
+                        <span class="cp-event-row__play">PLAY</span>
+                    </div>
+                    <div class="cp-event-row">
+                        <span class="cp-event-row__led cp-event-row__led--off"></span>
+                        <span class="cp-event-row__name" style="color: var(--text-tertiary);">tool_success</span>
+                        <span class="cp-event-row__sound" style="opacity: 0.4;">When a tool executes successfully</span>
+                        <span class="cp-event-row__play" style="opacity: 0.3;">PLAY</span>
+                    </div>
+                    <div class="cp-event-row" style="border-bottom: none;">
+                        <span class="cp-event-row__led cp-event-row__led--off"></span>
+                        <span class="cp-event-row__name" style="color: var(--text-tertiary);">thinking_short</span>
+                        <span class="cp-event-row__sound" style="opacity: 0.4;">Quick thinking (&lt;5s)</span>
+                        <span class="cp-event-row__play" style="opacity: 0.3;">PLAY</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature bullets -->
+            <div class="feature-bullets reveal">
+                <div class="feature-bullet"><span class="led"></span> 40+ event types across 10 categories</div>
+                <div class="feature-bullet"><span class="led"></span> Toggle any event on or off with one click</div>
+                <div class="feature-bullet"><span class="led"></span> Swap the sound for any event via dropdown</div>
+                <div class="feature-bullet"><span class="led"></span> Preview any sound before assigning it</div>
+                <div class="feature-bullet"><span class="led"></span> Search and filter events instantly</div>
+                <div class="feature-bullet"><span class="led"></span> Bulk actions: enable all, disable all, Claude Suggests</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         FEATURES ROW
+         ========================================== -->
+    <section class="features-row" id="features">
+        <div class="container">
+            <div class="features-row__grid reveal">
+                <div class="feature-card">
+                    <div class="feature-card__title">
+                        <span class="led"></span>
+                        Claude Suggests
+                    </div>
+                    <div class="feature-card__desc">
+                        Click one button. Claude analyzes every sound filename against
+                        every event and picks opinionated, balanced defaults. Smart defaults,
+                        not busy defaults.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-card__title">
+                        <span class="led"></span>
+                        Focus Modes
+                    </div>
+                    <div class="feature-card__desc">
+                        Smart Mode only plays sounds when your terminal isn't focused.
+                        Always Mode plays every sound, every time. For when you want the
+                        full soundtrack.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-card__title">
+                        <span class="led"></span>
+                        Bring Your Own Sounds
+                    </div>
+                    <div class="feature-card__desc">
+                        Point Quick-Ping at any folder of audio files. Click "Scan Folder."
+                        Click "Claude Suggests Mappings." Save. WAV, MP3, AIFF, M4A.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         EVENT MAP
+         ========================================== -->
+    <section class="event-map" id="events">
+        <div class="container">
+            <div class="event-map__header reveal">
+                <h2 class="h1">40+ events. Every moment covered.</h2>
+            </div>
+
+            <div class="event-map__grid reveal">
+                <div class="event-category">
+                    <div class="event-category__title">Core</div>
+                    <ul class="event-category__list">
+                        <li class="event-category__item">session_start</li>
+                        <li class="event-category__item">session_end</li>
+                        <li class="event-category__item">task_complete</li>
+                        <li class="event-category__item">permission</li>
+                    </ul>
+                </div>
+                <div class="event-category">
+                    <div class="event-category__title">Git</div>
+                    <ul class="event-category__list">
+                        <li class="event-category__item">git_commit</li>
+                        <li class="event-category__item">git_push</li>
+                        <li class="event-category__item">git_pr_create</li>
+                        <li class="event-category__item">git_error</li>
+                    </ul>
+                </div>
+                <div class="event-category">
+                    <div class="event-category__title">Testing</div>
+                    <ul class="event-category__list">
+                        <li class="event-category__item">test_pass</li>
+                        <li class="event-category__item">test_fail</li>
+                        <li class="event-category__item">build_complete</li>
+                        <li class="event-category__item">build_error</li>
+                    </ul>
+                </div>
+                <div class="event-category">
+                    <div class="event-category__title">Context</div>
+                    <ul class="event-category__list">
+                        <li class="event-category__item">context_50</li>
+                        <li class="event-category__item">context_75</li>
+                        <li class="event-category__item">context_90</li>
+                    </ul>
+                </div>
+                <div class="event-category">
+                    <div class="event-category__title">Streaks</div>
+                    <ul class="event-category__list">
+                        <li class="event-category__item">streak_3</li>
+                        <li class="event-category__item">streak_5</li>
+                        <li class="event-category__item">streak_10</li>
+                    </ul>
+                </div>
+                <div class="event-category">
+                    <div class="event-category__title">Time of Day</div>
+                    <ul class="event-category__list">
+                        <li class="event-category__item">morning</li>
+                        <li class="event-category__item">afternoon</li>
+                        <li class="event-category__item">evening</li>
+                        <li class="event-category__item">late_night</li>
+                    </ul>
+                </div>
+                <div class="event-category">
+                    <div class="event-category__title">Agents</div>
+                    <ul class="event-category__list">
+                        <li class="event-category__item">subagent_start</li>
+                        <li class="event-category__item">subagent_stop</li>
+                        <li class="event-category__item">team_created</li>
+                        <li class="event-category__item">teammate_message</li>
+                    </ul>
+                </div>
+                <div class="event-category">
+                    <div class="event-category__title">Thinking</div>
+                    <ul class="event-category__list">
+                        <li class="event-category__item">thinking_short</li>
+                        <li class="event-category__item">thinking_medium</li>
+                        <li class="event-category__item">thinking_long</li>
+                    </ul>
+                </div>
+                <div class="event-category">
+                    <div class="event-category__title">Skills</div>
+                    <ul class="event-category__list">
+                        <li class="event-category__item">/commit</li>
+                        <li class="event-category__item">/newday</li>
+                        <li class="event-category__item">/publish</li>
+                        <li class="event-category__item">/deploy</li>
+                    </ul>
+                </div>
+                <div class="event-category">
+                    <div class="event-category__title">Tools</div>
+                    <ul class="event-category__list">
+                        <li class="event-category__item">tool_pre</li>
+                        <li class="event-category__item">tool_success</li>
+                        <li class="event-category__item">tool_failure</li>
+                        <li class="event-category__item">error_threshold</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="stats-bar reveal">
+                <div class="stats-bar__item">
+                    <div class="stats-bar__value">40+</div>
+                    <div class="stats-bar__label">Events</div>
+                </div>
+                <div class="stats-bar__item">
+                    <div class="stats-bar__value">2</div>
+                    <div class="stats-bar__label">Collections</div>
+                </div>
+                <div class="stats-bar__item">
+                    <div class="stats-bar__value">264+</div>
+                    <div class="stats-bar__label">Sounds</div>
+                </div>
+                <div class="stats-bar__item">
+                    <div class="stats-bar__value">0</div>
+                    <div class="stats-bar__label">Build Step</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         INSTALLATION
+         ========================================== -->
+    <section class="install" id="install">
+        <div class="container">
+            <div class="install__header reveal">
+                <h2 class="h1">Three steps. Two minutes. All the sounds.</h2>
+            </div>
+
+            <div class="install__steps reveal">
+                <div class="install-step">
+                    <div class="install-step__number">01</div>
+                    <div class="install-step__title">Clone and Install</div>
+                    <div class="install-step__desc">
+                        Pure Python + vanilla JS. No build step. No node_modules.
+                    </div>
+                    <div class="code-block">
+<span class="comment"># Clone the repository</span>
+git clone https://github.com/user/quick-ping-2.git
+pip3 install flask flask-cors</div>
+                </div>
+
+                <div class="install-step">
+                    <div class="install-step__number">02</div>
+                    <div class="install-step__title">Hook into Claude Code</div>
+                    <div class="install-step__desc">
+                        Add Quick-Ping to your Claude Code hooks. One config block, three hook points.
+                    </div>
+                    <div class="code-block">
+<span class="comment"># Add to ~/.claude/settings.json</span>
+<span class="string">"PreToolUse"</span>, <span class="string">"PostToolUse"</span>, <span class="string">"Stop"</span></div>
+                </div>
+
+                <div class="install-step">
+                    <div class="install-step__number">03</div>
+                    <div class="install-step__title">Launch and Code</div>
+                    <div class="install-step__desc">
+                        Open the Control Panel. Pick a collection. Start coding.
+                    </div>
+                    <div class="code-block">
+./launch-control-panel.sh
+<span class="comment"># Open localhost:5050</span></div>
+                </div>
+            </div>
+
+            <!-- Architecture flow -->
+            <div class="architecture reveal">
+                <div class="arch-node">Claude Code</div>
+                <div class="arch-arrow">&#8594;</div>
+                <div class="arch-node">Hooks</div>
+                <div class="arch-arrow">&#8594;</div>
+                <div class="arch-node">quick-ping-v2.sh</div>
+                <div class="arch-arrow">&#8594;</div>
+                <div class="arch-node">afplay</div>
+            </div>
+
+            <p class="install__footnote reveal">
+                macOS (uses afplay) -- Python 3 -- Flask -- That's it.
+            </p>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         CTA
+         ========================================== -->
+    <section class="cta">
+        <div class="container">
+            <div class="cta__panel reveal">
+                <h2 class="h1">Your terminal is too quiet.</h2>
+
+                <div class="code-block">
+                    <button class="code-copy" onclick="copyInstall(this)" aria-label="Copy install command">Copy</button>
+git clone https://github.com/user/quick-ping-2.git && cd quick-ping-2 && ./install.sh</div>
+
+                <p class="body-text">Free. Open source. Two sound packs included.</p>
+
+                <div class="cta__actions">
+                    <a href="#" class="btn btn--filled">View on GitHub</a>
+                    <a href="#install" class="btn btn--ghost">Installation Guide</a>
+                </div>
+
+                <p class="cta__footnote">
+                    macOS only. Requires Python 3 and Claude Code.
+                </p>
+
+                <p class="cta__closing">
+                    Built for developers who alt-tab. Powered by nostalgia.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         FOOTER
+         ========================================== -->
+    <footer class="site-footer">
+        <p class="site-footer__credit">
+            Sound notifications for Claude Code. Two collections. Infinite vibes.
+        </p>
+        <p class="site-footer__tagline">
+            Quick-Ping v2 -- MIT License -- 2026
+        </p>
+    </footer>
+
+    <!-- ==========================================
+         SCRIPTS
+         ========================================== -->
+    <script>
+        // Scroll reveal
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -40px 0px'
+        });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // Copy install command
+        function copyInstall(btn) {
+            const code = btn.parentElement.textContent.replace('Copy', '').trim();
+            navigator.clipboard.writeText(code).then(() => {
+                btn.textContent = 'Copied';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = 'Copy';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
