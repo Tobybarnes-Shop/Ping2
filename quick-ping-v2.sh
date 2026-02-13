@@ -3,7 +3,7 @@
 set -euo pipefail
 
 VERSION="2.0"
-QUICK_PING_DIR="${QUICK_PING_DIR:-$HOME/.quick-ping}"
+QUICK_PING_DIR="${QUICK_PING_DIR:-$HOME/Documents/MyEP/projects/quick-ping-2}"
 CONFIG_FILE="$QUICK_PING_DIR/config.json"
 PID_FILE="$QUICK_PING_DIR/.afplay.pid"
 DETECT_SCRIPT="$QUICK_PING_DIR/detect-event.sh"
