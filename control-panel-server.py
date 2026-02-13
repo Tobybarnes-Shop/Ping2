@@ -37,6 +37,8 @@ def get_config():
         flat_config = {
             'version': config.get('version'),
             'focus_mode': config.get('focus_mode'),
+            'master_enabled': config.get('master_enabled', True),
+            'volume': config.get('volume', 100),
             'active_collection': active_collection,
             'collections': collections,
             'events': collections[active_collection]['events']
@@ -60,6 +62,10 @@ def save_config():
         config['focus_mode'] = incoming['focus_mode']
     if 'version' in incoming:
         config['version'] = incoming['version']
+    if 'master_enabled' in incoming:
+        config['master_enabled'] = incoming['master_enabled']
+    if 'volume' in incoming:
+        config['volume'] = incoming['volume']
 
     # Save events to active collection
     active_collection = config.get('active_collection', 'default')
@@ -112,7 +118,9 @@ def play_sound():
     sound_path = sounds_path / sound_file
 
     if sound_path.exists():
-        subprocess.Popen(['afplay', str(sound_path)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        # Apply volume setting
+        volume = config.get('volume', 100) / 100.0
+        subprocess.Popen(['afplay', '-v', str(volume), str(sound_path)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         return jsonify({'status': 'success'})
 
     return jsonify({'status': 'error', 'message': 'Sound file not found'}), 404

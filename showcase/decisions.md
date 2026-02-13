@@ -230,7 +230,7 @@ Think Spotify showcasing different playlists -- the player is neutral, but each 
 ## DEC-010: Add sound description labels to the Control Panel
 
 **Date**: 2026-02-13
-**Status**: Decided
+**Status**: Decided (field name corrected in DEC-013: use `sound_label`, not `sound_description`)
 **Decider**: User / Team Lead
 
 **Context**: The Control Panel event cards currently show the event description ("When a git commit succeeds") and the sound filename ("0x67.wav"). Filenames like "0x67.wav" tell the user nothing about what the sound actually is. Users must click play to learn that it's an "Item pickup chime."
@@ -275,60 +275,40 @@ UI change -- in `createEventCard()` (line 1228 of control-panel.html), add a `<s
 ## DEC-011: Master power switch for instant silence
 
 **Date**: 2026-02-13
-**Status**: Decided
+**Status**: Implemented (see also DEC-015 for CLI details)
 **Decider**: User / Team Lead
 
-**Context**: Users on a sudden call or in a meeting need to silence Quick-Ping instantly without disabling individual event settings. Currently the only options are: disable events one by one, mute system volume, or kill the process.
+**Context**: Users on a sudden call or in a meeting need to silence Quick-Ping instantly without disabling individual event settings.
 
-**Decision**: Add a master power switch -- a single toggle that silences all sounds while preserving individual event configuration. When powered off, no sounds play. When powered back on, all previously enabled events resume.
+**Decision**: Master power switch -- a single toggle that silences all sounds while preserving individual event configuration.
 
-**Implementation (4 touch points):**
+**Implementation (as built):**
 
-1. **config.json** -- Add `"master_enabled": true` at top level (alongside `focus_mode`, `active_collection`):
-```json
-{
-  "version": "2.0",
-  "master_enabled": true,
-  "focus_mode": "always",
-  "active_collection": "mgs"
-}
-```
+1. **config.json** -- `"master_enabled": true` at top level.
 
-2. **quick-ping-v2.sh** -- Add master check immediately after the focus mode check (after line ~152, before the event loop). Early exit if `master_enabled` is `false`:
-```bash
-# Check master switch
-MASTER=$(python3 -c "
-import json
-with open('$CONFIG_FILE') as f: config = json.load(f)
-print(config.get('master_enabled', True))
-" 2>/dev/null) || MASTER="True"
+2. **quick-ping-v2.sh** -- Master check at lines 139-146, runs before focus mode check. Early exit if `master_enabled` is `false`. CLI commands: `--mute` / `--unmute`. `--status` shows master power state.
 
-if [ "$MASTER" = "False" ]; then exit 0; fi
-```
-This is the cheapest possible check -- a single JSON read before any event processing.
+3. **control-panel.html** -- Skeuomorphic 72x36px rocker switch with sliding paddle and embossed ON/OFF labels. Own rack-unit strip between title header and controls nav. Features:
+   - Power indicator LED (red default, teal for Sims, amber for MGS)
+   - "MASTER POWER" label with "Cmd+Shift+M" keyboard hint
+   - Status readout: "Active" / "Standby"
+   - Powered-off treatment via `body.powered-off` class:
+     - Events grid: 25% opacity, desaturated, pointer-events disabled
+     - Header controls: 35% opacity, disabled
+     - Search: 35% opacity, disabled
+     - Collections: 50% opacity
+     - Power switch stays fully interactive
+   - Theme-aware: housing color, paddle gradient, LED color, border accents all adapt per collection theme
 
-3. **control-panel.html** -- Skeuomorphic power switch in header, between `<h1>` title and stats section (lines 1163-1166). Distinct from the small LED event toggles -- should look like a physical hardware power button:
-   - Larger than event toggles (hardware-scale, not UI-scale)
-   - Prominent placement (top-right of header or next to title)
-   - Visual feedback: body gets `opacity: 0.5` or similar dimming when powered off
-   - Optional: Cmd+Shift+M keyboard shortcut
-   - Updates `master_enabled` in config via existing `POST /api/config`
-
-4. **control-panel-server.py** -- No changes needed. The existing `POST /api/config` endpoint writes arbitrary config fields.
+4. **control-panel-server.py** -- No changes needed. Existing `POST /api/config` handles it.
 
 **Rationale**:
 - Solves a real, urgent user scenario (sudden calls)
 - One click/shortcut to silence, one click to restore
 - Preserves all event configuration -- no tedious re-enabling
 - Fits the hardware rack aesthetic (power switches are standard on audio equipment)
-- Minimal implementation surface (4 files, lightweight changes)
 
-**Relationship to focus_mode**: The master switch is independent of focus mode. Focus mode controls *when* sounds play (smart vs always). The master switch controls *whether* sounds play at all. Master off = silence regardless of focus mode.
-
-**Alternatives considered**:
-- System volume mute: Works but affects all system audio, not just Quick-Ping
-- "Mute" button without persistence: Risk of unmuting accidentally on restart
-- Focus mode "silent": Overloads an existing concept with a different meaning
+**Relationship to focus_mode**: Independent. Focus mode controls *when* sounds play (smart vs always). Master switch controls *whether* sounds play at all.
 
 ---
 
@@ -395,6 +375,31 @@ This is the cheapest possible check -- a single JSON read before any event proce
 1. `config.json` field: `master_enabled` (boolean)
 2. CLI: `quick-ping-v2.sh --mute` / `quick-ping-v2.sh --unmute`
 3. Control Panel UI: Power switch + Cmd+Shift+M keyboard shortcut
+
+---
+
+## DEC-016: Delete CONTROL-PANEL-THEMES.md (stale, superseded)
+
+**Date**: 2026-02-13
+**Status**: Decided
+**Decider**: Operations, on recommendation from Creative Director
+
+**Context**: `showcase/CONTROL-PANEL-THEMES.md` was an early pre-implementation spec for collection-adaptive theming. It documented a `data-theme` attribute approach on `<html>` (line 15) with `document.documentElement.setAttribute('data-theme', ...)` (line 22). The actual implementation uses `body.theme-mgs` / `body.theme-sims` CSS classes (see DEC-014). The file also used `sound_description` instead of the correct `sound_label` field name (see DEC-013).
+
+**Decision**: Delete the file entirely. All accurate theming, sound label, and master power switch documentation now lives in:
+- `showcase/DEVELOPMENT.md` -- implementation details with correct mechanisms
+- `showcase/DESIGN-SPECS.md` -- complete design tokens and component specs
+- `CREATIVE-BRIEF.md` -- creative rationale and visual direction
+
+**Rationale**:
+- Every code example in the file used the wrong theming mechanism (`data-theme` vs body classes)
+- Sound label section used the wrong field name (`sound_description` vs `sound_label`)
+- Keeping it risked confusing anyone implementing from the wrong spec
+- A deprecation header was considered but deletion is cleaner -- no partial-truth documents
+
+**Alternatives considered**:
+- Add a deprecation notice pointing to DEVELOPMENT.md: Adds clutter, document has no remaining unique value
+- Keep as historical reference: Git history preserves it if needed
 
 ---
 

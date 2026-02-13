@@ -7,7 +7,6 @@ Guide for building and maintaining the showcase site.
 - A modern web browser (Chrome, Safari, or Firefox)
 - A text editor
 - `python3` (for local dev server) or any static file server
-- `ffmpeg` (optional, for audio conversion)
 - `git` for version control
 
 No npm, no node_modules, no build tools required.
@@ -119,19 +118,75 @@ The showcase site uses a **neutral-framework** approach ("The Player"): the base
 | Event Map | White | White | -- | `rgba(255,255,255,0.80)` | `rgba(255,255,255,0.08)` |
 | CTA | White | -- | White | `rgba(255,255,255,0.80)` | `rgba(255,255,255,0.25)` |
 
-#### Control Panel Theming (Product Feature)
+#### Control Panel Theming (Product Feature -- Implemented)
 
-The Control Panel (`control-panel.html`) supports adaptive themes via `body.theme-mgs` and `body.theme-sims` CSS classes. The `switchCollection()` function toggles the class when collections change.
+The Control Panel (`control-panel.html`) supports adaptive themes via `body.theme-mgs` and `body.theme-sims` CSS classes.
 
-The showcase site demonstrates both themes side-by-side in the Control Panel section using CSS-only mini mockups (no screenshots needed -- all CSS-generated).
+**Trigger**: `applyCollectionTheme(collectionId)` function, called from both `switchCollection()` and `init()`.
+
+**Theme class mapping** (JS):
+```
+collectionThemes = {
+    'MGS': 'theme-mgs', 'mgs': 'theme-mgs',
+    'Sims2': 'theme-sims', 'sims2': 'theme-sims', 'sims': 'theme-sims'
+}
+```
+
+**Sims theme variables** (`body.theme-sims`):
+
+| Variable | Value |
+|----------|-------|
+| `--color-bg-primary` | `#F4F1EC` |
+| `--color-bg-panel` | `#FFFFFF` |
+| `--color-bg-meter` | `#EAE6DF` |
+| `--color-bg-category` | `#EDE9E3` |
+| `--color-text-primary` | `#1A1A1A` |
+| `--color-text-secondary` | `rgba(0, 0, 0, 0.55)` |
+| `--color-accent` | `#009B7D` |
+| `--color-border` | `rgba(0, 0, 0, 0.10)` |
+| `--color-led-on` | `#00D4AA` |
+| `--color-led-bezel` | `#C0C0C0` |
+
+**MGS theme variables** (`body.theme-mgs`):
+
+| Variable | Value |
+|----------|-------|
+| `--color-bg-primary` | `#0A0A0A` |
+| `--color-bg-panel` | `#0E0E0E` |
+| `--color-bg-category` | `#161310` |
+| `--color-accent` | `#FFB800` |
+| `--color-border` | `rgba(255, 184, 0, 0.08)` |
+| `--color-led-on` | `#00FF00` |
+
+Both themes include per-theme overrides for buttons, focus options, toasts, loading spinner, modals, and the master power switch.
+
+The showcase site demonstrates both themes side-by-side in the `.cp-dual` grid section using CSS-only mini mockups (rendered live in HTML, no screenshots).
 
 #### Master Power Switch (Product Feature -- Implemented)
 
-`master_enabled` field in config.json. CLI: `--mute` / `--unmute`. Keyboard shortcut: Cmd+Shift+M. Shell script checks `master_enabled` before playing any sound (line ~140 in `quick-ping-v2.sh`). Independent of focus_mode.
+**Config**: `master_enabled: true` at top level of config.json.
 
-#### Sound Description Labels (Product Feature -- Implemented)
+**UI** (`control-panel.html`): Skeuomorphic 72x36px rocker switch with sliding paddle and embossed ON/OFF labels. Sits as its own rack-unit strip between the title header and the controls nav (not inside the header). Includes:
+- Power indicator LED (red glow default, teal for Sims theme, amber for MGS theme)
+- "MASTER POWER" label with "Cmd+Shift+M" keyboard hint
+- Status readout: "Active" / "Standby"
 
-`sound_label` field on all 76 events in config.json. Displayed beneath the sound dropdown in the Control Panel. Key examples:
+**Powered-off visual treatment** (`body.powered-off` class):
+- Events grid: 25% opacity, desaturated (`filter: saturate(0)`), pointer-events disabled
+- Header controls: 35% opacity, pointer-events disabled
+- Search box: 35% opacity, disabled
+- Collections section: 50% opacity
+- Power switch itself stays fully interactive
+
+**Theme-aware**: Full CSS overrides for `body.theme-sims` and `body.theme-mgs` -- housing color, paddle gradient, LED color, border accents all adapt.
+
+**Shell script** (`quick-ping-v2.sh`): Master check at lines 139-146, runs before focus mode check. CLI commands: `--mute` / `--unmute`. `--status` shows master power state.
+
+Independent of focus_mode. Master off = silence regardless of focus mode setting.
+
+#### Sound Labels (Product Feature -- Implemented)
+
+`sound_label` field on all 76 events in config.json. CSS class: `.sound-label` (styled in accent color at 70% opacity). Rendered inside `createEventCard()` between `.event-description` and `.event-controls`. When user changes the sound dropdown, the label is actively cleared (not left stale). Key examples:
 
 | Event | MGS Sound | MGS Label | Sims Sound | Sims Label |
 |-------|-----------|-----------|------------|------------|

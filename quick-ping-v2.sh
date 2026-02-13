@@ -110,7 +110,7 @@ for f in sorted(pathlib.Path(sounds_path).glob('*')):
       echo "Usage: quick-ping-v2.sh --play <sound-file>"
       exit 1
     fi
-    SOUND_PATH=$(python3 -c "
+    read -r SOUND_PATH VOLUME <<< $(python3 -c "
 import json, os
 p = os.path.join(os.environ.get('QUICK_PING_DIR', os.path.expanduser('~/Documents/MyEP/projects/quick-ping-2')), 'config.json')
 with open(p) as f: config = json.load(f)
@@ -120,9 +120,10 @@ if active in collections:
     sounds_path = collections[active]['path']
 else:
     sounds_path = os.path.join(os.environ.get('QUICK_PING_DIR', os.path.expanduser('~/Documents/MyEP/projects/quick-ping-2')), 'sounds')
-print(os.path.join(sounds_path, '$2'))
+volume_percent = config.get('volume', 100)
+print(os.path.join(sounds_path, '$2'), volume_percent / 100.0)
 ")
-    afplay "$SOUND_PATH"
+    afplay -v "$VOLUME" "$SOUND_PATH"
     exit 0
     ;;
   --control-panel|--ui|--config)
@@ -162,6 +163,15 @@ print(config.get('master_enabled', True))
 " 2>/dev/null) || MASTER_ENABLED="True"
 
 if [ "$MASTER_ENABLED" != "True" ]; then exit 0; fi
+
+# Get volume setting
+VOLUME=$(python3 -c "
+import json
+with open('$CONFIG_FILE') as f: config = json.load(f)
+volume_percent = config.get('volume', 100)
+# Convert 0-100 to 0.0-1.0 for afplay
+print(volume_percent / 100.0)
+" 2>/dev/null) || VOLUME="1.0"
 
 # Get focus mode
 FOCUS_MODE=$(python3 -c "
@@ -221,9 +231,9 @@ print(event.get('enabled', False), event.get('sound', ''), sounds_path)
     rm -f "$PID_FILE"
   fi
 
-  # Play sound
+  # Play sound with volume
   export QUICK_PING_DIR
-  nohup afplay "$SOUND_PATH" >/dev/null 2>&1 &
+  nohup afplay -v "$VOLUME" "$SOUND_PATH" >/dev/null 2>&1 &
   AFPLAY_PID=$!
   echo "$AFPLAY_PID" > "$PID_FILE"
   disown "$AFPLAY_PID" 2>/dev/null || true
