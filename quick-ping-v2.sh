@@ -155,6 +155,9 @@ fi
 
 if [ ! -f "$CONFIG_FILE" ]; then exit 1; fi
 
+# Update activity timestamp for idle monitor
+touch "$QUICK_PING_DIR/.last_activity" 2>/dev/null || true
+
 # Check master power switch
 MASTER_ENABLED=$(python3 -c "
 import json

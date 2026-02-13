@@ -34,3 +34,5 @@ config.json.backup
 config.json.bak
 config.json.before-per-collection-events
 config.json.pre-mgs-mapping
+.idle-monitor.pid
+.last_activity
