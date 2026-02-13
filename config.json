@@ -7,7 +7,7 @@
   "collections": {
     "default": {
       "name": "Sims 2 Sounds",
-      "path": "/Users/tobybarnes_shop/Documents/MyEP/Projects/quick-ping-2/sounds/Sims2",
+      "path": "/Users/tobybarnes_shop/Documents/MyEP/Projects/noisy-claude/sounds/Sims2",
       "description": "Original Sims 2 game sounds",
       "events": {
         "afternoon": {
@@ -289,7 +289,7 @@
     },
     "mgs": {
       "name": "MGS Sounds",
-      "path": "/Users/tobybarnes_shop/Documents/MyEP/Projects/quick-ping-2/sounds/MGS",
+      "path": "/Users/tobybarnes_shop/Documents/MyEP/Projects/noisy-claude/sounds/MGS",
       "description": "Metal Gear Solid game sounds - tactical espionage audio",
       "events": {
         "afternoon": {
