@@ -214,25 +214,23 @@ git push origin main
 ## Content Updates
 
 ### Updating copy
-Edit the text directly in `index.html`. All copy lives inline -- no CMS, no content files.
+Edit the text directly in the HTML file. All copy lives inline -- no CMS, no content files. Reference `showcase-copy.md` for the canonical copy.
 
-### Adding sounds
-1. Convert to MP3 (see Audio File Preparation above)
-2. Add to `assets/sounds/mgs/` or `assets/sounds/sims2/`
-3. Update the JS to reference the new file
-4. Test playback
+### Updating Control Panel mockups
+The Control Panel section uses CSS-only mini mockups (not screenshots). To update:
+1. Edit the `.mini-card--mgs` and `.mini-card--sims` elements in the HTML
+2. Update event names, sound filenames, and sound labels to match current config.json
+3. Ensure the dark/light contrast is immediately obvious
 
-### Updating screenshots
-The showcase site needs screenshots of BOTH Control Panel themes:
-1. Take screenshot with MGS collection active (dark theme)
-2. Take screenshot with Sims 2 collection active (light theme)
-3. Optimize (compress, crop, appropriate resolution)
-4. Replace files in `assets/images/`
-5. Ensure alt text specifies which theme is shown
+### Updating event counts or stats
+Search for the stats bar section and update the numeric values to match the current config.json event count.
 
 ## Related Documentation
 
 - [PROJECT.md](PROJECT.md) -- Project goals and team structure
 - [DEPLOY.md](DEPLOY.md) -- Hosting and deployment details
+- [DESIGN-SPECS.md](DESIGN-SPECS.md) -- Complete design specifications
 - [decisions.md](decisions.md) -- Decision log with rationale
-- Main Quick-Ping repo: `README.md`, `README-GITHUB.md`, `COLLECTIONS.md`
+- `CREATIVE-BRIEF.md` (repo root) -- Full creative direction
+- `showcase-copy.md` (repo root) -- All page copy
+- `showcase-site.html` (repo root) -- Working prototype

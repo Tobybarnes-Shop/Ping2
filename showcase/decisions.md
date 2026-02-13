@@ -332,4 +332,70 @@ This is the cheapest possible check -- a single JSON read before any event proce
 
 ---
 
+## DEC-012: Final design system -- "The Player" (neutral white framework)
+
+**Date**: 2026-02-13
+**Status**: Decided (supersedes DEC-008 specifics)
+**Decider**: Creative Director + Designer
+
+**Context**: The creative brief and design specs were finalized, codifying the exact tokens and visual approach for the showcase site.
+
+**Key decisions finalized in CREATIVE-BRIEF.md and DESIGN-SPECS.md:**
+
+1. **Concept name**: "The Player" (previously unnamed / informally "Dark Ops Studio")
+2. **Framework accent is white (`#FFFFFF`), not green**: Terminal green (`#00FF41`) belongs exclusively to the MGS aesthetic. The neutral framework uses white for LEDs, buttons, accents, focus states.
+3. **Page background**: `#0A0A0A` (not `#1A1A1A` as earlier assumed). The three backgrounds go: page `#0A0A0A` -> surface `#141414` -> elevated `#1A1A1A`.
+4. **MGS primary accent**: `#FFB800` (amber), not green. Green only for code/event text within MGS sections.
+5. **Sims primary accent**: `#00D4AA` (plumbob teal). On the showcase site, Sims sections use a cool-dark background (`#0F1413`), not light. The Sims LIGHT theme only appears in the Control Panel itself.
+6. **No images**: All visual elements are CSS-generated. Zero image files.
+7. **No sound on the website**: Deliberate choice. Let visitors imagine the sounds.
+8. **No `border-radius`**: Sharp corners everywhere except LED circles.
+9. **IBM Plex Mono only**: One font, no secondary. All headings uppercase.
+10. **Performance target**: Under 50KB total (excluding fonts).
+11. **Control Panel section**: CSS-only mini mockups showing both themes side-by-side, not screenshots.
+12. **11-section single page**: Hero, The Gap, Collections Overview, MGS Deep Dive, Sims Deep Dive, Control Panel, Features Row, Event Map, Installation, CTA, Footer.
+
+**Deliverables**: `CREATIVE-BRIEF.md` (339 lines), `showcase/DESIGN-SPECS.md` (2318 lines), `showcase-site.html` (working prototype).
+
+---
+
+## DEC-013: Sound labels use `sound_label` field name (not `sound_description`)
+
+**Date**: 2026-02-13
+**Status**: Decided (corrects DEC-010)
+**Decider**: Developer (implementation)
+
+**Context**: DEC-010 proposed `sound_description` as the field name. The actual implementation used `sound_label` across all 76 events in config.json.
+
+**Decision**: The canonical field name is `sound_label`, not `sound_description`.
+
+---
+
+## DEC-014: Control Panel theming via body classes (not data-theme attribute)
+
+**Date**: 2026-02-13
+**Status**: Decided (corrects DEC-009)
+**Decider**: Developer (implementation)
+
+**Context**: DEC-009 proposed theming via `[data-theme="sims"]` on the `<html>` element. The actual implementation uses `body.theme-mgs` and `body.theme-sims` CSS classes.
+
+**Decision**: The canonical theming mechanism is CSS classes on `<body>`, not `data-theme` attributes.
+
+---
+
+## DEC-015: Master power switch implements --mute/--unmute CLI commands
+
+**Date**: 2026-02-13
+**Status**: Decided (extends DEC-011)
+**Decider**: Developer (implementation)
+
+**Context**: DEC-011 documented the master switch with a config field and UI toggle. The implementation also added `--mute` and `--unmute` CLI commands to `quick-ping-v2.sh`, plus the `--status` command now shows master power state.
+
+**Decision**: Master power is controllable via three interfaces:
+1. `config.json` field: `master_enabled` (boolean)
+2. CLI: `quick-ping-v2.sh --mute` / `quick-ping-v2.sh --unmute`
+3. Control Panel UI: Power switch + Cmd+Shift+M keyboard shortcut
+
+---
+
 *Add new decisions below as they arise during the project.*
