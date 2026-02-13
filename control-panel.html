@@ -381,6 +381,7 @@
             transition: all var(--transition-fast);
             flex-shrink: 0;
             box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
+            padding: 15px; /* WCAG 2.5.5: 44x44px touch target */
         }
 
         .switch:hover {
@@ -446,7 +447,7 @@
             transition: all var(--transition-fast);
             font-size: 8px;
             flex-shrink: 0;
-            padding-left: 2px;
+            padding: 12px; /* WCAG 2.5.5: 44x44px touch target */
         }
 
         .btn-play:hover {
@@ -704,6 +705,12 @@
         .form-input:focus {
             outline: none;
             border: var(--border-width-heavy) solid var(--color-accent);
+        }
+
+        .form-input:invalid,
+        .form-input.error {
+            border-color: var(--color-accent);
+            background: var(--color-accent-dim);
         }
 
         .form-input::placeholder {
