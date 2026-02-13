@@ -7,13 +7,13 @@ A beautiful web interface for managing your Claude Code sound notifications.
 Launch the control panel:
 
 ```bash
-~/.quick-ping/quick-ping-v2.sh --control-panel
+~/Documents/MyEP/Projects/quick-ping-2/quick-ping-v2.sh --control-panel
 ```
 
 Or use the launcher directly:
 
 ```bash
-~/.quick-ping/launch-control-panel.sh
+~/Documents/MyEP/Projects/quick-ping-2/launch-control-panel.sh
 ```
 
 Then open **http://localhost:5050** in your browser.
@@ -111,8 +111,8 @@ quick-ping-v2.sh --play mGREETING.wav
 
 - **Frontend**: Pure HTML/CSS/JavaScript (no build step required)
 - **Backend**: Python Flask server
-- **Config**: JSON file at `~/.quick-ping/config.json`
-- **Sounds**: WAV/MP3 files in `~/.quick-ping/sounds/`
+- **Config**: JSON file at `~/Documents/MyEP/Projects/quick-ping-2/config.json`
+- **Sounds**: WAV/MP3 files in `~/Documents/MyEP/Projects/quick-ping-2/sounds/`
 
 ## Requirements
 
@@ -174,7 +174,7 @@ See [COLLECTIONS.md](COLLECTIONS.md) for more details.
 
 **Sounds not playing:**
 - Check focus mode setting
-- Test sound playback: `afplay ~/.quick-ping/sounds/mGREETING.wav`
+- Test sound playback: `afplay ~/Documents/MyEP/Projects/quick-ping-2/sounds/mGREETING.wav`
 - Verify system volume is up
 
 **Events not triggering:**

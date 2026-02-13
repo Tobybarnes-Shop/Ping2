@@ -29,9 +29,9 @@
             /* Typography - Technical Readouts */
             --font-mono: 'IBM Plex Mono', 'SF Mono', 'Monaco', 'Courier New', monospace;
             --font-size-micro: 0.625rem;
-            --font-size-small: 0.6875rem;
-            --font-size-body: 0.75rem;
-            --font-size-label: 0.8125rem;
+            --font-size-small: 0.75rem;
+            --font-size-body: 0.875rem;
+            --font-size-label: 1rem;
             --font-size-display: 1.25rem;
             --font-weight-regular: 400;
             --font-weight-medium: 500;
@@ -277,8 +277,8 @@
         }
 
         .search-box:focus {
-            outline: none;
-            border: var(--border-width-heavy) solid var(--color-accent);
+            outline: var(--border-width-heavy) solid var(--color-accent);
+            outline-offset: -1px;
         }
 
         /* CATEGORY HEADER - CHANNEL STRIP STYLE */
@@ -330,7 +330,7 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 2px;
+            height: 4px;
             background: var(--color-led-off);
             transition: background var(--transition-fast);
         }
@@ -569,6 +569,14 @@
             outline-offset: 1px;
         }
 
+        /* Fallback for browsers without :focus-visible support */
+        @supports not selector(:focus-visible) {
+            *:focus {
+                outline: var(--border-width-heavy) solid var(--color-accent);
+                outline-offset: 1px;
+            }
+        }
+
         /* REMOVED: Spectrum analyzer animations */
 
         /* COLLECTIONS SECTION */
@@ -621,7 +629,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.75);
             z-index: 1000;
             padding: var(--space-4);
             overflow-y: auto;
@@ -903,7 +911,7 @@
 
         .progress-bar-fill.indeterminate {
             width: 30%;
-            animation: progressSlide 1.5s ease-in-out infinite;
+            animation: progressSlide 1.2s linear infinite;
         }
 
         @keyframes progressSlide {
