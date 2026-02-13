@@ -1,7 +1,7 @@
 {
   "version": "2.0",
   "focus_mode": "always",
-  "active_collection": "default",
+  "active_collection": "mgs",
   "collections": {
     "default": {
       "name": "Sims 2 Sounds",
