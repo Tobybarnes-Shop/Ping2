@@ -195,12 +195,13 @@ This is the strongest demo moment on the site. Show the control panel switching 
 **Body:**
 A control panel that adapts to your collection. MGS active? Dark steel, green LEDs, tactical readouts. Sims active? Light UI, dayglow colors, playful and warm. The interface matches the vibe of whatever you're listening to.
 
-Toggle events. Swap sounds. Preview before you commit. Search, filter, bulk enable, bulk disable.
+Toggle events. Swap sounds. Preview before you commit. Search, filter, bulk enable, bulk disable. Every sound has a human-readable label -- "Item pickup chime", "Oops!", "Guards searching" -- so you know what you'll hear without pressing play.
 
 Pure HTML/CSS/JS. No build step. Runs on localhost:5050.
 
 **Feature bullets:**
 - Adaptive UI theme -- switches with your active collection
+- Sound description labels -- know what every sound is at a glance
 - 40+ event types across 10 categories
 - Toggle any event on or off with one click
 - Swap the sound for any event via dropdown

@@ -364,6 +364,14 @@
             letter-spacing: 0.02em;
         }
 
+        .sound-label {
+            color: var(--color-accent);
+            font-size: var(--font-size-micro);
+            letter-spacing: 0.04em;
+            margin-bottom: var(--space-2);
+            opacity: 0.7;
+        }
+
         .event-controls {
             display: flex;
             gap: var(--space-2);
@@ -560,6 +568,193 @@
             .btn {
                 width: 100%;
             }
+        }
+
+        /* ============================================
+           THEME: SIMS (Light, Warm, Playful)
+           Applied via body.theme-sims
+           ============================================ */
+        body.theme-sims {
+            --color-bg-primary: #F4F1EC;
+            --color-bg-panel: #FFFFFF;
+            --color-bg-meter: #EAE6DF;
+            --color-text-primary: #1A1A1A;
+            --color-text-secondary: rgba(0, 0, 0, 0.55);
+            --color-text-tertiary: rgba(0, 0, 0, 0.35);
+            --color-accent: #009B7D;
+            --color-accent-dim: rgba(0, 155, 125, 0.10);
+            --color-border: rgba(0, 0, 0, 0.10);
+            --color-border-heavy: rgba(0, 0, 0, 0.18);
+            --color-led-off: rgba(0, 0, 0, 0.08);
+            --color-led-on: #00D4AA;
+            --color-led-bezel: #C0C0C0;
+            --color-bg-category: #EDE9E3;
+        }
+
+        body.theme-sims .switch {
+            background: #F4F1EC;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08);
+        }
+
+        body.theme-sims .switch.active {
+            background: #F4F1EC;
+            border-color: var(--color-led-bezel);
+        }
+
+        body.theme-sims .btn-play {
+            background: #EDE9E3;
+        }
+
+        body.theme-sims .btn-primary {
+            background: #009B7D;
+            border-color: #009B7D;
+            color: #FFFFFF;
+        }
+
+        body.theme-sims .btn-primary:hover {
+            background: #00B38F;
+            border-color: #00B38F;
+        }
+
+        body.theme-sims .btn-accent {
+            background: #F4F1EC;
+            color: #009B7D;
+            border-color: #009B7D;
+        }
+
+        body.theme-sims .btn-accent:hover {
+            background: rgba(0, 155, 125, 0.08);
+        }
+
+        body.theme-sims .focus-option.active {
+            background: #009B7D;
+            color: #FFFFFF;
+        }
+
+        body.theme-sims .focus-option {
+            background: var(--color-bg-primary);
+            color: var(--color-text-secondary);
+        }
+
+        body.theme-sims .toast {
+            background: #FFFFFF;
+            color: var(--color-text-primary);
+            border-left-color: #009B7D;
+        }
+
+        body.theme-sims .loading {
+            background: #FFFFFF;
+            border-color: #009B7D;
+        }
+
+        body.theme-sims .spinner {
+            border-color: rgba(0, 0, 0, 0.1);
+            border-top-color: #009B7D;
+        }
+
+        body.theme-sims .scan-count {
+            color: #009B7D;
+        }
+
+        body.theme-sims .suggestion-arrow {
+            color: #009B7D;
+        }
+
+        body.theme-sims .suggestion-confidence {
+            color: #009B7D;
+        }
+
+        body.theme-sims .progress-bar-fill {
+            background: #00D4AA;
+        }
+
+        body.theme-sims .progress-complete {
+            color: #009B7D;
+        }
+
+        body.theme-sims .progress-checkmark {
+            border-color: #009B7D;
+        }
+
+        body.theme-sims .modal {
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        body.theme-sims .modal-content {
+            background: #FFFFFF;
+            border-color: rgba(0, 0, 0, 0.12);
+        }
+
+        /* ============================================
+           THEME: MGS (Dark, Tactical, Amber)
+           Applied via body.theme-mgs
+           ============================================ */
+        body.theme-mgs {
+            --color-bg-primary: #0A0A0A;
+            --color-bg-panel: #0E0E0E;
+            --color-bg-meter: #060606;
+            --color-text-primary: #FFFFFF;
+            --color-text-secondary: rgba(255, 255, 255, 0.55);
+            --color-text-tertiary: rgba(255, 255, 255, 0.35);
+            --color-accent: #FFB800;
+            --color-accent-dim: rgba(255, 184, 0, 0.12);
+            --color-border: rgba(255, 184, 0, 0.08);
+            --color-border-heavy: rgba(255, 184, 0, 0.15);
+            --color-led-off: rgba(255, 255, 255, 0.06);
+            --color-led-on: #00FF00;
+            --color-led-bezel: #3A3A3A;
+            --color-bg-category: #161310;
+        }
+
+        body.theme-mgs .btn-primary {
+            background: #FFB800;
+            border-color: #FFB800;
+            color: #0A0A0A;
+        }
+
+        body.theme-mgs .btn-primary:hover {
+            background: #FFCC33;
+            border-color: #FFCC33;
+        }
+
+        body.theme-mgs .btn-accent {
+            background: #111111;
+            color: #FFB800;
+            border-color: #FFB800;
+        }
+
+        body.theme-mgs .btn-accent:hover {
+            background: rgba(255, 184, 0, 0.08);
+        }
+
+        body.theme-mgs .focus-option.active {
+            background: #FFB800;
+            color: #0A0A0A;
+        }
+
+        body.theme-mgs .toast {
+            background: #111111;
+            border-left-color: #FFB800;
+        }
+
+        body.theme-mgs .loading {
+            border-color: #FFB800;
+        }
+
+        body.theme-mgs .spinner {
+            border-top-color: #FFB800;
+        }
+
+        body.theme-mgs .scan-count {
+            color: #FFB800;
+        }
+
+        body.theme-mgs .suggestion-arrow {
+            color: #FFB800;
+        }
+
+        body.theme-mgs .suggestion-confidence {
+            color: #FFB800;
         }
 
         /* ACCESSIBILITY */
@@ -1248,6 +1443,7 @@
                     ></button>
                 </div>
                 <p class="event-description">${event.description || ''}</p>
+                ${event.sound_label ? `<p class="sound-label">${event.sound_label}</p>` : ''}
                 <div class="event-controls">
                     <label for="${selectId}" class="sr-only">Select sound for ${formatEventName(eventId)}</label>
                     <select
@@ -1288,7 +1484,10 @@
                 const eventId = e.target.dataset.event;
                 const sound = e.target.value;
                 config.events[eventId].sound = sound;
+                config.events[eventId].sound_label = '';
                 card.querySelector('.btn-play').dataset.sound = sound;
+                const labelEl = card.querySelector('.sound-label');
+                if (labelEl) labelEl.textContent = '';
             });
 
             // Play sound
@@ -1686,6 +1885,27 @@
             showLoading(false);
         }
 
+        // Theme mapping: collection ID -> CSS theme class
+        const collectionThemes = {
+            'MGS': 'theme-mgs',
+            'mgs': 'theme-mgs',
+            'Sims2': 'theme-sims',
+            'sims2': 'theme-sims',
+            'sims': 'theme-sims'
+        };
+
+        function applyCollectionTheme(collectionId) {
+            // Remove all theme classes
+            document.body.classList.remove('theme-mgs', 'theme-sims');
+
+            // Apply matching theme if one exists
+            const themeClass = collectionThemes[collectionId];
+            if (themeClass) {
+                document.body.classList.add(themeClass);
+            }
+            // If no match (custom collection), use default dark theme (no class)
+        }
+
         async function switchCollection(collectionId) {
             showLoading(true);
             try {
@@ -1696,6 +1916,7 @@
                 });
 
                 activeCollection = collectionId;
+                applyCollectionTheme(collectionId);
                 await loadSounds();
                 await loadConfig();  // CRITICAL: Reload config to get new collection's events
                 renderEvents();
@@ -1728,6 +1949,7 @@
         // Initialize
         async function init() {
             await loadCollections();
+            applyCollectionTheme(activeCollection);
             await loadSounds();
             await loadConfig();
             renderEvents();

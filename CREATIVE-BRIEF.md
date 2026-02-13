@@ -54,13 +54,14 @@ When the visitor scrolls into the Sims section, the environment shifts again -- 
 
 ## Color Palette
 
-### Primary Palette
+### Primary Palette (Neutral Frame)
 
 | Role | Color | Hex | Usage |
 |------|-------|-----|-------|
-| Background | Near-black | `#0A0A0A` | Page background, deepest layer |
-| Surface | Dark steel | `#141414` | Cards, panels, content blocks |
-| Surface elevated | Gunmetal | `#1A1A1A` | Hover states, elevated panels |
+| Background | Neutral dark | `#1A1A1A` | Page background -- not pure black |
+| Surface | Panel gray | `#222222` | Cards, panels, content blocks |
+| Surface elevated | Light gray | `#2A2A2A` | Hover states, elevated panels |
+| Code background | Near-black | `#141414` | Code blocks only |
 | Border | Subtle white | `rgba(255,255,255,0.08)` | Panel edges, dividers |
 
 ### Accent System -- Neutral frame + distinct collection palettes
@@ -72,16 +73,34 @@ When the visitor scrolls into the Sims section, the environment shifts again -- 
 | Sims teal | Plumbob teal | `#00D4AA` | Sims section only: headings, borders, stats, glow |
 | Danger red | Alert red | `#FF3333` | Shared: error states, context_90 warning |
 
-### Sims Section Extended Palette (warm environment)
+### MGS Section Palette (goes DARKER than the frame)
 
-The Sims section breaks from the dark frame to create its own warm micro-environment:
+The MGS section drops to pure black -- darker than the neutral frame. A tactical void.
 
 | Role | Color | Hex | Usage |
 |------|-------|-----|-------|
-| Sims background | Warm dark | `#0F1412` | Section background, slight green-warm tint |
-| Sims surface | Warm panel | `#141A17` | Cards within the Sims section |
-| Sims text | Warm white | `#F0F5F2` | Headings in Sims section |
-| Sims secondary | Soft sage | `rgba(0, 212, 170, 0.65)` | Body text in Sims section |
+| MGS background | Pure black | `#0A0A0A` | Section background, deep void |
+| MGS surface | Dark steel | `#111111` | Table rows in MGS section |
+| MGS border | Amber edge | `rgba(255, 184, 0, 0.08)` | Table grid lines, dividers |
+| MGS text | White | `#FFFFFF` | Headings, event names |
+| MGS secondary | Dim white | `rgba(255, 255, 255, 0.6)` | Body text, descriptions |
+
+### Sims Section Palette (goes LIGHTER than the frame)
+
+The Sims section flips to light. White background, dark text. A completely different world.
+
+| Role | Color | Hex | Usage |
+|------|-------|-----|-------|
+| Sims background | Warm white | `#F4F1EC` | Section background -- warm off-white |
+| Sims surface | Pure white | `#FFFFFF` | Table rows, cards |
+| Sims surface alt | Light warm | `#EAE6DF` | Table headers, hover states |
+| Sims border | Light gray | `rgba(0, 0, 0, 0.10)` | Table grid lines, dividers |
+| Sims text primary | Near-black | `#1A1A1A` | Headings, event names |
+| Sims text secondary | Dark gray | `#4A4A4A` | Body text, descriptions |
+| Sims text tertiary | Medium gray | `#7A7A7A` | Metadata, italic moods |
+| Sims teal (on light) | Dark teal | `#009B7D` | Accent color -- darker than normal teal for contrast on white |
+
+**Design principle**: The two collection sections go in opposite directions from the neutral frame. MGS goes darker (neutral #1A1A1A -> MGS #0A0A0A). Sims goes lighter (neutral #1A1A1A -> Sims #F4F1EC). The contrast between these worlds is dramatic and intentional -- as you scroll through the page, you physically experience the difference between the two collections.
 
 ### Glow Effects
 
@@ -131,17 +150,18 @@ Every accent color gets a corresponding glow for LED/indicator moments:
 The headline promise. Coding is silent by default. Quick-Ping changes that. Every event becomes a moment. Every session has an arc.
 
 **Supporting messages:**
-- "Git commits are item pickups. Test failures are alert stings."
 - "40+ events. 2 built-in collections. Your session, your soundtrack."
+- "Because the best notification is the one you don't have to look at."
 - "Because coding in silence was always the real bug."
 
-### Pillar 2: "Choose Your Mission"
-The collections are not just sound packs -- they are complete narrative experiences. MGS turns your session into a stealth operation. Sims turns it into a cheerful household simulation. The collection you choose defines the emotional arc of your workday.
+### Pillar 2: "Two Collections. Two Worlds."
+MGS and Sims are separate inputs, not variations of the same theme. MGS is a stealth operation. Sims is a cheerful household. They share the same event system but create completely different emotional experiences. The site must present them as equal, distinct choices -- not a primary and a secondary.
 
 **Supporting messages:**
 - MGS: "Every session is a stealth mission. The codec rings when you start. Flow state is sneaking through Shadow Moses."
 - Sims: "Your codebase is a household. Commits are promotions. Test failures get the grumpy Simlish treatment."
 - "Switch collections to match your mood. Tactical Tuesday. Simlish Friday."
+- "Same events. Different worlds."
 
 ### Pillar 3: "Professional-Grade Control"
 This is not a toy. The control panel is a proper instrument with 40+ events, per-event sound selection, AI-powered mapping, focus modes, and a REST API. The dark steel aesthetic is not decoration -- it signals serious craft.
@@ -199,15 +219,18 @@ A single-page scroll. The neutral frame holds the product story. The collection 
 - Closing with the "household" metaphor
 - Visually contained -- clearly "you have entered the Sims zone"
 
-### Section 6: CONTROL PANEL (Neutral Frame)
-- "SSL console meets dev tools" -- the neutral instrument
-- Mockup should NOT show MGS-specific sounds
-- Instead show generic event names with neutral sound references
-- Or show a collection switcher dropdown as the highlighted feature
-- Feature bullets for capabilities
+### Section 6: CONTROL PANEL (Adaptive Themes)
+- "The UI adapts to your collection" -- the key revelation
+- **Side-by-side mockups** showing both themes simultaneously:
+  - Left: MGS theme (deep black `#0A0A0A`, amber buttons, green LEDs, codec filenames)
+  - Right: Sims theme (warm white `#F4F1EC`, teal buttons, teal LEDs, Simlish filenames)
+- Each mockup shows the same events with their collection-specific sounds
+- Labeled "MGS Collection Active" and "Sims 2 Collection Active"
+- Feature bullets for control panel capabilities
+- The actual `control-panel.html` implements theme switching via CSS custom properties and `body.theme-mgs` / `body.theme-sims` classes
 
 ### Section 7: FEATURES ROW (Neutral Frame)
-- Claude Suggests, Focus Modes, Bring Your Own Sounds
+- Claude Suggests, Adaptive Themes, Bring Your Own Sounds
 - Three equal feature cards, no collection-specific theming
 
 ### Section 8: EVENT MAP (Neutral Frame)
@@ -273,7 +296,7 @@ Section dividers and emphasis use a 2-4px left border in the accent color. Like 
 - **Confident, not boastful.** State what it does. Do not oversell.
 - **Dry wit, not comedy.** "Because coding in silence was always the real bug" -- one joke per section maximum.
 - **Technical, not jargony.** Speak developer. CLI commands are copy. API endpoints are features. JSON is documentation.
-- **Referential, not fan-service.** Mentioning Shadow Moses once is evocative. Mentioning it five times is cosplay.
+- **Referential, not fan-service.** One Shadow Moses reference is evocative. One "Sul sul" is charming. Five of either is cosplay. Each collection section gets its own voice but keeps it contained.
 
 ### Copy Rules
 - Short paragraphs. 2-3 sentences maximum.

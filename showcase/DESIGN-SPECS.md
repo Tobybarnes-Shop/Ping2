@@ -1,25 +1,48 @@
 # Quick-Ping Showcase Site -- Design Specifications
 
-**Version**: 1.0
+**Version**: 2.0
 **Date**: 2026-02-13
-**Status**: Ready for development
+**Status**: Ready for development (revised)
 **Input**: CREATIVE-BRIEF.md, showcase-copy.md, control-panel.html design tokens
 
-This document contains every detail a developer needs to build the showcase site without asking questions. All values are exact. When in doubt, reference the hex codes and pixel values here, not approximations.
+**Revision note (v2):** The site framework is now **collection-neutral**. The base aesthetic is a clean, modern developer-tool dark theme -- like the control panel itself. Each collection section gets its own distinct visual treatment. The site does not favor MGS or Sims; it celebrates the contrast between them.
+
+This document contains every detail a developer needs to build the showcase site without asking questions. All values are exact.
 
 ---
 
 ## Table of Contents
 
-1. [Design Tokens](#1-design-tokens)
-2. [Global Styles](#2-global-styles)
-3. [Component Library](#3-component-library)
-4. [Section-by-Section Specs](#4-section-by-section-specs)
-5. [Interaction States](#5-interaction-states)
-6. [Animations](#6-animations)
-7. [Responsive Breakpoints](#7-responsive-breakpoints)
-8. [Accessibility](#8-accessibility)
-9. [Performance Budget](#9-performance-budget)
+1. [Design Philosophy](#0-design-philosophy)
+2. [Design Tokens](#1-design-tokens)
+3. [Global Styles](#2-global-styles)
+4. [Component Library](#3-component-library)
+5. [Section-by-Section Specs](#4-section-by-section-specs)
+6. [Interaction States](#5-interaction-states)
+7. [Animations](#6-animations)
+8. [Responsive Breakpoints](#7-responsive-breakpoints)
+9. [Accessibility](#8-accessibility)
+10. [Performance Budget](#9-performance-budget)
+
+---
+
+## 0. Design Philosophy
+
+### The Spotify Model
+
+Think of the showcase site like Spotify showcasing different playlists. The player is neutral -- dark, clean, functional. But each playlist (collection) has its own mood, color, and character.
+
+**Three layers of visual identity:**
+
+| Layer | Aesthetic | Where |
+|-------|-----------|-------|
+| **Framework** (neutral) | Clean dark developer tool. Matches the control panel. White/gray accents. No collection-specific color. | Hero, How It Works, Event Map, CTA, Footer |
+| **MGS Collection** | Dark, tactical, military-industrial. Amber/green codec screen vibes. Dense, technical, serious. | MGS card, MGS deep-dive section |
+| **Sims Collection** | Lighter, warmer, playful. Teal/plumbob colors. More whitespace, softer edges within the card. Cheerful energy. | Sims card, Sims feature section |
+
+### Key Principle
+
+The site should feel like a **neutral instrument** that plays two very different records. A visitor should be able to imagine ANY collection working in Quick-Ping, not just these two.
 
 ---
 
@@ -29,6 +52,8 @@ This document contains every detail a developer needs to build the showcase site
 
 ```css
 :root {
+  /* === FRAMEWORK COLORS (neutral, collection-agnostic) === */
+
   /* Backgrounds */
   --bg-page:           #0A0A0A;
   --bg-surface:        #141414;
@@ -40,36 +65,56 @@ This document contains every detail a developer needs to build the showcase site
   --border-hover:      rgba(255, 255, 255, 0.15);
   --border-active:     rgba(255, 255, 255, 0.25);
 
-  /* Accent Colors */
-  --green:             #00FF41;
-  --amber:             #FFB800;
-  --teal:              #00D4AA;
-  --red:               #FF3333;
-
-  /* Accent Glows (for box-shadow) */
-  --glow-green:        0 0 12px rgba(0, 255, 65, 0.4);
-  --glow-amber:        0 0 12px rgba(255, 184, 0, 0.4);
-  --glow-teal:         0 0 12px rgba(0, 212, 170, 0.4);
-  --glow-red:          0 0 12px rgba(255, 51, 51, 0.5);
-
-  /* Accent Dims (for subtle backgrounds) */
-  --green-dim:         rgba(0, 255, 65, 0.08);
-  --amber-dim:         rgba(255, 184, 0, 0.08);
-  --teal-dim:          rgba(0, 212, 170, 0.08);
-  --red-dim:           rgba(255, 51, 51, 0.08);
+  /* Framework Accent (neutral white -- NOT collection-colored) */
+  --accent:            #FFFFFF;
+  --accent-dim:        rgba(255, 255, 255, 0.08);
+  --accent-glow:       0 0 12px rgba(255, 255, 255, 0.15);
 
   /* Text Hierarchy */
   --text-primary:      #FFFFFF;
   --text-secondary:    rgba(255, 255, 255, 0.65);
   --text-tertiary:     rgba(255, 255, 255, 0.40);
-  --text-accent:       #00FF41;
 
-  /* Semantic */
-  --led-on:            #00FF41;
+  /* Semantic (framework) */
+  --led-on:            #FFFFFF;    /* Neutral white LED for framework sections */
   --led-off:           rgba(255, 255, 255, 0.10);
   --led-bezel:         #4A4A4A;
+
+  /* Error / warning (shared across all contexts) */
+  --red:               #FF3333;
+  --red-dim:           rgba(255, 51, 51, 0.08);
+  --glow-red:          0 0 12px rgba(255, 51, 51, 0.5);
+
+  /* === MGS COLLECTION COLORS === */
+  --mgs-primary:       #FFB800;   /* Codec amber */
+  --mgs-secondary:     #00FF41;   /* Terminal green (for code/event names within MGS) */
+  --mgs-bg:            #0D0D0A;   /* Slightly warm near-black */
+  --mgs-surface:       #141410;   /* Slightly warm dark surface */
+  --mgs-dim:           rgba(255, 184, 0, 0.08);
+  --mgs-glow:          0 0 12px rgba(255, 184, 0, 0.4);
+  --mgs-border:        rgba(255, 184, 0, 0.15);
+
+  /* === SIMS COLLECTION COLORS === */
+  --sims-primary:      #00D4AA;   /* Plumbob teal */
+  --sims-secondary:    #7BE87B;   /* Soft green (needs panel, not terminal green) */
+  --sims-bg:           #0F1413;   /* Slightly cool near-black */
+  --sims-surface:      #141A18;   /* Slightly cool dark surface */
+  --sims-warm:         #1C2420;   /* Warm elevated surface for Sims sections */
+  --sims-dim:          rgba(0, 212, 170, 0.08);
+  --sims-glow:         0 0 12px rgba(0, 212, 170, 0.4);
+  --sims-border:       rgba(0, 212, 170, 0.15);
 }
 ```
+
+### Color Usage Rules
+
+| Context | Primary Accent | LED Color | Border Accent | Code/Event Text |
+|---------|---------------|-----------|---------------|-----------------|
+| Framework sections (hero, how-it-works, event map, CTA, footer) | `#FFFFFF` | `#FFFFFF` | `rgba(255,255,255,0.15)` | `rgba(255,255,255,0.65)` |
+| MGS collection section | `#FFB800` | `#FFB800` | `rgba(255,184,0,0.15)` | `#00FF41` (terminal green) |
+| Sims collection section | `#00D4AA` | `#00D4AA` | `rgba(0,212,170,0.15)` | `#00D4AA` |
+
+**Critical rule:** Terminal green (`#00FF41`) is NOT a framework color. It belongs exclusively to the MGS aesthetic. The neutral framework uses white. This prevents the entire site from feeling like an MGS codec screen.
 
 ### 1.2 Typography
 
@@ -163,7 +208,7 @@ body {
 
 ### 2.2 Background Grid Texture
 
-A subtle dot grid across the entire page. Achieved via CSS only -- no images.
+A subtle dot grid across the entire page. CSS only -- no images.
 
 ```css
 body::before {
@@ -183,31 +228,28 @@ body::before {
 }
 ```
 
-This creates a 24px dot grid at ~3% opacity. Barely visible -- a texture, not a pattern. It references PCB traces and studio acoustic panels.
+24px dot grid at ~3% opacity. Barely visible -- a texture, not a pattern.
 
 ### 2.3 Page Container
 
 ```css
 .page-container {
   position: relative;
-  z-index: 1;          /* Above the background grid */
+  z-index: 1;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 24px;     /* Gutter: 24px on each side */
+  padding: 0 24px;
 }
 ```
 
 - Maximum content width: 1200px
 - Side gutters: 24px (all breakpoints)
-- Content area at max: 1152px
 
 ### 2.4 Section Spacing
 
-Every major section (hero, experience, control panel, event map, how-it-works, CTA, footer) uses consistent vertical rhythm:
-
 ```css
 .section {
-  padding: 96px 0;    /* --space-24 top and bottom */
+  padding: 96px 0;
 }
 
 .section + .section {
@@ -215,13 +257,25 @@ Every major section (hero, experience, control panel, event map, how-it-works, C
 }
 ```
 
-Sections are separated by a 1px border, not whitespace gaps. This reinforces the "rack-mounted modules" aesthetic.
+Sections are separated by 1px borders. Exception: collection-themed sections (MGS, Sims) may override the border with their accent color at low opacity.
 
 ### 2.5 Selection Color
 
 ```css
+/* Neutral framework selection */
 ::selection {
-  background: rgba(0, 255, 65, 0.25);
+  background: rgba(255, 255, 255, 0.20);
+  color: #FFFFFF;
+}
+
+/* Override inside collection sections */
+.mgs-theme ::selection {
+  background: rgba(255, 184, 0, 0.25);
+  color: #FFFFFF;
+}
+
+.sims-theme ::selection {
+  background: rgba(0, 212, 170, 0.25);
   color: #FFFFFF;
 }
 ```
@@ -232,7 +286,7 @@ Sections are separated by a 1px border, not whitespace gaps. This reinforces the
 
 ### 3.1 The LED Indicator
 
-The signature element. A small glowing circle that signals "Quick-Ping is on."
+A small glowing circle. Color varies by context.
 
 **Dimensions and Structure:**
 
@@ -254,8 +308,8 @@ The signature element. A small glowing circle that signals "Quick-Ping is on."
   width: 8px;
   height: 8px;
   border-radius: 50%;        /* ONLY element allowed border-radius */
-  background: #00FF41;
-  box-shadow: 0 0 8px rgba(0, 255, 65, 0.5);
+  background: #FFFFFF;       /* Default: neutral white */
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
   outline: 2px solid #4A4A4A;
   outline-offset: 1px;
 }
@@ -270,6 +324,11 @@ The signature element. A small glowing circle that signals "Quick-Ping is on."
   box-shadow: 0 0 8px rgba(255, 184, 0, 0.5);
 }
 
+.led--green {
+  background: #00FF41;
+  box-shadow: 0 0 8px rgba(0, 255, 65, 0.5);
+}
+
 .led--teal {
   background: #00D4AA;
   box-shadow: 0 0 8px rgba(0, 212, 170, 0.5);
@@ -281,6 +340,13 @@ The signature element. A small glowing circle that signals "Quick-Ping is on."
 }
 ```
 
+**Context rules for LED color:**
+- Hero section: **white** (neutral)
+- Framework section labels: **white** (neutral)
+- MGS card/section: **amber** (`#FFB800`)
+- Sims card/section: **teal** (`#00D4AA`)
+- Event map LEDs: **white** (neutral -- events are collection-agnostic)
+
 **Note:** The LED is the ONLY element in the entire design that uses `border-radius`. Everything else is sharp corners. No exceptions.
 
 ### 3.2 Buttons
@@ -291,9 +357,9 @@ Two button variants: Primary (filled) and Ghost (outlined).
 
 ```
 +----------------------------------+
-|  [LED]  VIEW ON GITHUB           |   height: 48px
+|  VIEW ON GITHUB                  |   height: 48px
 +----------------------------------+
-    ^green bg                  ^white text, 12px uppercase
+    ^white bg, dark text
 ```
 
 ```css
@@ -303,9 +369,9 @@ Two button variants: Primary (filled) and Ghost (outlined).
   gap: 8px;
   height: 48px;
   padding: 0 24px;
-  background: #00FF41;
+  background: #FFFFFF;
   color: #0A0A0A;
-  border: 2px solid #00FF41;
+  border: 2px solid #FFFFFF;
   font-family: inherit;
   font-size: 12px;
   font-weight: 700;
@@ -317,9 +383,9 @@ Two button variants: Primary (filled) and Ghost (outlined).
 }
 
 .btn-primary:hover {
-  background: #00CC34;
-  border-color: #00CC34;
-  box-shadow: 0 0 16px rgba(0, 255, 65, 0.3);
+  background: rgba(255, 255, 255, 0.90);
+  border-color: rgba(255, 255, 255, 0.90);
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.15);
 }
 
 .btn-primary:active {
@@ -328,19 +394,40 @@ Two button variants: Primary (filled) and Ghost (outlined).
 }
 
 .btn-primary:focus-visible {
-  outline: 2px solid #FFFFFF;
+  outline: 2px solid #FFB800;  /* Use amber for focus -- visible against white */
   outline-offset: 2px;
 }
 ```
 
-#### Ghost Button
+**Collection-themed button variants** (used inside collection sections only):
 
+```css
+/* MGS context */
+.mgs-theme .btn-primary {
+  background: #FFB800;
+  color: #0A0A0A;
+  border-color: #FFB800;
+}
+.mgs-theme .btn-primary:hover {
+  background: #E5A600;
+  border-color: #E5A600;
+  box-shadow: 0 0 16px rgba(255, 184, 0, 0.3);
+}
+
+/* Sims context */
+.sims-theme .btn-primary {
+  background: #00D4AA;
+  color: #0A0A0A;
+  border-color: #00D4AA;
+}
+.sims-theme .btn-primary:hover {
+  background: #00BF99;
+  border-color: #00BF99;
+  box-shadow: 0 0 16px rgba(0, 212, 170, 0.3);
+}
 ```
-+----------------------------------+
-|  SEE HOW IT WORKS                |   height: 48px
-+----------------------------------+
-    ^transparent bg, 1px white border
-```
+
+#### Ghost Button
 
 ```css
 .btn-ghost {
@@ -373,21 +460,16 @@ Two button variants: Primary (filled) and Ghost (outlined).
 }
 
 .btn-ghost:focus-visible {
-  outline: 2px solid #00FF41;
+  outline: 2px solid #FFFFFF;
   outline-offset: 2px;
 }
 ```
 
 ### 3.3 Code Blocks
 
-Terminal-style code display with an optional copy button.
+Terminal-style code display. Neutral styling in framework sections; collection-colored in collection sections.
 
-```
-+-------------------------------------------+
-| $ git clone https://github.com/...    [CP] |
-+-------------------------------------------+
-  ^green text on near-black bg
-```
+**Framework (neutral) code block:**
 
 ```css
 .code-block {
@@ -398,23 +480,41 @@ Terminal-style code display with an optional copy button.
   font-family: 'IBM Plex Mono', monospace;
   font-size: 14px;
   line-height: 1.5;
-  color: #00FF41;
+  color: rgba(255, 255, 255, 0.80);    /* Neutral light gray, NOT green */
   overflow-x: auto;
   white-space: pre;
   -webkit-overflow-scrolling: touch;
 }
 
 .code-block .prompt {
-  color: rgba(255, 255, 255, 0.40);   /* The $ or > symbol */
+  color: rgba(255, 255, 255, 0.40);
   user-select: none;
 }
 
 .code-block .comment {
-  color: rgba(255, 255, 255, 0.30);   /* # comments */
+  color: rgba(255, 255, 255, 0.30);
 }
 ```
 
-**Copy Button** (top-right corner of code block):
+**MGS-themed code block** (inside `.mgs-theme`):
+
+```css
+.mgs-theme .code-block {
+  color: #00FF41;          /* Terminal green -- MGS territory */
+  background: #0A0A08;
+}
+```
+
+**Sims-themed code block** (inside `.sims-theme`):
+
+```css
+.sims-theme .code-block {
+  color: #00D4AA;          /* Teal */
+  background: #0A0D0C;
+}
+```
+
+**Copy Button** (same across all themes):
 
 ```css
 .code-copy-btn {
@@ -439,21 +539,18 @@ Terminal-style code display with an optional copy button.
   color: #FFFFFF;
 }
 
-/* After copying -- brief green flash */
 .code-copy-btn.copied {
-  background: rgba(0, 255, 65, 0.15);
-  color: #00FF41;
-  border-color: rgba(0, 255, 65, 0.30);
+  background: rgba(255, 255, 255, 0.15);
+  color: #FFFFFF;
+  border-color: rgba(255, 255, 255, 0.30);
 }
 ```
 
-The copy icon is a simple clipboard SVG or the Unicode character `\u2398` (COPY). After click, it briefly changes to a checkmark for 1500ms, then reverts.
-
 ### 3.4 Collection Cards
 
-Two variants: MGS (amber theme) and Sims (teal theme). Used side-by-side in the Experience section.
+Two variants with dramatically different visual treatments. These sit side-by-side and the CONTRAST between them is the design feature.
 
-**Structure:**
+**Base Card Structure:**
 
 ```
 +------------------------------------------+
@@ -471,7 +568,7 @@ Two variants: MGS (amber theme) and Sims (teal theme). Used side-by-side in the 
 |  Feature bullet two                      |
 |  Feature bullet three                    |
 |                                          |
-|  "Pull quote or evocative line"          |  <- Accent-colored italic
+|  "Pull quote or evocative line"          |  <- Accent-colored text
 |                                          |
 +------------------------------------------+
 ```
@@ -480,16 +577,10 @@ Two variants: MGS (amber theme) and Sims (teal theme). Used side-by-side in the 
 
 ```css
 .collection-card {
-  background: #141414;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 0;                /* Padding is internal to sub-sections */
+  padding: 0;
   display: flex;
   flex-direction: column;
   transition: border-color 150ms ease;
-}
-
-.collection-card:hover {
-  border-color: rgba(255, 255, 255, 0.15);
 }
 
 .collection-card__header {
@@ -497,7 +588,6 @@ Two variants: MGS (amber theme) and Sims (teal theme). Used side-by-side in the 
   align-items: center;
   justify-content: space-between;
   padding: 12px 24px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .collection-card__header-label {
@@ -508,7 +598,6 @@ Two variants: MGS (amber theme) and Sims (teal theme). Used side-by-side in the 
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.10em;
-  color: rgba(255, 255, 255, 0.40);
 }
 
 .collection-card__body {
@@ -527,66 +616,120 @@ Two variants: MGS (amber theme) and Sims (teal theme). Used side-by-side in the 
 
 .collection-card__subtitle {
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.65);
   line-height: 1.6;
   margin-bottom: 24px;
 }
 
 .collection-card__quote {
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.65);
   padding-left: 16px;
-  border-left: 3px solid;    /* Border color set by variant */
+  border-left: 3px solid;
   margin-top: 24px;
   line-height: 1.6;
 }
 ```
 
-**MGS Variant:**
+#### MGS Card -- Dark, Tactical, Dense
+
+The MGS card should feel like a codec briefing screen. Dark, tight, amber accents.
 
 ```css
+.collection-card--mgs {
+  background: #0D0D0A;                          /* Warm near-black */
+  border: 1px solid rgba(255, 184, 0, 0.12);
+}
+
+.collection-card--mgs .collection-card__header {
+  border-bottom: 1px solid rgba(255, 184, 0, 0.12);
+  background: #111110;
+}
+
+.collection-card--mgs .collection-card__header-label {
+  color: rgba(255, 184, 0, 0.60);
+}
+
 .collection-card--mgs .collection-card__title {
   color: #FFB800;
 }
 
+.collection-card--mgs .collection-card__subtitle {
+  color: rgba(255, 255, 255, 0.55);
+}
+
 .collection-card--mgs .collection-card__quote {
   border-left-color: #FFB800;
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .collection-card--mgs:hover {
-  border-color: rgba(255, 184, 0, 0.25);
+  border-color: rgba(255, 184, 0, 0.30);
 }
 
-.collection-card--mgs .led {
-  background: #FFB800;
-  box-shadow: 0 0 8px rgba(255, 184, 0, 0.5);
+/* MGS internal table uses terminal green for event names */
+.collection-card--mgs .mission-table td:first-child {
+  color: #00FF41;
 }
 ```
 
-**Sims Variant:**
+#### Sims Card -- Lighter, Warmer, Playful
+
+The Sims card should feel noticeably different from MGS. Slightly lighter background, more breathing room, teal accents. Like going from a military bunker into a cheerful living room.
 
 ```css
+.collection-card--sims {
+  background: #111514;                          /* Cool-tinted dark */
+  border: 1px solid rgba(0, 212, 170, 0.12);
+}
+
+.collection-card--sims .collection-card__header {
+  border-bottom: 1px solid rgba(0, 212, 170, 0.12);
+  background: #141A18;
+}
+
+.collection-card--sims .collection-card__header-label {
+  color: rgba(0, 212, 170, 0.60);
+}
+
 .collection-card--sims .collection-card__title {
   color: #00D4AA;
 }
 
+.collection-card--sims .collection-card__subtitle {
+  color: rgba(255, 255, 255, 0.60);             /* Slightly brighter than MGS */
+}
+
 .collection-card--sims .collection-card__quote {
   border-left-color: #00D4AA;
+  color: rgba(255, 255, 255, 0.60);
 }
 
 .collection-card--sims:hover {
-  border-color: rgba(0, 212, 170, 0.25);
+  border-color: rgba(0, 212, 170, 0.30);
 }
 
-.collection-card--sims .led {
-  background: #00D4AA;
-  box-shadow: 0 0 8px rgba(0, 212, 170, 0.5);
+/* Sims internal table uses teal for event names */
+.collection-card--sims .mission-table td:first-child {
+  color: #00D4AA;
 }
 ```
 
+**Side-by-side contrast check:**
+
+| Property | MGS Card | Sims Card |
+|----------|----------|-----------|
+| Background | `#0D0D0A` (warm black) | `#111514` (cool, slightly lighter) |
+| Header bg | `#111110` | `#141A18` |
+| Title color | `#FFB800` (amber) | `#00D4AA` (teal) |
+| Border color | `rgba(255,184,0,0.12)` | `rgba(0,212,170,0.12)` |
+| LED color | Amber | Teal |
+| Event name color | `#00FF41` (terminal green) | `#00D4AA` (teal) |
+| Mood | Dense, tactical, serious | Lighter, warmer, playful |
+
+These two cards placed side-by-side should make the dual-personality of Quick-Ping immediately obvious.
+
 ### 3.5 Badge / Tag
 
-Small inline labels for stats and metadata.
+Small inline labels. Neutral by default, themed in collection context.
 
 ```css
 .badge {
@@ -602,11 +745,6 @@ Small inline labels for stats and metadata.
   white-space: nowrap;
 }
 
-.badge--green {
-  border-color: rgba(0, 255, 65, 0.30);
-  color: #00FF41;
-}
-
 .badge--amber {
   border-color: rgba(255, 184, 0, 0.30);
   color: #FFB800;
@@ -616,11 +754,16 @@ Small inline labels for stats and metadata.
   border-color: rgba(0, 212, 170, 0.30);
   color: #00D4AA;
 }
+
+.badge--white {
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #FFFFFF;
+}
 ```
 
 ### 3.6 Section Header
 
-Used at the start of each major section.
+Used at the start of each major section. LED color and label color match the section context.
 
 ```
 [LED]  SECTION LABEL
@@ -638,8 +781,17 @@ Description text goes here, kept to 2-3 sentences max.
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.10em;
-  color: #00FF41;
+  color: rgba(255, 255, 255, 0.50);   /* Neutral: muted white */
   margin-bottom: 16px;
+}
+
+/* In collection contexts, label takes the collection color */
+.mgs-theme .section-label {
+  color: rgba(255, 184, 0, 0.70);
+}
+
+.sims-theme .section-label {
+  color: rgba(0, 212, 170, 0.70);
 }
 
 .section-headline {
@@ -656,13 +808,13 @@ Description text goes here, kept to 2-3 sentences max.
   font-size: 16px;
   color: rgba(255, 255, 255, 0.65);
   line-height: 1.6;
-  max-width: 640px;           /* Constrain description width for readability */
+  max-width: 640px;
 }
 ```
 
 ### 3.7 Stats Bar
 
-Horizontal row of key metrics displayed as tabular readouts.
+Horizontal row of key metrics. Always neutral.
 
 ```
 +------+---------+--------+--------+
@@ -710,19 +862,7 @@ Horizontal row of key metrics displayed as tabular readouts.
 
 ### 3.8 Event Channel Strip
 
-For the Event Map section. Each event category is displayed as a mixer channel strip.
-
-**Structure:**
-
-```
-+-------------------------------------------+
-| CATEGORY NAME                    [4/6 ON] |  <- Category header
-|-------------------------------------------|
-| [LED] event_name      Short description   |  <- Individual event row
-| [LED] event_name      Short description   |
-| [LED] event_name      Short description   |
-+-------------------------------------------+
-```
+For the Event Map section. Neutral styling -- events belong to Quick-Ping, not a specific collection.
 
 ```css
 .channel-strip {
@@ -772,7 +912,7 @@ For the Event Map section. Each event category is displayed as a mixer channel s
 .channel-strip__event-name {
   font-size: 14px;
   font-weight: 400;
-  color: #00FF41;
+  color: rgba(255, 255, 255, 0.80);   /* Neutral -- NOT green */
   min-width: 160px;
   flex-shrink: 0;
 }
@@ -785,20 +925,7 @@ For the Event Map section. Each event category is displayed as a mixer channel s
 
 ### 3.9 Step Card (How It Works)
 
-Three numbered steps displayed in sequence.
-
-```
-+-------+------------------------------------------+
-|       |                                          |
-|  01   |  INSTALL                                 |
-|       |  Description text here                   |
-|       |                                          |
-|       |  +------------------------------------+  |
-|       |  | $ git clone ...                    |  |
-|       |  +------------------------------------+  |
-|       |                                          |
-+-------+------------------------------------------+
-```
+Neutral styling.
 
 ```css
 .step {
@@ -823,7 +950,7 @@ Three numbered steps displayed in sequence.
 }
 
 .step__content {
-  padding: 24px 24px 24px 24px;
+  padding: 24px;
 }
 
 .step__title {
@@ -845,11 +972,11 @@ Three numbered steps displayed in sequence.
 
 ### 3.10 Accent Line
 
-A vertical left-border used for emphasis. Equivalent to a channel strip selection indicator.
+Left-border emphasis. Color matches context.
 
 ```css
 .accent-line {
-  border-left: 3px solid #00FF41;
+  border-left: 3px solid rgba(255, 255, 255, 0.25);  /* Neutral default */
   padding-left: 16px;
 }
 
@@ -862,37 +989,96 @@ A vertical left-border used for emphasis. Equivalent to a channel strip selectio
 }
 ```
 
+### 3.11 Feature List (inside cards)
+
+```css
+.feature-list {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+}
+
+.feature-list li {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.6;
+  padding: 4px 0 4px 16px;
+  position: relative;
+}
+
+.feature-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 11px;
+  width: 4px;
+  height: 4px;
+  background: currentColor;
+}
+```
+
+Bullet markers are small 4px squares, not circles. Sharp corners.
+
+### 3.12 Internal Table (Mission Arc / Event Mapping)
+
+Used inside collection cards.
+
+```css
+.mapping-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mapping-table th {
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: rgba(255, 255, 255, 0.40);
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mapping-table td {
+  font-size: 13px;
+  padding: 6px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.65);
+}
+```
+
+Background color of the table inherits from the card context (warm-black for MGS, cool-dark for Sims).
+
 ---
 
 ## 4. Section-by-Section Specs
 
 ### 4.1 HERO -- "Your Code Has a Soundtrack Now"
 
-**Layout: Full viewport height, centered content**
+**Theme: NEUTRAL. No collection colors.**
 
 ```
 +================================================================+
 |                                                                |
 |                                                                |
+|                       [LED white, pulsing]                     |
 |                                                                |
-|                        [LED pulsing]                           |
+|              YOUR CODE HAS A SOUNDTRACK NOW                    |
 |                                                                |
-|              YOUR CODE HAS A SOUNDTRACK NOW                    |  <- Display type
-|                                                                |
-|   Sound notifications for Claude Code. 124 Metal Gear Solid   |  <- Body
+|   Sound notifications for Claude Code. 124 Metal Gear Solid   |
 |   sounds. 140+ Sims 2 sounds. Every commit, every test,       |
 |   every context warning -- heard, not missed.                  |
 |                                                                |
-|       [VIEW ON GITHUB]     [SEE HOW IT WORKS]                 |  <- Buttons
+|       [VIEW ON GITHUB]     [SEE HOW IT WORKS]                 |
 |                                                                |
-|                                                                |
-|   Because the best notification is the one you don't have to   |  <- Tertiary text
+|   Because the best notification is the one you don't have to   |
 |   look at.                                                     |
 |                                                                |
 +================================================================+
 ```
-
-**Specs:**
 
 ```css
 .hero {
@@ -908,11 +1094,11 @@ A vertical left-border used for emphasis. Equivalent to a channel strip selectio
 
 .hero__led {
   margin-bottom: 32px;
-  /* Uses the LED component with pulse animation (see Section 6.1) */
+  /* White LED with pulse animation */
 }
 
 .hero__headline {
-  font-size: 56px;        /* --type-display */
+  font-size: 56px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -947,57 +1133,53 @@ A vertical left-border used for emphasis. Equivalent to a channel strip selectio
 ```
 
 **Content:**
-- LED: Green, pulsing on a 3-second loop (see Animation 6.1)
+- LED: **White**, pulsing on a 3-second loop
 - Headline: "YOUR CODE HAS A SOUNDTRACK NOW"
-- Tagline: "Sound notifications for Claude Code. 124 Metal Gear Solid sounds. 140+ Sims 2 sounds. Every commit, every test, every context warning -- heard, not missed."
-- CTA 1 (primary): "VIEW ON GITHUB" with small LED indicator
-- CTA 2 (ghost): "SEE HOW IT WORKS" (scrolls to Section 5)
+- Tagline: From showcase-copy.md
+- CTA 1 (primary, white): "VIEW ON GITHUB"
+- CTA 2 (ghost): "SEE HOW IT WORKS"
 - Sub-tagline: "Because the best notification is the one you don't have to look at."
 
 ---
 
 ### 4.2 THE EXPERIENCE -- "Two Collections, Zero Configuration"
 
-**Layout: Section label + headline + two-column card grid**
+**Theme: NEUTRAL framework with collection-themed cards inside.**
+
+This is the most important section visually. The two cards should feel like two different worlds placed side-by-side.
 
 ```
 +================================================================+
 |                                                                |
-|  [LED]  COLLECTIONS                                            |
+|  [LED white]  COLLECTIONS                                      |
 |                                                                |
 |  TWO ICONIC SOUND PACKS. READY ON INSTALL.                    |
-|  Quick-Ping ships with two built-in collections that work      |
-|  out of the box.                                               |
+|  Pick a vibe. Start coding.                                    |
 |                                                                |
-|  +---------------------------+ +---------------------------+   |
-|  | [LED] MGS COLLECTION      | | [LED] SIMS 2 COLLECTION  |   |
-|  |---------------------------| |---------------------------|   |
-|  |                           | |                           |   |
-|  | TACTICAL ESPIONAGE AUDIO  | | SIMLISH SOUND DESIGN      |   |
-|  | Your coding session       | | Coding feels like         |   |
-|  | becomes a tactical        | | managing a productive     |   |
-|  | espionage operation.      | | household.                |   |
-|  |                           | |                           |   |
-|  | +--------+----------+    | | +--------+----------+    |   |
-|  | | Event  | MGS Snd  |    | | | Event  | Sims Snd |    |   |
-|  | |--------|----------|    | | |--------|----------|    |   |
-|  | | start  | Codec    |    | | | commit | Cheerful |    |   |
-|  | | commit | Item     |    | | | fail   | Grumpy   |    |   |
-|  | | fail   | Alert ?  |    | | | push   | Excited  |    |   |
-|  | | ctx_90 | Alert !  |    | | | streak | Woohoo   |    |   |
-|  | +--------+----------+    | | +--------+----------+    |   |
-|  |                           | |                           |   |
-|  | * 124 sounds, 8-bit WAV  | | * 140+ sounds             |   |
-|  | * 21 events default on   | | * Every emotion covered   |   |
-|  |                           | |                           |   |
-|  | "You hear *that* sound   | | "Your codebase is a      |   |
-|  |  at context_90."         | |  household."             |   |
-|  +---------------------------+ +---------------------------+   |
+|  +--MGS CARD (warm black)--+ +--SIMS CARD (cool dark)---+    |
+|  | [LED amber] MGS COLL'N  | | [LED teal] SIMS 2 COLL'N|    |
+|  |  amber header bar       | |  teal header bar         |    |
+|  |-------------------------| |---------------------------|    |
+|  |                         | |                           |    |
+|  | TACTICAL ESPIONAGE      | | SIMLISH SOUND             |    |
+|  | AUDIO                   | | DESIGN                    |    |
+|  |                         | |                           |    |
+|  | +-----MGS table------+ | | +-----Sims table------+  |    |
+|  | | Event | Sound      | | | | Event | Sound        |  |    |
+|  | | start | Codec ring | | | | commit| Cheerful     |  |    |
+|  | | fail  | Alert ?    | | | | fail  | Grumpy       |  |    |
+|  | | ctx_90| Alert !    | | | | push  | Excited      |  |    |
+|  | +--------------------+ | | +----------------------+  |    |
+|  |                         | |                           |    |
+|  | * 124 sounds, 8-bit WAV| | * 140+ sounds             |    |
+|  | * 21 events default on | | * Every emotion covered   |    |
+|  |                         | |                           |    |
+|  | "You hear *that* sound  | | "Your codebase is a      |    |
+|  |  at context_90."        | |  household."             |    |
+|  +-------------------------+ +---------------------------+    |
 |                                                                |
 +================================================================+
 ```
-
-**Specs:**
 
 ```css
 .experience {
@@ -1012,195 +1194,299 @@ A vertical left-border used for emphasis. Equivalent to a channel strip selectio
 }
 ```
 
-**Card Internal Table (Mission Arc):**
+The section header uses a white LED and neutral label color. The cards themselves carry the collection theming.
+
+---
+
+### 4.3 THE CONTROL PANEL -- "The UI Adapts Too"
+
+**Theme: NEUTRAL framework, showcasing BOTH collection themes.**
+
+The control panel section demonstrates that Quick-Ping is more than sound swapping -- the entire UI adapts to match the active collection's aesthetic. This section shows two side-by-side mockups: the MGS dark theme and the Sims light theme.
+
+**Key message:** "Switch collections, and the entire interface transforms. Not just the sounds -- the whole experience."
+
+```
++================================================================+
+|                                                                |
+|  [LED white]  CONTROL PANEL                                    |
+|                                                                |
+|  THE UI ADAPTS TOO                                              |
+|  Switch collections, and the entire interface transforms.      |
+|  Dark and tactical for MGS. Light and playful for Sims.        |
+|                                                                |
+|  +--MGS THEME (dark mock)--+  +--SIMS THEME (light mock)-+   |
+|  | [dark bg #1A1A1A]       |  | [light bg #F5F5F0]       |   |
+|  | QUICK-PING 2            |  | QUICK-PING 2              |   |
+|  | [green LED strip]       |  | [teal LED strip]          |   |
+|  |                         |  |                            |   |
+|  | SESSION START     [*]   |  | SESSION START     [*]     |   |
+|  | [0x1a.wav        v] [>] |  | [mGREETING.wav   v] [>]  |   |
+|  | "Codec ring"            |  | "Cheerful greeting"       |   |
+|  |                         |  |                            |   |
+|  | [red Save Changes]      |  | [teal Save Changes]       |   |
+|  +-------------------------+  +----------------------------+   |
+|                                                                |
+|  "The entire experience adapts to your collection's vibe."     |
+|                                                                |
+|  localhost:5050 -- One URL, two worlds.                        |
+|                                                                |
+|  [TOGGLE ON/OFF] [PREVIEW SOUNDS] [AI-MAPPED] [THEME ADAPTS] |
+|                                                                |
++================================================================+
+```
+
+**Dual Screenshot Frame Layout:**
 
 ```css
-.mission-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 16px 0;
-  background: #0D0D0D;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+.control-panel-showcase {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 48px 0 24px 0;
 }
 
-.mission-table th {
+@media (max-width: 767px) {
+  .control-panel-showcase {
+    grid-template-columns: 1fr;
+  }
+}
+```
+
+**MGS Screenshot Frame (Dark):**
+
+```css
+.screenshot-frame--mgs {
+  background: #0D0D0D;
+  border: 2px solid rgba(255, 184, 0, 0.15);
+  padding: 2px;
+  position: relative;
+}
+
+.screenshot-frame--mgs .screenshot-frame__chrome {
+  background: #1A1A1A;
+  padding: 8px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.screenshot-frame--mgs .screenshot-frame__url {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.40);
+}
+
+.screenshot-frame--mgs .screenshot-frame__content {
+  padding: 24px;
+  min-height: 280px;
+  background: #1A1A1A;
+}
+
+.screenshot-frame--mgs .screenshot-frame__label {
   font-size: 10px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.10em;
-  color: rgba(255, 255, 255, 0.40);
-  text-align: left;
-  padding: 8px 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.mission-table td {
-  font-size: 13px;
-  padding: 6px 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-  color: rgba(255, 255, 255, 0.65);
-}
-
-.mission-table td:first-child {
-  color: #00FF41;          /* Event name in accent */
-  font-size: 12px;
-}
-```
-
-For the MGS card table `td:first-child` color is `#FFB800`. For the Sims card it is `#00D4AA`.
-
-**Feature List (inside cards):**
-
-```css
-.feature-list {
-  list-style: none;
-  padding: 0;
-  margin: 16px 0;
-}
-
-.feature-list li {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.65);
-  line-height: 1.6;
-  padding: 4px 0 4px 16px;
-  position: relative;
-}
-
-.feature-list li::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 11px;
-  width: 4px;
-  height: 4px;
-  background: currentColor;   /* Inherits the text color */
-}
-```
-
-Bullet markers are small 4px squares, not circles. Consistent with the sharp-corner aesthetic.
-
----
-
-### 4.3 THE CONTROL PANEL -- "SSL Console Meets Dev Tools"
-
-**Layout: Section header + annotated screenshot frame**
-
-```
-+================================================================+
-|                                                                |
-|  [LED]  CONTROL PANEL                                          |
-|                                                                |
-|  SSL CONSOLE MEETS DEV TOOLS                                   |
-|  A dark steel control panel for your sounds.                   |
-|                                                                |
-|  +--------------------------------------------------------+   |
-|  |                                                        |   |
-|  |          [Stylized Control Panel Mockup]               |   |
-|  |                                                        |   |
-|  |   .----- "Collection Switcher"                         |   |
-|  |   |                                                    |   |
-|  |   |   .------- "LED Toggles"                           |   |
-|  |   |   |                                                |   |
-|  |   |   |   .--- "Sound Preview"                         |   |
-|  |   |   |   |                                            |   |
-|  |   |   |   |   .--- "Claude Suggests"                   |   |
-|  |   |   |   |   |                                        |   |
-|  +--------------------------------------------------------+   |
-|                                                                |
-|  localhost:5050 -- Your mission control.                       |
-|                                                                |
-|  +--------+ +--------+ +---------+ +-----------+ +--------+  |
-|  | 40+    | | TOGGLE | | PREVIEW | | AI-MAPPED | | SEARCH |  |
-|  | EVENTS | | ON/OFF | | SOUNDS  | | DEFAULTS  | | FILTER |  |
-|  +--------+ +--------+ +---------+ +-----------+ +--------+  |
-|                                                                |
-+================================================================+
-```
-
-**Screenshot Frame:**
-
-The control panel "screenshot" is a CSS-only stylized mockup, not an actual image. It is a simplified representation using the same design tokens.
-
-```css
-.screenshot-frame {
+  color: #FFB800;
+  text-align: center;
+  padding: 8px;
   background: #0D0D0D;
-  border: 2px solid rgba(255, 255, 255, 0.08);
-  padding: 2px;
-  margin: 48px 0 24px 0;
-  position: relative;
-}
-
-.screenshot-frame__chrome {
-  background: #141414;
-  padding: 8px 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.screenshot-frame__url {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.40);
-  letter-spacing: 0.02em;
-}
-
-.screenshot-frame__content {
-  padding: 32px;
-  min-height: 400px;
-  /* Contains a simplified CSS-only mockup of the control panel */
+  border-top: 1px solid rgba(255, 184, 0, 0.15);
 }
 ```
 
-**Annotation Callouts:**
-
-Floating labels that point to features in the mockup.
+**Sims Screenshot Frame (Light):**
 
 ```css
-.callout {
-  position: absolute;
+.screenshot-frame--sims {
+  background: #ECEEE8;
+  border: 2px solid rgba(0, 179, 137, 0.15);
+  padding: 2px;
+  position: relative;
+}
+
+.screenshot-frame--sims .screenshot-frame__chrome {
+  background: #FFFFFF;
+  padding: 8px 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.callout__dot {
-  width: 6px;
-  height: 6px;
-  background: #00FF41;
-  border-radius: 50%;
-  box-shadow: 0 0 6px rgba(0, 255, 65, 0.5);
-  flex-shrink: 0;
-}
-
-.callout__line {
-  width: 40px;
-  height: 1px;
-  background: rgba(0, 255, 65, 0.30);
-  flex-shrink: 0;
-}
-
-.callout__text {
+.screenshot-frame--sims .screenshot-frame__url {
   font-size: 11px;
+  color: rgba(26, 42, 36, 0.40);
+}
+
+.screenshot-frame--sims .screenshot-frame__content {
+  padding: 24px;
+  min-height: 280px;
+  background: #F5F5F0;
+}
+
+.screenshot-frame--sims .screenshot-frame__label {
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: #00B389;
+  text-align: center;
+  padding: 8px;
+  background: #ECEEE8;
+  border-top: 1px solid rgba(0, 179, 137, 0.15);
+}
+```
+
+**Simplified Mockup Elements (inside each frame):**
+
+Each frame contains a CSS-only simplified version of the control panel showing:
+1. Header with "QUICK-PING 2" title
+2. A mini event card with LED strip, event name, toggle, and sound select
+3. A primary button in the theme's accent color
+4. Appropriate LED colors and text contrast
+
+These mockups do NOT need to be full replicas. They should convey the mood difference at a glance -- dark/green/tactical vs light/teal/playful.
+
+**Mini Event Card (MGS variant, inside dark frame):**
+
+```css
+.mini-card--mgs {
+  background: #151515;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  padding: 12px;
+  position: relative;
+}
+
+.mini-card--mgs .mini-led-strip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #00FF00;
+  box-shadow: 0 0 4px #00FF00;
+}
+
+.mini-card--mgs .mini-event-name {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #FFFFFF;
+  margin-top: 4px;
+}
+
+.mini-card--mgs .mini-sound-name {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.45);
+  margin-top: 4px;
+}
+
+/* Sound description label -- tells user what the sound IS */
+.mini-card--mgs .mini-sound-desc {
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.35);
+  margin-top: 2px;
+  letter-spacing: 0.02em;
+  /* e.g. "Codec ring", "Alert (!)", "Item pickup chime" */
+}
+
+.mini-btn--mgs {
+  display: inline-block;
+  padding: 4px 12px;
+  background: #D63500;
+  color: #FFFFFF;
+  font-size: 10px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.65);
-  white-space: nowrap;
+  margin-top: 12px;
+  border: none;
 }
 ```
 
-**Feature Badges Row:**
-
-Below the screenshot, a horizontal row of feature badges.
+**Mini Event Card (Sims variant, inside light frame):**
 
 ```css
-.feature-badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 32px;
+.mini-card--sims {
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 12px;
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
+
+.mini-card--sims .mini-led-strip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #00D4AA;
+  box-shadow: 0 0 4px rgba(0, 212, 170, 0.4);
+}
+
+.mini-card--sims .mini-event-name {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #1A2A24;
+  margin-top: 4px;
+}
+
+.mini-card--sims .mini-sound-name {
+  font-size: 10px;
+  color: rgba(26, 42, 36, 0.45);
+  margin-top: 4px;
+}
+
+/* Sound description label -- tells user what the sound IS */
+.mini-card--sims .mini-sound-desc {
+  font-size: 9px;
+  color: rgba(26, 42, 36, 0.35);
+  margin-top: 2px;
+  letter-spacing: 0.02em;
+  /* e.g. "Cheerful greeting", "Enthusiastic 'Dag dag!'" */
+}
+
+.mini-btn--sims {
+  display: inline-block;
+  padding: 4px 12px;
+  background: #00B389;
+  color: #1A2A24;
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 12px;
+  border: none;
+}
+```
+
+**Tagline below the dual mockups:**
+
+```css
+.control-panel-tagline {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.65);
+  text-align: center;
+  margin-top: 24px;
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+```
+
+Content: "The entire experience adapts to your collection's vibe. Not just the sounds -- the whole interface."
+
+**Feature Badges Row (updated):**
+
+Below the tagline, a row of feature badges. Updated to include "THEME ADAPTS":
+
+```
+[TOGGLE ON/OFF] [PREVIEW SOUNDS] [AI-MAPPED DEFAULTS] [THEME ADAPTS]
 ```
 
 Uses the `.badge` component from Section 3.5.
@@ -1209,42 +1495,9 @@ Uses the `.badge` component from Section 3.5.
 
 ### 4.4 EVENT MAP -- "40+ Events. Every Moment Covered."
 
-**Layout: Stats bar + channel strip grid**
+**Theme: NEUTRAL. Events belong to Quick-Ping, not a collection.**
 
-```
-+================================================================+
-|                                                                |
-|  [LED]  EVENT MAP                                              |
-|                                                                |
-|  40+ EVENTS. EVERY MOMENT COVERED.                             |
-|                                                                |
-|  +--------+---------+--------+---------+                       |
-|  |  40+   |    2    |  264+  |  ZERO   |                       |
-|  | EVENTS | COLL'NS | SOUNDS | BUILD   |                       |
-|  +--------+---------+--------+---------+                       |
-|                                                                |
-|  +---------------------------------------+                     |
-|  | CORE                          [5/5]   |                     |
-|  |---------------------------------------|                     |
-|  | [LED] session_start   Session begins  |                     |
-|  | [LED] session_end     Session ends    |                     |
-|  | [LED] tool_start      Tool begins     |                     |
-|  +---------------------------------------+                     |
-|                                                                |
-|  +--------------------+  +-------------------+                 |
-|  | GIT          [4/6] |  | TESTING     [3/4] |                 |
-|  |--------------------|  |-------------------|                 |
-|  | [LED] git_commit   |  | [LED] test_pass   |                 |
-|  | [LED] git_push     |  | [LED] test_fail   |                 |
-|  | [LED] git_pull     |  | [LED] test_start  |                 |
-|  +--------------------+  +-------------------+                 |
-|                                                                |
-|  (... more channel strips in responsive grid)                  |
-|                                                                |
-+================================================================+
-```
-
-**Grid Layout:**
+Same layout as v1 but with neutral (white) LEDs and neutral event name colors.
 
 ```css
 .event-map__grid {
@@ -1254,13 +1507,12 @@ Uses the `.badge` component from Section 3.5.
   margin-top: 32px;
 }
 
-/* First strip (CORE) spans full width */
 .event-map__grid .channel-strip:first-child {
   grid-column: 1 / -1;
 }
 ```
 
-**Channel Strip Categories and Representative Events:**
+Channel strip categories remain the same:
 
 | Category | Example Events | Count |
 |----------|---------------|-------|
@@ -1275,143 +1527,23 @@ Uses the `.badge` component from Section 3.5.
 | Thinking | plan_start, plan_end, thinking | ~3 |
 | Skills | skill_start, skill_end | ~2 |
 
-Show 2-3 representative events per category. The rest are implied by the count badge.
-
 ---
 
 ### 4.5 HOW IT WORKS -- "Three Steps. Two Minutes."
 
-**Layout: Section header + three step cards + architecture diagram**
+**Theme: NEUTRAL.**
 
-```
-+================================================================+
-|                                                                |
-|  [LED]  HOW IT WORKS                                           |
-|                                                                |
-|  THREE STEPS. TWO MINUTES. ALL THE SOUNDS.                    |
-|                                                                |
-|  +------+--------------------------------------------------+  |
-|  |      |  CLONE AND INSTALL                               |  |
-|  |  01  |  Quick-Ping is pure Python + vanilla JS.         |  |
-|  |      |                                                  |  |
-|  |      |  +----------------------------------------------+|  |
-|  |      |  | $ git clone https://github.com/user/qp2.git ||  |
-|  |      |  | $ pip3 install flask flask-cors              ||  |
-|  |      |  +----------------------------------------------+|  |
-|  +------+--------------------------------------------------+  |
-|                                                                |
-|  +------+--------------------------------------------------+  |
-|  |      |  HOOK INTO CLAUDE CODE                           |  |
-|  |  02  |  Add Quick-Ping to your hooks config.            |  |
-|  |      |  One config block, three hook points.            |  |
-|  +------+--------------------------------------------------+  |
-|                                                                |
-|  +------+--------------------------------------------------+  |
-|  |      |  LAUNCH THE CONTROL PANEL                        |  |
-|  |  03  |  Open localhost:5050. Pick a collection. Code.   |  |
-|  |      |                                                  |  |
-|  |      |  +----------------------------------------------+|  |
-|  |      |  | $ ./launch-control-panel.sh                  ||  |
-|  |      |  +----------------------------------------------+|  |
-|  +------+--------------------------------------------------+  |
-|                                                                |
-|  ARCHITECTURE                                                  |
-|                                                                |
-|  +------------+     +-------------+     +--------+             |
-|  | Claude     | --> | Hooks       | --> | quick- |             |
-|  | Code       |     | (Pre/Post/  |     | ping   |             |
-|  |            |     |  Stop)      |     | v2.sh  |             |
-|  +------------+     +-------------+     +--------+             |
-|                                              |                 |
-|                                              v                 |
-|                                         +--------+             |
-|                                         | afplay |             |
-|                                         +--------+             |
-|                                                                |
-|  [PYTHON FLASK]  [VANILLA JS]  [REST API]  [macOS]  [ZERO     |
-|                                              DEPS]             |
-|                                                                |
-+================================================================+
-```
+Same layout as v1. Step cards, architecture diagram, tech badges. All neutral styling.
 
-**Architecture Diagram:**
+Architecture diagram nodes use neutral white borders and text. No collection colors.
 
-CSS-only flow diagram using flexbox and borders.
-
-```css
-.architecture {
-  margin-top: 48px;
-}
-
-.architecture__label {
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.40);
-  margin-bottom: 24px;
-}
-
-.architecture__flow {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.architecture__node {
-  padding: 16px 24px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: #141414;
-  text-align: center;
-}
-
-.architecture__node-name {
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #FFFFFF;
-}
-
-.architecture__node-detail {
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.40);
-  margin-top: 4px;
-}
-
-.architecture__arrow {
-  width: 40px;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.20);
-  position: relative;
-}
-
-.architecture__arrow::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  top: -3px;
-  border: 3px solid transparent;
-  border-left-color: rgba(255, 255, 255, 0.20);
-}
-```
-
-**Tech Badges Row:**
-
-Below the architecture diagram, a row of `.badge` components:
-- PYTHON FLASK
-- VANILLA JS
-- REST API
-- macOS
-- ZERO DEPENDENCIES
+Tech badges: PYTHON FLASK, VANILLA JS, REST API, macOS, ZERO DEPENDENCIES -- all `.badge` (default neutral variant).
 
 ---
 
 ### 4.6 CTA -- "Your Terminal Is Too Quiet"
 
-**Layout: Green-bordered panel, centered**
+**Theme: NEUTRAL. White border, not green.**
 
 ```
 +================================================================+
@@ -1437,19 +1569,18 @@ Below the architecture diagram, a row of `.badge` components:
 
 ```css
 .cta-panel {
-  border: 2px solid #00FF41;
+  border: 2px solid rgba(255, 255, 255, 0.25);     /* Neutral white, NOT green */
   background: #141414;
   padding: 64px 48px;
   text-align: center;
   position: relative;
 }
 
-/* Subtle green ambient glow at the edges */
 .cta-panel::before {
   content: '';
   position: absolute;
   inset: -1px;
-  border: 1px solid rgba(0, 255, 65, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   pointer-events: none;
 }
 
@@ -1483,7 +1614,6 @@ Below the architecture diagram, a row of `.badge` components:
 .cta-panel__tagline {
   font-size: 14px;
   color: rgba(255, 255, 255, 0.65);
-  font-style: normal;        /* No italics */
 }
 ```
 
@@ -1491,17 +1621,7 @@ Below the architecture diagram, a row of `.badge` components:
 
 ### 4.7 FOOTER
 
-**Layout: Minimal, single line**
-
-```
-+================================================================+
-|                                                                |
-|  QUICK-PING    MIT License    2026                             |
-|                                                                |
-|  Built for developers who alt-tab. Powered by nostalgia.      |
-|                                                                |
-+================================================================+
-```
+**Theme: NEUTRAL.**
 
 ```css
 .footer {
@@ -1546,14 +1666,17 @@ Below the architecture diagram, a row of `.badge` components:
 
 | Element | Hover Effect |
 |---------|-------------|
-| Primary button | Background darkens to `#00CC34`, gains `box-shadow: 0 0 16px rgba(0, 255, 65, 0.3)` |
-| Ghost button | Border brightens to `rgba(255,255,255,0.40)`, text brightens to `#FFFFFF`, subtle bg `rgba(255,255,255,0.03)` |
-| Collection card | Border brightens to accent color at 25% opacity. No transform, no scale. |
-| Channel strip | No hover effect. Static display element. |
-| Code block | No hover on the block itself. Copy button gains hover state independently. |
-| Copy button | Background brightens to `rgba(255,255,255,0.10)`, text to `#FFFFFF` |
+| Primary button (neutral) | `rgba(255,255,255,0.90)` bg, `box-shadow: 0 0 16px rgba(255,255,255,0.15)` |
+| Primary button (MGS context) | `#E5A600` bg, `box-shadow: 0 0 16px rgba(255,184,0,0.3)` |
+| Primary button (Sims context) | `#00BF99` bg, `box-shadow: 0 0 16px rgba(0,212,170,0.3)` |
+| Ghost button | Border to `rgba(255,255,255,0.40)`, text to `#FFFFFF`, bg `rgba(255,255,255,0.03)` |
+| MGS collection card | Border to `rgba(255,184,0,0.30)` |
+| Sims collection card | Border to `rgba(0,212,170,0.30)` |
+| Channel strip | No hover. Static. |
+| Code block | No hover on block. Copy button has independent hover. |
+| Copy button | Bg to `rgba(255,255,255,0.10)`, text to `#FFFFFF` |
 | Footer links | Color to `#FFFFFF` |
-| Badges | No hover state. Static display element. |
+| Badges | No hover. Static. |
 
 All hover transitions: `150ms ease`.
 
@@ -1563,20 +1686,16 @@ All hover transitions: `150ms ease`.
 |---------|-------------|
 | Primary button | `translateY(1px)`, remove box-shadow |
 | Ghost button | `translateY(1px)` |
-| Copy button | Green flash -- background `rgba(0, 255, 65, 0.15)`, border `rgba(0, 255, 65, 0.30)`, text `#00FF41`. Lasts 1500ms, then reverts. |
+| Copy button | Brief flash -- bg `rgba(255,255,255,0.15)`, text `#FFFFFF`. 1500ms, then reverts. |
 
 ### 5.3 Focus States (Keyboard Navigation)
 
-All interactive elements must have visible focus indicators for keyboard users.
-
 ```css
-/* Default focus style for all interactive elements */
 :focus-visible {
-  outline: 2px solid #00FF41;
+  outline: 2px solid #FFFFFF;    /* Neutral white focus ring */
   outline-offset: 2px;
 }
 
-/* Remove default outline for mouse users */
 :focus:not(:focus-visible) {
   outline: none;
 }
@@ -1584,14 +1703,16 @@ All interactive elements must have visible focus indicators for keyboard users.
 
 | Element | Focus Style |
 |---------|------------|
-| Primary button | `outline: 2px solid #FFFFFF; outline-offset: 2px;` (white, not green, for contrast against green bg) |
-| Ghost button | `outline: 2px solid #00FF41; outline-offset: 2px;` |
-| Code copy button | `outline: 2px solid #00FF41; outline-offset: 2px;` |
-| Links | `outline: 2px solid #00FF41; outline-offset: 2px;` |
+| Primary button (neutral) | `outline: 2px solid #FFB800; outline-offset: 2px;` (amber visible against white bg) |
+| Primary button (MGS) | `outline: 2px solid #FFFFFF; outline-offset: 2px;` (white visible against amber bg) |
+| Primary button (Sims) | `outline: 2px solid #FFFFFF; outline-offset: 2px;` (white visible against teal bg) |
+| Ghost button | `outline: 2px solid #FFFFFF; outline-offset: 2px;` |
+| Code copy button | `outline: 2px solid #FFFFFF; outline-offset: 2px;` |
+| Links | `outline: 2px solid #FFFFFF; outline-offset: 2px;` |
 
 ### 5.4 Disabled States
 
-Not applicable for the showcase site. All elements are always active. No form inputs, no toggles.
+Not applicable. All elements are always active.
 
 ---
 
@@ -1599,19 +1720,19 @@ Not applicable for the showcase site. All elements are always active. No form in
 
 ### 6.1 LED Pulse (Hero)
 
-The signature animation. A slow, breathing pulse that signals "the site is on."
+White LED breathing pulse.
 
 ```css
 @keyframes led-pulse {
   0%, 100% {
     opacity: 1;
-    box-shadow: 0 0 8px rgba(0, 255, 65, 0.5),
-                0 0 16px rgba(0, 255, 65, 0.2);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.4),
+                0 0 16px rgba(255, 255, 255, 0.15);
   }
   50% {
-    opacity: 0.6;
-    box-shadow: 0 0 4px rgba(0, 255, 65, 0.3),
-                0 0 8px rgba(0, 255, 65, 0.1);
+    opacity: 0.5;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.2),
+                0 0 8px rgba(255, 255, 255, 0.05);
   }
 }
 
@@ -1626,8 +1747,6 @@ The signature animation. A slow, breathing pulse that signals "the site is on."
 - Only used on the hero LED. All other LEDs are static.
 
 ### 6.2 Scroll Reveal
-
-Sections fade in gently as they enter the viewport.
 
 ```css
 .reveal {
@@ -1649,12 +1768,12 @@ const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       entry.target.classList.add('visible');
-      observer.unobserve(entry.target);  // Only animate once
+      observer.unobserve(entry.target);
     }
   });
 }, {
-  threshold: 0.1,       // Trigger when 10% visible
-  rootMargin: '0px 0px -40px 0px'  // Slight offset so element is partially in view
+  threshold: 0.1,
+  rootMargin: '0px 0px -40px 0px'
 });
 
 document.querySelectorAll('.reveal').forEach(el => {
@@ -1664,14 +1783,11 @@ document.querySelectorAll('.reveal').forEach(el => {
 
 **Rules:**
 - Apply `.reveal` to each `<section>` and to each collection card individually
-- Each element animates independently (not all at once)
+- Each element animates independently
 - Animation triggers once. No repeat on scroll back up.
-- Transition: opacity 0 -> 1 + translateY(16px) -> 0 over 400ms ease
-- No bounce. No slide. No overshoot. Just a gentle fade-up.
+- No bounce. No slide. No overshoot.
 
 ### 6.3 Code Block Cursor Blink (Optional)
-
-A blinking cursor at the end of code blocks for aesthetic effect.
 
 ```css
 @keyframes cursor-blink {
@@ -1683,23 +1799,16 @@ A blinking cursor at the end of code blocks for aesthetic effect.
   display: inline-block;
   width: 8px;
   height: 16px;
-  background: #00FF41;
+  background: rgba(255, 255, 255, 0.60);   /* Neutral, not green */
   animation: cursor-blink 1s step-end infinite;
   vertical-align: text-bottom;
   margin-left: 2px;
 }
 ```
 
-Only used on the hero or CTA code block -- not every code block on the page. One blinking cursor is atmospheric; multiple is distracting.
+Only used on the CTA code block. One blinking cursor maximum.
 
 ### 6.4 Copy Confirmation
-
-When the copy button is clicked:
-
-1. Button text/icon changes from clipboard to checkmark
-2. Background flashes green: `rgba(0, 255, 65, 0.15)`
-3. After 1500ms, reverts to original state
-4. No easing on the flash -- it should feel like an LED switching
 
 ```javascript
 function handleCopy(button, text) {
@@ -1717,17 +1826,11 @@ function handleCopy(button, text) {
 ### 7.1 Breakpoint Definitions
 
 ```css
-/* Desktop-first approach. Three breakpoints. */
-
+/* Desktop-first. Three breakpoints. */
 /* Large desktop: 1200px+ (default) */
-/* Tablet: 768px - 1199px */
-@media (max-width: 1199px) { ... }
-
-/* Mobile: below 768px */
-@media (max-width: 767px) { ... }
-
-/* Small mobile: below 480px */
-@media (max-width: 479px) { ... }
+@media (max-width: 1199px) { ... }  /* Tablet */
+@media (max-width: 767px) { ... }   /* Mobile */
+@media (max-width: 479px) { ... }   /* Small mobile */
 ```
 
 ### 7.2 Section Adaptations
@@ -1738,9 +1841,9 @@ function handleCopy(button, text) {
 |----------|----------------|-------------------|---------------|
 | Headline size | 56px | 40px | 28px |
 | Tagline max-width | 600px | 500px | 100% |
-| CTA layout | Flex row | Flex row | Flex column, full-width buttons |
+| CTA layout | Flex row | Flex row | Flex column, full-width |
 | Min-height | 100vh | 100vh | auto, padding: 64px 0 |
-| Sub-tagline | Visible | Visible | Hidden (too much text on mobile) |
+| Sub-tagline | Visible | Visible | Hidden |
 
 ```css
 @media (max-width: 1199px) {
@@ -1767,7 +1870,7 @@ function handleCopy(button, text) {
 }
 ```
 
-#### Collection Cards (The Experience)
+#### Collection Cards
 
 | Property | Desktop | Tablet | Mobile |
 |----------|---------|--------|--------|
@@ -1785,11 +1888,6 @@ function handleCopy(button, text) {
 ```
 
 #### Event Map
-
-| Property | Desktop | Tablet | Mobile |
-|----------|---------|--------|--------|
-| Channel strip grid | 2 columns | 2 columns | 1 column |
-| Event names | 160px min-width | 140px | Full width, stacked |
 
 ```css
 @media (max-width: 1199px) {
@@ -1814,11 +1912,6 @@ function handleCopy(button, text) {
 
 #### Stats Bar
 
-| Property | Desktop | Tablet | Mobile |
-|----------|---------|--------|--------|
-| Layout | Flex row, equal columns | Flex row | 2x2 grid |
-| Value size | 24px | 24px | 20px |
-
 ```css
 @media (max-width: 767px) {
   .stats-bar {
@@ -1838,12 +1931,7 @@ function handleCopy(button, text) {
 }
 ```
 
-#### Step Cards (How It Works)
-
-| Property | Desktop | Tablet | Mobile |
-|----------|---------|--------|--------|
-| Grid | 80px number + 1fr content | 60px + 1fr | Single column, number above |
-| Code block | Inline | Inline | Horizontal scroll |
+#### Step Cards
 
 ```css
 @media (max-width: 767px) {
@@ -1854,7 +1942,6 @@ function handleCopy(button, text) {
     padding: 16px 24px 0 24px;
     justify-content: flex-start;
     border-right: none;
-    border-bottom: none;
     font-size: 24px;
   }
   .code-block {
@@ -1866,11 +1953,6 @@ function handleCopy(button, text) {
 
 #### Architecture Diagram
 
-| Property | Desktop | Tablet | Mobile |
-|----------|---------|--------|--------|
-| Flow direction | Horizontal | Horizontal | Vertical |
-| Arrow direction | Right-pointing | Right-pointing | Down-pointing |
-
 ```css
 @media (max-width: 767px) {
   .architecture__flow {
@@ -1879,7 +1961,6 @@ function handleCopy(button, text) {
   .architecture__arrow {
     width: 1px;
     height: 32px;
-    /* Rotate arrow to point down */
   }
   .architecture__arrow::after {
     right: auto;
@@ -1893,12 +1974,6 @@ function handleCopy(button, text) {
 ```
 
 #### CTA Panel
-
-| Property | Desktop | Tablet | Mobile |
-|----------|---------|--------|--------|
-| Padding | 64px 48px | 48px 32px | 32px 20px |
-| Headline size | 36px | 28px | 24px |
-| Buttons | Flex row | Flex row | Flex column |
 
 ```css
 @media (max-width: 767px) {
@@ -1915,13 +1990,11 @@ function handleCopy(button, text) {
 
 ### 7.3 Touch Targets
 
-All interactive elements on mobile must meet the minimum 44x44px touch target.
-
 ```css
 @media (max-width: 767px) {
   .btn-primary,
   .btn-ghost {
-    min-height: 48px;      /* Exceeds 44px minimum */
+    min-height: 48px;
   }
   .code-copy-btn {
     width: 44px;
@@ -1934,23 +2007,24 @@ All interactive elements on mobile must meet the minimum 44x44px touch target.
 
 ## 8. Accessibility
 
-### 8.1 WCAG 2.1 AA Compliance Checklist
+### 8.1 WCAG 2.1 AA Compliance
 
-#### Color Contrast Ratios (Verified)
+#### Color Contrast Ratios
 
 | Text | Background | Ratio | Pass? |
 |------|-----------|-------|-------|
 | `#FFFFFF` on `#0A0A0A` | Page bg | 19.3:1 | AA + AAA |
 | `rgba(255,255,255,0.65)` on `#0A0A0A` | Page bg | ~11.5:1 | AA + AAA |
-| `rgba(255,255,255,0.40)` on `#0A0A0A` | Page bg | ~6.3:1 | AA (normal), AAA (large) |
-| `#00FF41` on `#0A0A0A` | Page bg | ~12.6:1 | AA + AAA |
-| `#FFB800` on `#0A0A0A` | Page bg | ~10.7:1 | AA + AAA |
-| `#00D4AA` on `#0A0A0A` | Page bg | ~10.1:1 | AA + AAA |
-| `#0A0A0A` on `#00FF41` | Primary btn | ~12.6:1 | AA + AAA |
-| `rgba(255,255,255,0.65)` on `#141414` | Surface | ~10.1:1 | AA + AAA |
-| `rgba(255,255,255,0.40)` on `#141414` | Surface | ~5.6:1 | AA (large text only) |
+| `rgba(255,255,255,0.40)` on `#0A0A0A` | Page bg | ~6.3:1 | AA (large text only) |
+| `rgba(255,255,255,0.80)` on `#0A0A0A` | Code text on page | ~14.8:1 | AA + AAA |
+| `#FFB800` on `#0D0D0A` | MGS title | ~10.7:1 | AA + AAA |
+| `#00FF41` on `#0D0D0A` | MGS event name | ~12.6:1 | AA + AAA |
+| `#00D4AA` on `#111514` | Sims title | ~9.2:1 | AA + AAA |
+| `#0A0A0A` on `#FFFFFF` | Primary btn | 19.3:1 | AA + AAA |
+| `#0A0A0A` on `#FFB800` | MGS primary btn | ~10.7:1 | AA + AAA |
+| `#0A0A0A` on `#00D4AA` | Sims primary btn | ~10.1:1 | AA + AAA |
 
-Note: The tertiary text color (`rgba(255,255,255,0.40)`) passes AA only for large text (18px+ or 14px+ bold). It is used exclusively for labels and metadata at 10-12px sizes. To ensure compliance, these elements should be **non-essential decorative text** (labels supplementing other cues, metadata that is also expressed in structure). If any tertiary text conveys essential information, bump it to `rgba(255,255,255,0.55)` which passes AA at all sizes.
+Note: Tertiary text (`rgba(255,255,255,0.40)`) passes AA only for large text. Used only for non-essential labels. If any tertiary text conveys essential information, bump to `rgba(255,255,255,0.55)`.
 
 #### Semantic HTML Structure
 
@@ -1964,9 +2038,13 @@ Note: The tertiary text color (`rgba(255,255,255,0.40)`) passes AA only for larg
   <meta name="description" content="...">
 </head>
 <body>
+  <a href="#hero" class="skip-link">Skip to content</a>
   <main>
     <section id="hero" aria-label="Introduction">...</section>
-    <section id="experience" aria-label="Sound Collections">...</section>
+    <section id="experience" aria-label="Sound Collections">
+      <div class="collection-card--mgs mgs-theme" role="article">...</div>
+      <div class="collection-card--sims sims-theme" role="article">...</div>
+    </section>
     <section id="control-panel" aria-label="Control Panel Features">...</section>
     <section id="event-map" aria-label="Event Map">...</section>
     <section id="how-it-works" aria-label="Installation Guide">...</section>
@@ -1978,28 +2056,24 @@ Note: The tertiary text color (`rgba(255,255,255,0.40)`) passes AA only for larg
 ```
 
 **Rules:**
-- Every `<section>` has an `aria-label` or is labelled by a visible heading via `aria-labelledby`
-- Headings follow proper hierarchy: one `<h1>` (hero), then `<h2>` for each section, `<h3>` for subsections
-- No heading skips (e.g., jumping from `<h2>` to `<h4>`)
-- All images (if any) have `alt` text. The site uses no images by design, but if screenshots are added, they need alt text.
+- One `<h1>` in hero, `<h2>` for sections, `<h3>` for subsections
+- No heading skips
+- Collection cards use `role="article"` for content grouping
+- All sections have `aria-label` or `aria-labelledby`
 
 #### Keyboard Navigation
 
-- Tab order follows visual reading order (top to bottom, left to right)
-- All interactive elements (buttons, links, copy buttons) are reachable via Tab
-- Focus indicators are visible (see Section 5.3)
-- Skip-to-content link at the very top of the page:
-
-```html
-<a href="#hero" class="skip-link">Skip to content</a>
-```
+- Tab order follows visual reading order
+- All interactive elements reachable via Tab
+- Focus indicators visible (see Section 5.3)
+- Skip-to-content link:
 
 ```css
 .skip-link {
   position: absolute;
   top: -100px;
   left: 16px;
-  background: #00FF41;
+  background: #FFFFFF;
   color: #0A0A0A;
   padding: 8px 16px;
   font-size: 12px;
@@ -2016,8 +2090,6 @@ Note: The tertiary text color (`rgba(255,255,255,0.40)`) passes AA only for larg
 ```
 
 #### Reduced Motion
-
-Respect `prefers-reduced-motion` for users who are sensitive to animations:
 
 ```css
 @media (prefers-reduced-motion: reduce) {
@@ -2039,19 +2111,19 @@ Respect `prefers-reduced-motion` for users who are sensitive to animations:
 }
 ```
 
-#### Screen Reader Considerations
+#### Screen Reader Notes
 
-- The LED indicators are decorative and should be hidden from screen readers: `aria-hidden="true"`
-- Code blocks should use `<pre><code>` with a descriptive `aria-label` (e.g., `aria-label="Installation command"`)
-- The background grid texture (`body::before`) is a pseudo-element and naturally hidden from AT
-- Copy buttons should have `aria-label="Copy code to clipboard"` and update to `aria-label="Copied"` when clicked
+- LED indicators: `aria-hidden="true"` (decorative)
+- Code blocks: `<pre><code>` with `aria-label="Installation command"` etc.
+- Background grid: pseudo-element, naturally hidden from AT
+- Copy buttons: `aria-label="Copy code to clipboard"`, updates to `aria-label="Copied"` on click
 
 ### 8.2 Meta Tags
 
 ```html
 <meta name="description" content="Quick-Ping: Sound notifications for Claude Code. 124 Metal Gear Solid sounds and 140+ Sims 2 sounds. Every commit, test, and context warning gets its own sound.">
 <meta property="og:title" content="Quick-Ping -- Your Terminal Has a Soundtrack Now">
-<meta property="og:description" content="Sound notifications for Claude Code. 124 Metal Gear Solid sounds and 140+ Sims 2 sounds. Every commit, test, and context warning gets its own sound.">
+<meta property="og:description" content="Sound notifications for Claude Code. 124 Metal Gear Solid sounds and 140+ Sims 2 sounds.">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Quick-Ping -- Your Terminal Has a Soundtrack Now">
@@ -2067,144 +2139,112 @@ Respect `prefers-reduced-motion` for users who are sensitive to animations:
 | Resource | Budget |
 |----------|--------|
 | HTML | ~15KB |
-| Inline CSS | ~20KB |
+| Inline CSS | ~22KB (slightly larger due to dual-theme CSS) |
 | Inline JS | ~5KB |
 | External fonts (IBM Plex Mono 400, 500, 700) | ~150KB (separate, cached) |
 | Images | 0KB (all CSS-generated) |
-| **Total page weight (excluding fonts)** | **~40KB** |
+| **Total page weight (excluding fonts)** | **~42KB** |
 
 ### 9.2 Loading Strategy
 
 ```html
-<!-- Preconnect to Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<!-- Load fonts with display=swap for fast text rendering -->
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 ```
 
-- All CSS is inline in `<style>` (no external stylesheet)
-- All JS is inline at the bottom of `<body>` (no external scripts)
-- No images to lazy-load
-- `font-display: swap` ensures text renders immediately with system mono font, then swaps to IBM Plex Mono when loaded
-
-### 9.3 Critical Rendering Path
-
-1. Browser receives single HTML file
-2. Inline CSS renders immediately -- hero section paints first
-3. Fonts begin loading (async, swap behavior)
-4. Page is interactive before fonts finish loading
-5. Inline JS at bottom initializes scroll observers and copy handlers
-6. Below-fold sections get `.reveal` animations as user scrolls
-
-No render-blocking resources. No external CSS. No external JS. First paint should happen in under 100ms on broadband.
+- All CSS inline in `<style>`
+- All JS inline at bottom of `<body>`
+- No images
+- `font-display: swap` for immediate text rendering
 
 ---
 
-## Appendix A: Full Page ASCII Blueprint
+## Appendix A: Full Page ASCII Blueprint (v2 -- Neutral Framework)
 
 ```
 +=============================================================+
 |                                                             |
-|                      [LED pulsing]                          |
+|                   [LED WHITE pulsing]                       |
 |                                                             |
 |           YOUR CODE HAS A SOUNDTRACK NOW                    |
 |                                                             |
 |   Sound notifications for Claude Code...                    |
 |                                                             |
-|       [VIEW ON GITHUB]     [SEE HOW IT WORKS]              |
+|     [VIEW ON GITHUB (white)]  [SEE HOW IT WORKS (ghost)]   |
 |                                                             |
 |   Because the best notification is the one you don't        |
 |   have to look at.                                          |
 |                                                             |
-|-------------------------------------------------------------|
+|------- neutral 1px border ----------------------------------|
 |                                                             |
-|  [LED] COLLECTIONS                                          |
+|  [LED white] COLLECTIONS                                    |
 |  TWO ICONIC SOUND PACKS. READY ON INSTALL.                  |
 |                                                             |
-|  +--MGS CARD (AMBER)----+ +--SIMS CARD (TEAL)-----+       |
-|  | TACTICAL ESPIONAGE    | | SIMLISH SOUND DESIGN  |       |
-|  | AUDIO                 | |                        |       |
-|  |                       | |                        |       |
-|  | Mission arc table     | | Emotion mapping grid   |       |
-|  |                       | |                        |       |
-|  | 124 sounds, 8-bit WAV | | 140+ sounds            |       |
-|  | "You hear *that*..."  | | "Your codebase is..."  |       |
-|  +-----------------------+ +------------------------+       |
+|  +==MGS (warm black bg)====+ +==SIMS (cool dark bg)=====+  |
+|  | [LED amber] MGS         | | [LED teal] SIMS 2        |  |
+|  | amber border accent     | | teal border accent        |  |
+|  |--------------------------| |---------------------------|  |
+|  | TACTICAL ESPIONAGE AUDIO| | SIMLISH SOUND DESIGN      |  |
+|  |                         | |                            |  |
+|  | Event table (green txt) | | Event table (teal txt)    |  |
+|  |                         | |                            |  |
+|  | * 124 sounds, 8-bit WAV | | * 140+ sounds             |  |
+|  | "You hear *that*..."    | | "Your codebase is..."     |  |
+|  +==========================+ +===========================+  |
 |                                                             |
-|-------------------------------------------------------------|
+|  ^ WARM / TACTICAL / DENSE    COOL / PLAYFUL / LIGHTER ^   |
 |                                                             |
-|  [LED] CONTROL PANEL                                        |
-|  SSL CONSOLE MEETS DEV TOOLS                                |
+|------- neutral 1px border ----------------------------------|
 |                                                             |
-|  +-------[Annotated Screenshot Frame]--------+              |
-|  |                                           |              |
-|  |   Callout: Collection Switcher            |              |
-|  |   Callout: LED Toggles                    |              |
-|  |   Callout: Sound Preview                  |              |
-|  |   Callout: Claude Suggests                |              |
-|  |                                           |              |
-|  +-------------------------------------------+              |
+|  [LED white] CONTROL PANEL                                  |
+|  THE UI ADAPTS TOO                                          |
 |                                                             |
-|  localhost:5050 -- Your mission control.                    |
+|  +--MGS (dark mock)------+ +--SIMS (light mock)-----+     |
+|  | Dark bg, green LEDs   | | Light bg, teal LEDs    |     |
+|  | 0x1a.wav  "Codec ring"| | mGREETING "Cheerful"   |     |
+|  | Red accent buttons    | | Green accent buttons   |     |
+|  +------------------------+ +------------------------+     |
 |                                                             |
-|  [40+ EVENTS] [TOGGLE] [PREVIEW] [AI-MAPPED] [SEARCH]     |
+|  "The entire experience adapts to your collection's vibe."  |
 |                                                             |
-|-------------------------------------------------------------|
+|  [TOGGLE] [PREVIEW] [AI-MAPPED] [THEME ADAPTS]             |
 |                                                             |
-|  [LED] EVENT MAP                                            |
+|------- neutral 1px border ----------------------------------|
+|                                                             |
+|  [LED white] EVENT MAP                                      |
 |  40+ EVENTS. EVERY MOMENT COVERED.                          |
 |                                                             |
-|  +--------+---------+--------+---------+                    |
-|  |  40+   |    2    |  264+  |  ZERO   |                    |
-|  | EVENTS | COLL'NS | SOUNDS | BUILD   |                    |
-|  +--------+---------+--------+---------+                    |
+|  Stats bar (neutral white values)                           |
 |                                                             |
-|  +--CORE (full width)----------------------------+          |
-|  | session_start | session_end | tool_start ...  |          |
-|  +-----------------------------------------------+          |
+|  Channel strips with WHITE LEDs (neutral)                   |
+|  Event names in neutral rgba(255,255,255,0.80)              |
 |                                                             |
-|  +--GIT-----------+  +--TESTING--------+                    |
-|  | git_commit ... |  | test_pass ...   |                    |
-|  +----------------+  +-----------------+                    |
+|------- neutral 1px border ----------------------------------|
 |                                                             |
-|  +--CONTEXT-------+  +--STREAKS--------+                    |
-|  | context_50 ... |  | streak_3 ...    |                    |
-|  +----------------+  +-----------------+                    |
-|                                                             |
-|  (... remaining channel strips)                             |
-|                                                             |
-|-------------------------------------------------------------|
-|                                                             |
-|  [LED] HOW IT WORKS                                         |
+|  [LED white] HOW IT WORKS                                   |
 |  THREE STEPS. TWO MINUTES.                                  |
 |                                                             |
-|  +--01--+--CLONE AND INSTALL-------------------------+      |
-|  +--02--+--HOOK INTO CLAUDE CODE---------------------+      |
-|  +--03--+--LAUNCH THE CONTROL PANEL------------------+      |
+|  Step cards (neutral)                                       |
+|  Architecture diagram (neutral)                             |
+|  Tech badges (neutral)                                      |
 |                                                             |
-|  ARCHITECTURE                                               |
-|  [Claude Code] --> [Hooks] --> [quick-ping] --> [afplay]    |
+|------- neutral 1px border ----------------------------------|
 |                                                             |
-|  [PYTHON] [VANILLA JS] [REST API] [macOS] [ZERO DEPS]      |
+|  +=====[WHITE BORDER]==================================+    |
+|  ||                                                   ||    |
+|  ||          YOUR TERMINAL IS TOO QUIET               ||    |
+|  ||                                                   ||    |
+|  ||  $ git clone ...    (neutral gray code text) [CP] ||    |
+|  ||                                                   ||    |
+|  ||  [GET QUICK-PING (white)]  [VIEW ON GITHUB]      ||    |
+|  ||                                                   ||    |
+|  ||  Free. Open source. Two sound packs included.     ||    |
+|  ||  Because coding in silence was always the         ||    |
+|  ||  real bug.                                        ||    |
+|  +=================================================== +    |
 |                                                             |
-|-------------------------------------------------------------|
-|                                                             |
-|  +=====[GREEN BORDER]================================+      |
-|  ||                                                 ||      |
-|  ||          YOUR TERMINAL IS TOO QUIET             ||      |
-|  ||                                                 ||      |
-|  ||  $ git clone ...                          [CP]  ||      |
-|  ||                                                 ||      |
-|  ||      [GET QUICK-PING]    [VIEW ON GITHUB]       ||      |
-|  ||                                                 ||      |
-|  ||  Free. Open source. Two sound packs included.   ||      |
-|  ||  Because coding in silence was always the       ||      |
-|  ||  real bug.                                      ||      |
-|  +===================================================+      |
-|                                                             |
-|-------------------------------------------------------------|
+|------- neutral 1px border ----------------------------------|
 |                                                             |
 |  QUICK-PING    MIT License    2026                          |
 |  Built for developers who alt-tab.                          |
@@ -2216,44 +2256,62 @@ No render-blocking resources. No external CSS. No external JS. First paint shoul
 
 ## Appendix B: What NOT to Do
 
-These are explicit anti-patterns to avoid during implementation:
-
-1. **No `border-radius`** on any element except the LED indicator circles
-2. **No shadows** on cards or panels (only glow effects on LEDs and accent elements)
-3. **No gradients** in backgrounds (solid colors only; exception: subtle radial for the dot grid)
-4. **No emoji** anywhere in the rendered page
-5. **No light mode** toggle or support
-6. **No hamburger menu** or navigation bar
-7. **No parallax** scrolling backgrounds
+1. **No `border-radius`** except LED circles
+2. **No shadows** on cards (only glow on LEDs/accents)
+3. **No gradients** in backgrounds (exception: dot grid radial)
+4. **No emoji** anywhere
+5. **No light mode** toggle
+6. **No hamburger menu** or nav bar
+7. **No parallax** scrolling
 8. **No bounce or overshoot** in animations
-9. **No images** -- all visual elements are CSS-generated
-10. **No external CSS or JS files** -- everything inline in a single HTML file
+9. **No images** -- all CSS-generated
+10. **No external CSS or JS** -- everything inline
 11. **No framework** -- vanilla HTML/CSS/JS only
-12. **No italic text** anywhere
-13. **No rounded buttons** -- all button corners are sharp 0px
-14. **No hover transforms** on cards (no scale, no rotate, no translateZ)
-15. **No sound on the website** -- the irony is intentional
+12. **No italic text**
+13. **No rounded buttons**
+14. **No hover transforms** on cards (no scale, rotate, translateZ)
+15. **No sound on the website**
+16. **No terminal green (`#00FF41`) in framework sections** -- green is an MGS color, not a framework color
+17. **No single collection dominating the overall site palette** -- the framework is neutral
 
 ---
 
 ## Appendix C: Implementation Notes for the Developer
 
-1. **Start with the Hero.** Get the LED, headline, and buttons right first. This sets the tone for everything.
+1. **The key concept is "neutral framework, themed islands."** The site defaults to white/gray accents. Collection theming only appears inside `.mgs-theme` and `.sims-theme` containers.
 
-2. **Build components, then sections.** The LED, buttons, badges, code blocks, and cards are reusable. Build them once, use them everywhere.
+2. **Start with the Hero in neutral.** White LED, white primary button, no collection colors. This proves the neutral framework works.
 
-3. **Test at 1200px, 768px, and 375px.** These are the three critical widths. If it works at those, it works everywhere.
+3. **Build both collection cards early.** Place them side-by-side. If the contrast between MGS (warm/dark/amber) and Sims (cool/lighter/teal) is immediately obvious, the design is working.
 
-4. **The grid background is optional.** If it bloats performance or looks wrong at certain resolutions, drop it. The design works without it.
+4. **Use CSS scoping, not global overrides.** Collection colors are applied via parent class (`.mgs-theme .btn-primary`, `.sims-theme .code-block`). The base components stay neutral.
 
-5. **Copy the design tokens exactly.** The CSS custom properties defined in Section 1 are the source of truth. Do not approximate colors or sizes.
+5. **Test the card contrast at arm's length.** Squint at the two cards. If you can tell them apart by color temperature alone (warm left, cool right), the design succeeds.
 
-6. **The control panel mockup is the hardest piece.** If a full CSS-only mockup is too complex, a simplified representation (header bar + grid of event rows with LEDs) is acceptable. Prioritize the callout annotations -- they tell the story.
+6. **The framework accent is white, not green.** This is the biggest change from v1. Green (`#00FF41`) only appears inside MGS-themed areas. Everywhere else: white.
 
-7. **Smooth scroll anchors.** The ghost button "SEE HOW IT WORKS" scrolls to `#how-it-works`. Use `scroll-behavior: smooth` on `<html>` and standard anchor links.
+7. **Code block text is neutral by default.** `rgba(255,255,255,0.80)` in framework sections. Only collection-scoped code blocks use colored text.
 
-8. **The IntersectionObserver JS is the only JavaScript.** Plus the copy-to-clipboard handler. Total JS should be under 50 lines.
+8. **The collection backgrounds are subtly different.** MGS: `#0D0D0A` (warm). Sims: `#111514` (cool, slightly lighter). The page bg is `#0A0A0A` (true neutral). These differences are subtle but perceptible.
 
-9. **Test the font swap.** The page should be readable with system monospace fonts before IBM Plex Mono loads. Verify that the `font-display: swap` behavior looks acceptable.
+9. **Test at 1200px, 768px, and 375px.** Three critical widths. If cards stack well on mobile and the theme contrast survives the single-column layout, the responsive design works.
 
-10. **Validate the HTML.** Run through the W3C validator. Zero errors. Semantic structure matters for accessibility and SEO.
+10. **The IntersectionObserver + copy handler is the only JS.** Under 50 lines total.
+
+---
+
+## Appendix D: Color Usage Quick Reference
+
+| Where | Accent Color | LED | Button BG | Code Text | Borders |
+|-------|-------------|-----|-----------|-----------|---------|
+| Hero | White | White | White | -- | `rgba(255,255,255,0.08)` |
+| Collections intro | White | White | -- | -- | `rgba(255,255,255,0.08)` |
+| MGS card | Amber `#FFB800` | Amber | Amber | Green `#00FF41` | `rgba(255,184,0,0.12)` |
+| Sims card | Teal `#00D4AA` | Teal | Teal | Teal `#00D4AA` | `rgba(0,212,170,0.12)` |
+| Control Panel | White | White | White | `rgba(255,255,255,0.80)` | `rgba(255,255,255,0.08)` |
+| Event Map | White | White | -- | `rgba(255,255,255,0.80)` | `rgba(255,255,255,0.08)` |
+| How It Works | White | White | -- | `rgba(255,255,255,0.80)` | `rgba(255,255,255,0.08)` |
+| CTA | White | -- | White | `rgba(255,255,255,0.80)` | `rgba(255,255,255,0.25)` |
+| Footer | White | -- | -- | -- | `rgba(255,255,255,0.08)` |
+
+This table is the definitive guide. If in doubt about what color to use where, consult this table.

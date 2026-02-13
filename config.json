@@ -11,232 +11,277 @@
         "afternoon": {
           "description": "Afternoon session (12pm-5pm)",
           "enabled": true,
-          "sound": "fHAVEADRINK.wav"
+          "sound": "fHAVEADRINK.wav",
+          "sound_label": "Cheerful 'have a drink'"
         },
         "agent_response": {
           "description": "When Claude responds",
           "enabled": true,
-          "sound": "mSTORY0.wav"
+          "sound": "mSTORY0.wav",
+          "sound_label": "Storytelling Simlish"
         },
         "background_task_done": {
           "description": "When async task completes",
           "enabled": true,
-          "sound": "fLOVELY0.wav"
+          "sound": "fLOVELY0.wav",
+          "sound_label": "Delighted 'lovely!'"
         },
         "build_complete": {
           "description": "When build/compilation finishes",
           "enabled": true,
-          "sound": "MalePLSSuccess.wav"
+          "sound": "MalePLSSuccess.wav",
+          "sound_label": "Male success cheer"
         },
         "build_error": {
           "description": "When build fails",
           "enabled": true,
-          "sound": "MalePLSFailure.wav"
+          "sound": "MalePLSFailure.wav",
+          "sound_label": "Male failure groan"
         },
         "context_50": {
           "description": "50% context usage",
           "enabled": true,
-          "sound": "fSNACK0.wav"
+          "sound": "fSNACK0.wav",
+          "sound_label": "Snack request"
         },
         "context_75": {
           "description": "75% context usage",
           "enabled": true,
-          "sound": "fHUNGRY.wav"
+          "sound": "fHUNGRY.wav",
+          "sound_label": "Hungry complaint"
         },
         "context_90": {
           "description": "90% context usage - time to wrap up!",
           "enabled": true,
-          "sound": "fHUNGRY2.wav"
+          "sound": "fHUNGRY2.wav",
+          "sound_label": "Desperate hunger whine"
         },
         "error_threshold": {
           "description": "Multiple tool failures in sequence",
           "enabled": true,
           "sound": "fMAD0.wav",
+          "sound_label": "Angry outburst",
           "threshold_count": 3
         },
         "evening": {
           "description": "Evening session (5pm-10pm)",
           "enabled": true,
-          "sound": "mCOKE0.wav"
+          "sound": "mCOKE0.wav",
+          "sound_label": "Relaxed evening sip"
         },
         "git_commit": {
           "description": "When a git commit succeeds",
           "enabled": true,
-          "sound": "Good Shot M.wav"
+          "sound": "Good Shot M.wav",
+          "sound_label": "Enthusiastic 'dag dag!'"
         },
         "git_error": {
           "description": "When a git operation fails",
           "enabled": true,
-          "sound": "Bad Shot M.wav"
+          "sound": "Bad Shot M.wav",
+          "sound_label": "Disappointed mutter"
         },
         "git_pr_create": {
           "description": "When a PR is created",
           "enabled": true,
-          "sound": "fCELEB0.wav"
+          "sound": "fCELEB0.wav",
+          "sound_label": "Party celebration"
         },
         "git_push": {
           "description": "When a git push succeeds",
           "enabled": true,
-          "sound": "FemaleSKSSSuccess.wav"
+          "sound": "FemaleSKSSSuccess.wav",
+          "sound_label": "Female skill success"
         },
         "late_night": {
           "description": "Late night session (10pm-6am) - get some rest!",
           "enabled": true,
-          "sound": "mTIRED.wav"
+          "sound": "mTIRED.wav",
+          "sound_label": "Exhausted yawn"
         },
         "long_task": {
           "description": "When a task takes >30 seconds",
           "enabled": true,
           "sound": "fTIRED.wav",
+          "sound_label": "Tired sigh",
           "threshold_seconds": 30
         },
         "morning": {
           "description": "First session of the day (6am-12pm)",
           "enabled": true,
-          "sound": "mGREETING.wav"
+          "sound": "mGREETING.wav",
+          "sound_label": "Cheerful greeting"
         },
         "permission": {
           "description": "When Claude needs permission",
           "enabled": true,
-          "sound": "fWAITING0.wav"
+          "sound": "fWAITING0.wav",
+          "sound_label": "Impatient waiting"
         },
         "plan_mode_enter": {
           "description": "When entering plan mode",
           "enabled": true,
-          "sound": "mBENCH0.wav"
+          "sound": "mBENCH0.wav",
+          "sound_label": "Sitting down to think"
         },
         "plan_mode_exit": {
           "description": "When exiting plan mode",
           "enabled": true,
-          "sound": "mSTORYYES.wav"
+          "sound": "mSTORYYES.wav",
+          "sound_label": "Agreeable 'yes yes!'"
         },
         "session_end": {
           "description": "When Claude Code session ends",
           "enabled": true,
-          "sound": "mOPTIONS.wav"
+          "sound": "mOPTIONS.wav",
+          "sound_label": "Pondering options"
         },
         "session_start": {
           "description": "When Claude Code session starts",
           "enabled": true,
-          "sound": "mGREETING.wav"
+          "sound": "mGREETING.wav",
+          "sound_label": "Cheerful greeting"
         },
         "skill_commit": {
           "description": "When /commit skill runs",
           "enabled": true,
-          "sound": "Good Shot M.wav"
+          "sound": "Good Shot M.wav",
+          "sound_label": "Enthusiastic 'dag dag!'"
         },
         "skill_deploy": {
           "description": "When /deploy-weekly skill runs",
           "enabled": true,
-          "sound": "MaleSSSSuccess.wav"
+          "sound": "MaleSSSSuccess.wav",
+          "sound_label": "Male proud success"
         },
         "skill_gsd": {
           "description": "When /gsd review skill runs",
           "enabled": true,
-          "sound": "mBENCH0.wav"
+          "sound": "mBENCH0.wav",
+          "sound_label": "Sitting down to think"
         },
         "skill_newday": {
           "description": "When /newday skill runs",
           "enabled": true,
-          "sound": "FemalePLSHappy.wav"
+          "sound": "FemalePLSHappy.wav",
+          "sound_label": "Female happy exclaim"
         },
         "skill_publish": {
           "description": "When /publish skill runs",
           "enabled": true,
-          "sound": "FemaleSKSSSuccess.wav"
+          "sound": "FemaleSKSSSuccess.wav",
+          "sound_label": "Female skill success"
         },
         "streak_10": {
           "description": "10 successful operations - you're on fire!",
           "enabled": true,
-          "sound": "fCELEB0.wav"
+          "sound": "fCELEB0.wav",
+          "sound_label": "Party celebration"
         },
         "streak_3": {
           "description": "3 successful operations in a row",
           "enabled": true,
-          "sound": "Good Shot FM.wav"
+          "sound": "Good Shot FM.wav",
+          "sound_label": "Female 'nice shot!'"
         },
         "streak_5": {
           "description": "5 successful operations in a row",
           "enabled": true,
-          "sound": "Good Shot FM2.wav"
+          "sound": "Good Shot FM2.wav",
+          "sound_label": "Female 'great shot!'"
         },
         "subagent_start": {
           "description": "When a subagent launches",
           "enabled": true,
-          "sound": "mHAPPY0.wav"
+          "sound": "mHAPPY0.wav",
+          "sound_label": "Happy exclamation"
         },
         "subagent_stop": {
           "description": "When a subagent completes",
           "enabled": true,
-          "sound": "MaleSSSSuccess.wav"
+          "sound": "MaleSSSSuccess.wav",
+          "sound_label": "Male proud success"
         },
         "task_complete": {
           "description": "When Claude finishes processing",
           "enabled": true,
-          "sound": "FemalePLSSuccess.wav"
+          "sound": "FemalePLSSuccess.wav",
+          "sound_label": "Female pleased success"
         },
         "team_created": {
           "description": "When a team is created",
           "enabled": true,
-          "sound": "FemaleSKSSHappy.wav"
+          "sound": "FemaleSKSSHappy.wav",
+          "sound_label": "Female happy cheer"
         },
         "team_deleted": {
           "description": "When a team is deleted",
           "enabled": true,
-          "sound": "FemaleSSSSad.wav"
+          "sound": "FemaleSSSSad.wav",
+          "sound_label": "Female sad sigh"
         },
         "teammate_message": {
           "description": "When a teammate sends a message",
           "enabled": true,
-          "sound": "fHAPPY1.wav"
+          "sound": "fHAPPY1.wav",
+          "sound_label": "Happy chatter"
         },
         "test_fail": {
           "description": "When tests fail",
           "enabled": true,
-          "sound": "fBADHOLE.wav"
+          "sound": "fBADHOLE.wav",
+          "sound_label": "Grumpy muttering"
         },
         "test_pass": {
           "description": "When tests pass",
           "enabled": true,
-          "sound": "Easy Shot FM.wav"
+          "sound": "Easy Shot FM.wav",
+          "sound_label": "Cheerful approval"
         },
         "thinking_long": {
           "description": "Deep thinking (>15s)",
           "enabled": true,
           "sound": "mTIRED.wav",
+          "sound_label": "Exhausted yawn",
           "threshold_seconds": 15
         },
         "thinking_medium": {
           "description": "Medium thinking (5-15s)",
           "enabled": true,
           "sound": "mTHIRSTY.wav",
+          "sound_label": "Thirsty request",
           "threshold_seconds": 15
         },
         "thinking_short": {
           "description": "Quick thinking (<5s)",
           "enabled": true,
           "sound": "mWAITING0.wav",
+          "sound_label": "Patient waiting hum",
           "threshold_seconds": 5
         },
         "tool_failure": {
           "description": "When a tool fails",
           "enabled": true,
-          "sound": "fOOPS0.wav"
+          "sound": "fOOPS0.wav",
+          "sound_label": "Classic 'oops!'"
         },
         "tool_pre": {
           "description": "Before any tool executes",
-          "enabled": false,
-          "sound": "mBLIND.wav"
+          "enabled": true,
+          "sound": "mBLIND.wav",
+          "sound_label": "Cautious murmur"
         },
         "tool_success": {
           "description": "When a tool executes successfully",
           "enabled": true,
-          "sound": "fSTORYOK.wav"
+          "sound": "fSTORYOK.wav",
+          "sound_label": "Approving 'okay!'"
         },
         "user_prompt": {
           "description": "When you send a message",
-          "enabled": false,
-          "sound": "fSTORY0.wav"
+          "enabled": true,
+          "sound": "fSTORY0.wav",
+          "sound_label": "Attentive listening"
         }
       }
     },
@@ -247,233 +292,278 @@
       "events": {
         "afternoon": {
           "description": "Afternoon session (12pm-5pm)",
-          "enabled": false,
-          "sound": "0x25.wav"
+          "enabled": true,
+          "sound": "0x25.wav",
+          "sound_label": "Radio static burst"
         },
         "agent_response": {
           "description": "When Claude responds",
-          "enabled": false,
-          "sound": "0x03.wav"
+          "enabled": true,
+          "sound": "0x03.wav",
+          "sound_label": "Codec receive tone"
         },
         "background_task_done": {
           "description": "When async task completes",
-          "enabled": false,
-          "sound": "0x15.wav"
+          "enabled": true,
+          "sound": "0x15.wav",
+          "sound_label": "Caution (?)"
         },
         "build_complete": {
           "description": "When build/compilation finishes",
           "enabled": true,
-          "sound": "0x20.wav"
+          "sound": "0x20.wav",
+          "sound_label": "Mission checkpoint"
         },
         "build_error": {
           "description": "When build fails",
           "enabled": true,
-          "sound": "0x2D.wav"
+          "sound": "0x2D.wav",
+          "sound_label": "Explosion rumble"
         },
         "context_50": {
           "description": "50% context usage",
-          "enabled": false,
-          "sound": "0x0E.wav"
+          "enabled": true,
+          "sound": "0x0E.wav",
+          "sound_label": "Radar sweep"
         },
         "context_75": {
           "description": "75% context usage",
           "enabled": true,
-          "sound": "0x0D.wav"
+          "sound": "0x0D.wav",
+          "sound_label": "Guards searching"
         },
         "context_90": {
           "description": "90% context usage - time to wrap up!",
           "enabled": true,
-          "sound": "0x01.wav"
+          "sound": "0x01.wav",
+          "sound_label": "Alert (!)"
         },
         "error_threshold": {
           "description": "Multiple tool failures in sequence",
-          "enabled": false,
+          "enabled": true,
           "sound": "0x7A.wav",
+          "sound_label": "Game over sting",
           "threshold_count": 3
         },
         "evening": {
           "description": "Evening session (5pm-10pm)",
-          "enabled": false,
-          "sound": "0x76.wav"
+          "enabled": true,
+          "sound": "0x76.wav",
+          "sound_label": "Night ambient tone"
         },
         "git_commit": {
           "description": "When a git commit succeeds",
           "enabled": true,
-          "sound": "0x67.wav"
+          "sound": "0x67.wav",
+          "sound_label": "Item pickup chime"
         },
         "git_error": {
           "description": "When a git operation fails",
           "enabled": true,
-          "sound": "0x0E.wav"
+          "sound": "0x0E.wav",
+          "sound_label": "Radar sweep"
         },
         "git_pr_create": {
           "description": "When a PR is created",
           "enabled": true,
-          "sound": "0x44.wav"
+          "sound": "0x44.wav",
+          "sound_label": "Mission complete fanfare"
         },
         "git_push": {
           "description": "When a git push succeeds",
           "enabled": true,
-          "sound": "0x08.wav"
+          "sound": "0x08.wav",
+          "sound_label": "Transmission sent"
         },
         "late_night": {
           "description": "Late night session (10pm-6am) - get some rest!",
           "enabled": true,
-          "sound": "0x64.wav"
+          "sound": "0x64.wav",
+          "sound_label": "Low alert drone"
         },
         "long_task": {
           "description": "When a task takes >30 seconds",
-          "enabled": false,
+          "enabled": true,
           "sound": "0x30.wav",
+          "sound_label": "Tension building",
           "threshold_seconds": 30
         },
         "morning": {
           "description": "First session of the day (6am-12pm)",
           "enabled": true,
-          "sound": "0x0F.wav"
+          "sound": "0x0F.wav",
+          "sound_label": "Morning briefing tone"
         },
         "permission": {
           "description": "When Claude needs permission",
           "enabled": true,
-          "sound": "0x24.wav"
+          "sound": "0x24.wav",
+          "sound_label": "Radio request"
         },
         "plan_mode_enter": {
           "description": "When entering plan mode",
           "enabled": true,
-          "sound": "0x40.wav"
+          "sound": "0x40.wav",
+          "sound_label": "Cardboard box"
         },
         "plan_mode_exit": {
           "description": "When exiting plan mode",
-          "enabled": false,
-          "sound": "0x2B.wav"
+          "enabled": true,
+          "sound": "0x2B.wav",
+          "sound_label": "Emerge from cover"
         },
         "session_end": {
           "description": "When Claude Code session ends",
           "enabled": true,
-          "sound": "0x41.wav"
+          "sound": "0x41.wav",
+          "sound_label": "Mission debrief"
         },
         "session_start": {
           "description": "When Claude Code session starts",
           "enabled": true,
-          "sound": "0x1a.wav"
+          "sound": "0x1a.wav",
+          "sound_label": "Codec ring"
         },
         "skill_commit": {
           "description": "When /commit skill runs",
-          "enabled": false,
-          "sound": "0x05.wav"
+          "enabled": true,
+          "sound": "0x05.wav",
+          "sound_label": "Intel secured"
         },
         "skill_deploy": {
           "description": "When /deploy-weekly skill runs",
-          "enabled": false,
-          "sound": "0x4B.wav"
+          "enabled": true,
+          "sound": "0x4B.wav",
+          "sound_label": "Deployment confirm"
         },
         "skill_gsd": {
           "description": "When /gsd review skill runs",
-          "enabled": false,
-          "sound": "0x10.wav"
+          "enabled": true,
+          "sound": "0x10.wav",
+          "sound_label": "Tactical assessment"
         },
         "skill_newday": {
           "description": "When /newday skill runs",
-          "enabled": false,
-          "sound": "0x12.wav"
+          "enabled": true,
+          "sound": "0x12.wav",
+          "sound_label": "New mission ping"
         },
         "skill_publish": {
           "description": "When /publish skill runs",
-          "enabled": false,
-          "sound": "0x6b.wav"
+          "enabled": true,
+          "sound": "0x6b.wav",
+          "sound_label": "Broadcast sent"
         },
         "streak_10": {
           "description": "10 successful operations - you're on fire!",
           "enabled": true,
-          "sound": "0x44.wav"
+          "sound": "0x44.wav",
+          "sound_label": "Mission complete fanfare"
         },
         "streak_3": {
           "description": "3 successful operations in a row",
-          "enabled": false,
-          "sound": "0x27.wav"
+          "enabled": true,
+          "sound": "0x27.wav",
+          "sound_label": "Combo streak"
         },
         "streak_5": {
           "description": "5 successful operations in a row",
           "enabled": true,
-          "sound": "0x3E.wav"
+          "sound": "0x3E.wav",
+          "sound_label": "Streak escalation"
         },
         "subagent_start": {
           "description": "When a subagent launches",
           "enabled": true,
-          "sound": "0x13.wav"
+          "sound": "0x13.wav",
+          "sound_label": "Squad deploy"
         },
         "subagent_stop": {
           "description": "When a subagent completes",
-          "enabled": false,
-          "sound": "0x2E.wav"
+          "enabled": true,
+          "sound": "0x2E.wav",
+          "sound_label": "Squad return"
         },
         "task_complete": {
           "description": "When Claude finishes processing",
           "enabled": true,
-          "sound": "0x1F.wav"
+          "sound": "0x1F.wav",
+          "sound_label": "Objective complete"
         },
         "team_created": {
           "description": "When a team is created",
-          "enabled": false,
-          "sound": "0x7B.wav"
+          "enabled": true,
+          "sound": "0x7B.wav",
+          "sound_label": "Team assembled"
         },
         "team_deleted": {
           "description": "When a team is deleted",
           "enabled": true,
-          "sound": "0x7D.wav"
+          "sound": "0x7D.wav",
+          "sound_label": "Team disbanded"
         },
         "teammate_message": {
           "description": "When a teammate sends a message",
-          "enabled": false,
-          "sound": "0x1C.wav"
+          "enabled": true,
+          "sound": "0x1C.wav",
+          "sound_label": "Codec incoming"
         },
         "test_fail": {
           "description": "When tests fail",
           "enabled": true,
-          "sound": "0x15.wav"
+          "sound": "0x15.wav",
+          "sound_label": "Caution (?)"
         },
         "test_pass": {
           "description": "When tests pass",
           "enabled": true,
-          "sound": "0x73.wav"
+          "sound": "0x73.wav",
+          "sound_label": "All clear chime"
         },
         "thinking_long": {
           "description": "Deep thinking (>15s)",
-          "enabled": false,
+          "enabled": true,
           "sound": "0x56.wav",
+          "sound_label": "Deep tension hum",
           "threshold_seconds": 15
         },
         "thinking_medium": {
           "description": "Medium thinking (5-15s)",
-          "enabled": false,
+          "enabled": true,
           "sound": "0x50.wav",
+          "sound_label": "Processing tone",
           "threshold_seconds": 15
         },
         "thinking_short": {
           "description": "Quick thinking (<5s)",
-          "enabled": false,
+          "enabled": true,
           "sound": "0x17.wav",
+          "sound_label": "Quick blip",
           "threshold_seconds": 5
         },
         "tool_failure": {
           "description": "When a tool fails",
-          "enabled": false,
-          "sound": "0x36.wav"
+          "enabled": true,
+          "sound": "0x36.wav",
+          "sound_label": "Error sting"
         },
         "tool_pre": {
           "description": "Before any tool executes",
-          "enabled": false,
-          "sound": "0x4A.wav"
+          "enabled": true,
+          "sound": "0x4A.wav",
+          "sound_label": "Radar blip"
         },
         "tool_success": {
           "description": "When a tool executes successfully",
-          "enabled": false,
-          "sound": "0x4F.wav"
+          "enabled": true,
+          "sound": "0x4F.wav",
+          "sound_label": "Radar blip (soft)"
         },
         "user_prompt": {
           "description": "When you send a message",
-          "enabled": false,
-          "sound": "0x68.wav"
+          "enabled": true,
+          "sound": "0x68.wav",
+          "sound_label": "Input received"
         }
       }
     }

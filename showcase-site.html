@@ -19,11 +19,26 @@
            DESIGN TOKENS
            ============================================ */
         :root {
-            /* Background layers */
-            --bg-deep: #0A0A0A;
-            --bg-surface: #141414;
-            --bg-elevated: #1A1A1A;
-            --bg-code: #0D0D0D;
+            /* Background layers -- neutral base */
+            --bg-deep: #1A1A1A;
+            --bg-surface: #222222;
+            --bg-elevated: #2A2A2A;
+            --bg-code: #141414;
+
+            /* MGS world -- deep black */
+            --mgs-bg: #0A0A0A;
+            --mgs-surface: #111111;
+            --mgs-border: rgba(255, 184, 0, 0.12);
+
+            /* Sims world -- light */
+            --sims-bg: #F4F1EC;
+            --sims-surface: #FFFFFF;
+            --sims-surface-alt: #EAE6DF;
+            --sims-text-primary: #1A1A1A;
+            --sims-text-secondary: #4A4A4A;
+            --sims-text-tertiary: #7A7A7A;
+            --sims-border: rgba(0, 0, 0, 0.10);
+            --sims-teal-dark: #009B7D;
 
             /* Borders */
             --border-subtle: rgba(255, 255, 255, 0.08);
@@ -93,7 +108,7 @@
             position: fixed;
             inset: 0;
             background-image:
-                radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
+                radial-gradient(circle, rgba(255,255,255,0.025) 1px, transparent 1px);
             background-size: 24px 24px;
             pointer-events: none;
             z-index: 0;
@@ -602,7 +617,17 @@
            ============================================ */
         .mgs-narrative {
             border-top: 1px solid var(--border-subtle);
-            background: linear-gradient(180deg, var(--bg-deep) 0%, rgba(255, 184, 0, 0.02) 50%, var(--bg-deep) 100%);
+            background: var(--mgs-bg);
+            color: var(--text-primary);
+            position: relative;
+        }
+
+        .mgs-narrative::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(255, 184, 0, 0.03) 50%, transparent 100%);
+            pointer-events: none;
         }
 
         .mgs-narrative__header {
@@ -615,7 +640,7 @@
         }
 
         .mgs-narrative__intro {
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.6);
             font-size: 1.0625rem;
             line-height: 1.7;
             max-width: 640px;
@@ -632,17 +657,17 @@
             display: grid;
             grid-template-columns: 200px 1fr 1fr;
             gap: 1px;
-            background: var(--border-subtle);
+            background: rgba(255, 184, 0, 0.08);
         }
 
         .mission-arc__row > * {
-            background: var(--bg-surface);
+            background: var(--mgs-surface);
             padding: 12px 16px;
             font-size: 0.8125rem;
         }
 
         .mission-arc__row--header > * {
-            background: var(--bg-elevated);
+            background: #161310;
             font-weight: 500;
             letter-spacing: 0.08em;
             text-transform: uppercase;
@@ -656,11 +681,11 @@
         }
 
         .mission-arc__desc {
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.6);
         }
 
         .mission-arc__mgs {
-            color: var(--text-tertiary);
+            color: rgba(255, 255, 255, 0.35);
             font-style: italic;
         }
 
@@ -674,7 +699,7 @@
         }
 
         .mgs-narrative__closing {
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.6);
             max-width: 640px;
             line-height: 1.7;
         }
@@ -687,8 +712,9 @@
            SECTION: SIMS
            ============================================ */
         .sims-section {
-            border-top: 1px solid var(--border-subtle);
-            background: linear-gradient(180deg, var(--bg-deep) 0%, rgba(0, 212, 170, 0.03) 30%, rgba(0, 212, 170, 0.04) 50%, rgba(0, 212, 170, 0.03) 70%, var(--bg-deep) 100%);
+            border-top: none;
+            background: var(--sims-bg);
+            color: var(--sims-text-primary);
         }
 
         .sims-section__header {
@@ -696,22 +722,23 @@
         }
 
         .sims-section .h1 {
-            color: var(--teal);
+            color: var(--sims-teal-dark);
             margin-bottom: 24px;
         }
 
         .sims-section .body-text {
             margin-bottom: 16px;
             max-width: 640px;
+            color: var(--sims-text-secondary);
         }
 
         .sims-section__closing {
-            color: var(--text-tertiary);
+            color: var(--sims-text-tertiary);
             font-size: 0.875rem;
             font-style: italic;
         }
 
-        /* Sims mood grid */
+        /* Sims mood grid -- light theme */
         .sims-mood-grid {
             display: grid;
             gap: 2px;
@@ -722,42 +749,42 @@
             display: grid;
             grid-template-columns: 200px 1fr 1fr;
             gap: 1px;
-            background: var(--border-subtle);
+            background: var(--sims-border);
         }
 
         .sims-mood-row > * {
-            background: var(--bg-surface);
+            background: var(--sims-surface);
             padding: 12px 16px;
             font-size: 0.8125rem;
         }
 
         .sims-mood-row--header > * {
-            background: var(--bg-elevated);
+            background: var(--sims-surface-alt);
             font-weight: 500;
             letter-spacing: 0.08em;
             text-transform: uppercase;
             font-size: 0.6875rem;
-            color: var(--teal);
+            color: var(--sims-teal-dark);
         }
 
         .sims-mood-row__event {
-            color: var(--text-primary);
+            color: var(--sims-text-primary);
             font-weight: 500;
         }
 
         .sims-mood-row__sound {
-            color: var(--teal);
+            color: var(--sims-teal-dark);
             font-family: var(--font);
             font-size: 0.75rem;
         }
 
         .sims-mood-row__mood {
-            color: var(--text-tertiary);
+            color: var(--sims-text-tertiary);
             font-style: italic;
         }
 
         .sims-narrative {
-            color: var(--text-secondary);
+            color: var(--sims-text-secondary);
             max-width: 640px;
             line-height: 1.7;
         }
@@ -913,6 +940,122 @@
             font-size: 0.6875rem;
             text-align: right;
             letter-spacing: 0.06em;
+        }
+
+        /* Dual mockup grid */
+        .cp-dual {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 16px;
+        }
+
+        .cp-dual__label {
+            font-size: 0.625rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-align: center;
+            padding: 8px 0;
+        }
+
+        .cp-dual__label--mgs {
+            color: var(--amber);
+        }
+
+        .cp-dual__label--sims {
+            color: var(--teal);
+        }
+
+        /* Sims light mockup variant */
+        .cp-mockup--sims {
+            background: #F4F1EC;
+            border-color: rgba(0, 0, 0, 0.12);
+        }
+
+        .cp-mockup--sims .cp-mockup__titlebar {
+            background: #EAE6DF;
+            border-bottom-color: rgba(0, 0, 0, 0.08);
+        }
+
+        .cp-mockup--sims .cp-mockup__url {
+            color: #7A7A7A;
+        }
+
+        .cp-mockup--sims .cp-mockup__body {
+            background: #F4F1EC;
+        }
+
+        .cp-mockup--sims .cp-mockup__header-row {
+            border-bottom-color: rgba(0, 0, 0, 0.08);
+        }
+
+        .cp-mockup--sims .cp-mockup__title {
+            color: #1A1A1A;
+        }
+
+        .cp-mockup--sims .cp-mockup__dropdown {
+            background: #FFFFFF;
+            border-color: rgba(0, 0, 0, 0.10);
+            color: #009B7D;
+        }
+
+        .cp-mockup--sims .cp-mockup__btn-small {
+            background: #009B7D;
+            border-color: #009B7D;
+            color: #FFFFFF;
+        }
+
+        .cp-mockup--sims .cp-event-row {
+            border-bottom-color: rgba(0, 0, 0, 0.06);
+        }
+
+        .cp-mockup--sims .cp-event-row__led--on {
+            background: #00D4AA;
+            box-shadow: 0 0 6px rgba(0, 212, 170, 0.4);
+        }
+
+        .cp-mockup--sims .cp-event-row__led--off {
+            background: rgba(0, 0, 0, 0.08);
+        }
+
+        .cp-mockup--sims .cp-event-row__name {
+            color: #1A1A1A;
+        }
+
+        .cp-mockup--sims .cp-event-row__sound {
+            color: #7A7A7A;
+        }
+
+        .cp-mockup--sims .cp-event-row__play {
+            color: #009B7D;
+        }
+
+        /* MGS dark mockup variant */
+        .cp-mockup--mgs {
+            background: #0A0A0A;
+            border-color: rgba(255, 184, 0, 0.12);
+        }
+
+        .cp-mockup--mgs .cp-mockup__titlebar {
+            background: #0E0E0E;
+            border-bottom-color: rgba(255, 184, 0, 0.08);
+        }
+
+        .cp-mockup--mgs .cp-mockup__dropdown {
+            background: #0A0A0A;
+            border-color: rgba(255, 184, 0, 0.12);
+            color: var(--amber);
+        }
+
+        .cp-mockup--mgs .cp-mockup__btn-small {
+            background: var(--amber);
+            border-color: var(--amber);
+            color: #0A0A0A;
+        }
+
+        .cp-mockup--mgs .cp-event-row {
+            border-bottom-color: rgba(255, 184, 0, 0.06);
         }
 
         /* Feature bullets */
@@ -1271,6 +1414,10 @@
             }
 
             .feature-bullets {
+                grid-template-columns: 1fr;
+            }
+
+            .cp-dual {
                 grid-template-columns: 1fr;
             }
         }
@@ -1701,73 +1848,118 @@
     <section class="control-panel-section" id="panel">
         <div class="container">
             <div class="control-panel-section__header reveal">
-                <h2 class="h1">SSL console meets dev tools.</h2>
+                <h2 class="h1">The UI adapts to your collection.</h2>
                 <p class="body-text">
-                    A dark steel, rack-mounted control panel for your sounds. Toggle events.
-                    Swap sounds. Preview before you commit. Search, filter, bulk enable,
-                    bulk disable.
+                    The control panel matches the vibe of your active collection.
+                    Dark tactical steel for MGS. Warm light interface for Sims.
+                    Same features. Different worlds.
                 </p>
                 <p class="label" style="margin-top: 8px;">localhost:5050</p>
             </div>
 
-            <!-- Simulated control panel mockup -->
-            <div class="cp-mockup reveal">
-                <div class="cp-mockup__titlebar">
-                    <span class="cp-mockup__dot cp-mockup__dot--red"></span>
-                    <span class="cp-mockup__dot cp-mockup__dot--yellow"></span>
-                    <span class="cp-mockup__dot cp-mockup__dot--green"></span>
-                    <span class="cp-mockup__url">localhost:5050</span>
-                </div>
-                <div class="cp-mockup__body">
-                    <div class="cp-mockup__header-row">
-                        <span class="cp-mockup__title">Quick-Ping 2</span>
-                        <div class="cp-mockup__controls">
-                            <span class="cp-mockup__dropdown">Select Collection</span>
-                            <span class="cp-mockup__btn-small">Claude Suggests</span>
+            <!-- Side-by-side themed mockups -->
+            <div class="cp-dual reveal">
+                <!-- MGS themed mockup -->
+                <div>
+                    <div class="cp-dual__label cp-dual__label--mgs">MGS Collection Active</div>
+                    <div class="cp-mockup cp-mockup--mgs">
+                        <div class="cp-mockup__titlebar">
+                            <span class="cp-mockup__dot cp-mockup__dot--red"></span>
+                            <span class="cp-mockup__dot cp-mockup__dot--yellow"></span>
+                            <span class="cp-mockup__dot cp-mockup__dot--green"></span>
+                            <span class="cp-mockup__url">localhost:5050</span>
+                        </div>
+                        <div class="cp-mockup__body">
+                            <div class="cp-mockup__header-row">
+                                <span class="cp-mockup__title">Quick-Ping 2</span>
+                                <div class="cp-mockup__controls">
+                                    <span class="cp-mockup__dropdown">MGS Sounds</span>
+                                    <span class="cp-mockup__btn-small">Claude Suggests</span>
+                                </div>
+                            </div>
+                            <div class="cp-event-row">
+                                <span class="cp-event-row__led cp-event-row__led--on"></span>
+                                <span class="cp-event-row__name">session_start</span>
+                                <span class="cp-event-row__sound">0x1a.wav</span>
+                                <span class="cp-event-row__play">PLAY</span>
+                            </div>
+                            <div class="cp-event-row">
+                                <span class="cp-event-row__led cp-event-row__led--on"></span>
+                                <span class="cp-event-row__name">git_commit</span>
+                                <span class="cp-event-row__sound">0x67.wav</span>
+                                <span class="cp-event-row__play">PLAY</span>
+                            </div>
+                            <div class="cp-event-row">
+                                <span class="cp-event-row__led cp-event-row__led--on"></span>
+                                <span class="cp-event-row__name">test_pass</span>
+                                <span class="cp-event-row__sound">0x73.wav</span>
+                                <span class="cp-event-row__play">PLAY</span>
+                            </div>
+                            <div class="cp-event-row">
+                                <span class="cp-event-row__led cp-event-row__led--on" style="background: var(--red); box-shadow: var(--red-glow);"></span>
+                                <span class="cp-event-row__name" style="color: var(--red);">context_90</span>
+                                <span class="cp-event-row__sound">0x01.wav</span>
+                                <span class="cp-event-row__play">PLAY</span>
+                            </div>
+                            <div class="cp-event-row" style="border-bottom: none;">
+                                <span class="cp-event-row__led cp-event-row__led--off"></span>
+                                <span class="cp-event-row__name" style="opacity: 0.4;">tool_success</span>
+                                <span class="cp-event-row__sound" style="opacity: 0.3;">0x4F.wav</span>
+                                <span class="cp-event-row__play" style="opacity: 0.3;">PLAY</span>
+                            </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="cp-event-row">
-                        <span class="cp-event-row__led cp-event-row__led--on"></span>
-                        <span class="cp-event-row__name">session_start</span>
-                        <span class="cp-event-row__sound">When Claude Code session starts</span>
-                        <span class="cp-event-row__play">PLAY</span>
-                    </div>
-                    <div class="cp-event-row">
-                        <span class="cp-event-row__led cp-event-row__led--on"></span>
-                        <span class="cp-event-row__name">git_commit</span>
-                        <span class="cp-event-row__sound">When a git commit succeeds</span>
-                        <span class="cp-event-row__play">PLAY</span>
-                    </div>
-                    <div class="cp-event-row">
-                        <span class="cp-event-row__led cp-event-row__led--on"></span>
-                        <span class="cp-event-row__name">test_pass</span>
-                        <span class="cp-event-row__sound">When tests pass</span>
-                        <span class="cp-event-row__play">PLAY</span>
-                    </div>
-                    <div class="cp-event-row">
-                        <span class="cp-event-row__led cp-event-row__led--on"></span>
-                        <span class="cp-event-row__name">test_fail</span>
-                        <span class="cp-event-row__sound">When tests fail</span>
-                        <span class="cp-event-row__play">PLAY</span>
-                    </div>
-                    <div class="cp-event-row">
-                        <span class="cp-event-row__led cp-event-row__led--on" style="background: var(--red); box-shadow: var(--red-glow);"></span>
-                        <span class="cp-event-row__name" style="color: var(--red);">context_90</span>
-                        <span class="cp-event-row__sound">90% context -- time to wrap up</span>
-                        <span class="cp-event-row__play">PLAY</span>
-                    </div>
-                    <div class="cp-event-row">
-                        <span class="cp-event-row__led cp-event-row__led--off"></span>
-                        <span class="cp-event-row__name" style="color: var(--text-tertiary);">tool_success</span>
-                        <span class="cp-event-row__sound" style="opacity: 0.4;">When a tool executes successfully</span>
-                        <span class="cp-event-row__play" style="opacity: 0.3;">PLAY</span>
-                    </div>
-                    <div class="cp-event-row" style="border-bottom: none;">
-                        <span class="cp-event-row__led cp-event-row__led--off"></span>
-                        <span class="cp-event-row__name" style="color: var(--text-tertiary);">thinking_short</span>
-                        <span class="cp-event-row__sound" style="opacity: 0.4;">Quick thinking (&lt;5s)</span>
-                        <span class="cp-event-row__play" style="opacity: 0.3;">PLAY</span>
+                <!-- Sims themed mockup -->
+                <div>
+                    <div class="cp-dual__label cp-dual__label--sims">Sims 2 Collection Active</div>
+                    <div class="cp-mockup cp-mockup--sims">
+                        <div class="cp-mockup__titlebar">
+                            <span class="cp-mockup__dot cp-mockup__dot--red"></span>
+                            <span class="cp-mockup__dot cp-mockup__dot--yellow"></span>
+                            <span class="cp-mockup__dot cp-mockup__dot--green"></span>
+                            <span class="cp-mockup__url">localhost:5050</span>
+                        </div>
+                        <div class="cp-mockup__body">
+                            <div class="cp-mockup__header-row">
+                                <span class="cp-mockup__title">Quick-Ping 2</span>
+                                <div class="cp-mockup__controls">
+                                    <span class="cp-mockup__dropdown">Sims 2 Sounds</span>
+                                    <span class="cp-mockup__btn-small">Claude Suggests</span>
+                                </div>
+                            </div>
+                            <div class="cp-event-row">
+                                <span class="cp-event-row__led cp-event-row__led--on"></span>
+                                <span class="cp-event-row__name">session_start</span>
+                                <span class="cp-event-row__sound">mGREETING.wav</span>
+                                <span class="cp-event-row__play">PLAY</span>
+                            </div>
+                            <div class="cp-event-row">
+                                <span class="cp-event-row__led cp-event-row__led--on"></span>
+                                <span class="cp-event-row__name">git_commit</span>
+                                <span class="cp-event-row__sound">Good Shot M.wav</span>
+                                <span class="cp-event-row__play">PLAY</span>
+                            </div>
+                            <div class="cp-event-row">
+                                <span class="cp-event-row__led cp-event-row__led--on"></span>
+                                <span class="cp-event-row__name">test_pass</span>
+                                <span class="cp-event-row__sound">Easy Shot FM.wav</span>
+                                <span class="cp-event-row__play">PLAY</span>
+                            </div>
+                            <div class="cp-event-row">
+                                <span class="cp-event-row__led cp-event-row__led--on" style="background: var(--red); box-shadow: var(--red-glow);"></span>
+                                <span class="cp-event-row__name" style="color: var(--red);">context_90</span>
+                                <span class="cp-event-row__sound">fHUNGRY2.wav</span>
+                                <span class="cp-event-row__play">PLAY</span>
+                            </div>
+                            <div class="cp-event-row" style="border-bottom: none;">
+                                <span class="cp-event-row__led cp-event-row__led--off"></span>
+                                <span class="cp-event-row__name" style="opacity: 0.4;">tool_success</span>
+                                <span class="cp-event-row__sound" style="opacity: 0.3;">fOOPS0.wav</span>
+                                <span class="cp-event-row__play" style="opacity: 0.3;">PLAY</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1805,12 +1997,12 @@
                 <div class="feature-card">
                     <div class="feature-card__title">
                         <span class="led"></span>
-                        Focus Modes
+                        Adaptive Themes
                     </div>
                     <div class="feature-card__desc">
-                        Smart Mode only plays sounds when your terminal isn't focused.
-                        Always Mode plays every sound, every time. For when you want the
-                        full soundtrack.
+                        Switch collections and the entire UI adapts. Dark tactical steel
+                        for MGS. Warm light interface for Sims. The experience is
+                        seamless from sounds to interface.
                     </div>
                 </div>
 
