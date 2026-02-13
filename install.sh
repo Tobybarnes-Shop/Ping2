@@ -21,13 +21,13 @@ if ! command -v python3 &> /dev/null; then
 fi
 
 # Installation directory
-INSTALL_DIR="$HOME/ep/projects/quick-ping-2"
+INSTALL_DIR="$HOME/Documents/MyEP/Projects/quick-ping-2"
 
 echo "📁 Installing to: $INSTALL_DIR"
 echo ""
 
 # Create directory structure
-mkdir -p "$HOME/ep/projects"
+mkdir -p "$HOME/Documents/MyEP/Projects"
 
 # Clone or download
 if [ -d "$INSTALL_DIR" ]; then

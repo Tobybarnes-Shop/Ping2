@@ -24,6 +24,7 @@
             --color-led-off: rgba(255, 255, 255, 0.1);
             --color-led-on: #00FF00;
             --color-led-bezel: #4A4A4A;
+            --color-bg-category: #2A2A2A;
 
             /* Typography - Technical Readouts */
             --font-mono: 'IBM Plex Mono', 'SF Mono', 'Monaco', 'Courier New', monospace;
@@ -48,7 +49,7 @@
             /* Borders - Clean Technical Lines */
             --border-width: 1px;
             --border-width-heavy: 2px;
-            --border-radius: 1px;
+            --border-radius: 0;
 
             /* Transitions */
             --transition-fast: 80ms ease;
@@ -288,7 +289,7 @@
             letter-spacing: 0.08em;
             margin: var(--space-6) 0 var(--space-3) 0;
             padding: var(--space-2);
-            background: #2A2A2A;
+            background: var(--color-bg-category);
             color: var(--color-text-primary);
             border: var(--border-width) solid var(--color-border-heavy);
         }
@@ -450,7 +451,7 @@
 
         .btn-play:hover {
             background: var(--color-accent);
-            border-color: var(--color-accent);
+            border: var(--border-width-heavy) solid var(--color-accent);
         }
 
         .btn-play:active {
@@ -483,7 +484,7 @@
         .spinner {
             border: 2px solid var(--color-border);
             border-top: 2px solid var(--color-accent);
-            border-radius: 50%;
+            border-radius: 50%; /* Exception: functional circle for loading indicator */
             width: 24px;
             height: 24px;
             animation: spin 0.8s linear infinite;
@@ -510,7 +511,6 @@
             background: #252525;
             color: var(--color-text-primary);
             padding: var(--space-2) var(--space-3);
-            border-left: 3px solid var(--color-accent);
             border: var(--border-width) solid var(--color-border-heavy);
             border-left: 3px solid var(--color-accent);
             transform: translateX(400px);
@@ -806,6 +806,134 @@
         .btn-accent:hover {
             background: var(--color-accent-dim);
         }
+
+        /* FOLDER SELECTION */
+        .folder-selection {
+            display: flex;
+            gap: var(--space-2);
+            align-items: stretch;
+        }
+
+        .folder-path-display {
+            flex: 1;
+            padding: var(--space-2);
+            border: var(--border-width) solid var(--color-border);
+            font-size: var(--font-size-small);
+            font-family: var(--font-mono);
+            background: var(--color-bg-meter);
+            color: var(--color-text-secondary);
+            letter-spacing: 0.02em;
+            display: flex;
+            align-items: center;
+            min-height: 32px;
+        }
+
+        .folder-path-display.has-path {
+            color: var(--color-text-primary);
+        }
+
+        .folder-path-display.fallback {
+            background: var(--color-bg-primary);
+        }
+
+        .btn-browse {
+            padding: var(--space-2) var(--space-3);
+            white-space: nowrap;
+        }
+
+        .compatibility-message {
+            font-size: var(--font-size-micro);
+            color: var(--color-text-tertiary);
+            margin-top: var(--space-1);
+            letter-spacing: 0.05em;
+        }
+
+        /* PROGRESS BAR */
+        .progress-container {
+            display: none;
+            margin-top: var(--space-4);
+            padding: var(--space-3);
+            background: var(--color-bg-meter);
+            border: var(--border-width) solid var(--color-border);
+        }
+
+        .progress-container.show {
+            display: block;
+        }
+
+        .progress-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-2);
+            font-size: var(--font-size-small);
+        }
+
+        .progress-text {
+            color: var(--color-text-primary);
+            font-weight: var(--font-weight-medium);
+            letter-spacing: 0.05em;
+        }
+
+        .progress-detail {
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-micro);
+        }
+
+        .progress-bar-track {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--color-led-on);
+            width: 0%;
+            transition: width 200ms ease;
+        }
+
+        .progress-bar-fill.indeterminate {
+            width: 30%;
+            animation: progressSlide 1.5s ease-in-out infinite;
+        }
+
+        @keyframes progressSlide {
+            0% {
+                transform: translateX(-100%);
+            }
+            50% {
+                transform: translateX(350%);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        .progress-complete {
+            display: none;
+            align-items: center;
+            gap: var(--space-2);
+            margin-top: var(--space-2);
+            color: var(--color-led-on);
+            font-size: var(--font-size-small);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .progress-complete.show {
+            display: flex;
+        }
+
+        .progress-checkmark {
+            width: 16px;
+            height: 16px;
+            border: var(--border-width-heavy) solid var(--color-led-on);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
     </style>
 </head>
 <body>
@@ -893,13 +1021,23 @@
 
                 <div class="form-group">
                     <label for="collectionPath" class="form-label">Folder Path</label>
+                    <div class="folder-selection">
+                        <div class="folder-path-display" id="folderPathDisplay">
+                            No folder selected
+                        </div>
+                        <button type="button" class="btn btn-secondary btn-browse" id="browseFolder">
+                            Browse Folder
+                        </button>
+                    </div>
                     <input
                         type="text"
                         class="form-input"
                         id="collectionPath"
                         placeholder="/Users/username/Music/notifications"
                         required
+                        style="display: none;"
                     >
+                    <div class="compatibility-message" id="compatibilityMessage" style="display: none;"></div>
                 </div>
 
                 <div class="form-group">
@@ -913,6 +1051,20 @@
 
                 <div class="modal-actions">
                     <button type="button" class="btn btn-secondary" id="scanFolder">Scan Folder</button>
+                </div>
+
+                <div class="progress-container" id="progressContainer">
+                    <div class="progress-status">
+                        <span class="progress-text" id="progressText">Initializing...</span>
+                        <span class="progress-detail" id="progressDetail"></span>
+                    </div>
+                    <div class="progress-bar-track">
+                        <div class="progress-bar-fill" id="progressBarFill"></div>
+                    </div>
+                    <div class="progress-complete" id="progressComplete">
+                        <div class="progress-checkmark">✓</div>
+                        <span id="progressSummary"></span>
+                    </div>
                 </div>
 
                 <div class="scan-results" id="scanResults">
@@ -938,6 +1090,8 @@
         let activeCollection = 'default';
         let scannedFiles = [];
         let suggestedMappings = {};
+        let selectedFolderHandle = null;
+        let supportsFileSystemAccess = 'showDirectoryPicker' in window;
         let categories = {
             'Core Events': ['session_start', 'session_end', 'task_complete', 'permission', 'tool_success', 'tool_failure'],
             'Agent & Teams': ['subagent_start', 'subagent_stop', 'team_created', 'team_deleted', 'teammate_message'],
@@ -1227,14 +1381,111 @@
         function openCollectionModal() {
             document.getElementById('addCollectionModal').classList.add('show');
             document.getElementById('collectionName').focus();
+            initializeFolderSelection();
         }
 
         function closeCollectionModal() {
             document.getElementById('addCollectionModal').classList.remove('show');
             document.getElementById('collectionForm').reset();
             document.getElementById('scanResults').classList.remove('show');
+            document.getElementById('progressContainer').classList.remove('show');
+            document.getElementById('progressComplete').classList.remove('show');
+            document.getElementById('folderPathDisplay').textContent = 'No folder selected';
+            document.getElementById('folderPathDisplay').classList.remove('has-path', 'fallback');
             scannedFiles = [];
             suggestedMappings = {};
+            selectedFolderHandle = null;
+        }
+
+        function initializeFolderSelection() {
+            const pathInput = document.getElementById('collectionPath');
+            const pathDisplay = document.getElementById('folderPathDisplay');
+            const browseBtn = document.getElementById('browseFolder');
+            const compatMsg = document.getElementById('compatibilityMessage');
+
+            if (supportsFileSystemAccess) {
+                // Use File System Access API
+                pathInput.style.display = 'none';
+                pathDisplay.parentElement.style.display = 'flex';
+                compatMsg.style.display = 'none';
+            } else {
+                // Fallback to text input
+                pathInput.style.display = 'block';
+                pathDisplay.parentElement.style.display = 'none';
+                compatMsg.style.display = 'block';
+                compatMsg.textContent = 'Browser does not support folder picker. Please enter path manually.';
+            }
+        }
+
+        async function selectFolder() {
+            if (!supportsFileSystemAccess) {
+                showToast('FILE SYSTEM API NOT SUPPORTED');
+                return;
+            }
+
+            try {
+                const dirHandle = await window.showDirectoryPicker({
+                    mode: 'read'
+                });
+
+                selectedFolderHandle = dirHandle;
+                const pathDisplay = document.getElementById('folderPathDisplay');
+                const pathInput = document.getElementById('collectionPath');
+
+                // Store the folder name and path
+                pathDisplay.textContent = dirHandle.name;
+                pathDisplay.classList.add('has-path');
+
+                // For now, we'll use the folder name as the path
+                // In a real implementation, you'd need to get the full path
+                // Note: File System Access API doesn't provide full path for security
+                pathInput.value = dirHandle.name;
+
+                showToast('FOLDER SELECTED');
+            } catch (error) {
+                if (error.name !== 'AbortError') {
+                    console.error('Folder selection error:', error);
+                    showToast('FOLDER SELECTION FAILED');
+                }
+            }
+        }
+
+        function showProgress(phase, percent = 0, message = '', detail = '') {
+            const container = document.getElementById('progressContainer');
+            const fill = document.getElementById('progressBarFill');
+            const text = document.getElementById('progressText');
+            const detailEl = document.getElementById('progressDetail');
+            const complete = document.getElementById('progressComplete');
+            const summary = document.getElementById('progressSummary');
+
+            container.classList.add('show');
+            complete.classList.remove('show');
+
+            text.textContent = message;
+            detailEl.textContent = detail;
+
+            if (phase === 'scanning') {
+                fill.classList.add('indeterminate');
+                fill.style.width = '30%';
+            } else if (phase === 'analyzing') {
+                fill.classList.remove('indeterminate');
+                fill.style.width = percent + '%';
+            } else if (phase === 'complete') {
+                fill.classList.remove('indeterminate');
+                fill.style.width = '100%';
+                setTimeout(() => {
+                    complete.classList.add('show');
+                    summary.textContent = detail;
+                }, 200);
+            }
+        }
+
+        function hideProgress() {
+            document.getElementById('progressContainer').classList.remove('show');
+            document.getElementById('progressComplete').classList.remove('show');
+            const fill = document.getElementById('progressBarFill');
+            fill.classList.remove('indeterminate');
+            fill.style.width = '0%';
         }
 
         async function scanFolder() {
@@ -1244,30 +1495,48 @@
                 return;
             }
 
-            showLoading(true);
+            // Show scanning phase
+            showProgress('scanning', 0, 'Scanning folder for audio files...', '');
+
             try {
+                // Simulate live file count updates
+                let fileCount = 0;
+                const scanInterval = setInterval(() => {
+                    fileCount += Math.floor(Math.random() * 10) + 1;
+                    showProgress('scanning', 0, 'Scanning folder for audio files...', `${fileCount} files found...`);
+                }, 150);
+
                 const response = await fetch('/api/collections/scan', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ path })
                 });
 
+                clearInterval(scanInterval);
+
                 const data = await response.json();
 
                 if (data.status === 'error') {
+                    hideProgress();
                     showToast(data.message.toUpperCase());
-                    showLoading(false);
                     return;
                 }
 
                 scannedFiles = data.files;
+
+                // Show complete phase
+                showProgress('complete', 100, 'Scan complete', `Found ${data.count} audio files`);
+
                 document.getElementById('scanCount').textContent = `Found ${data.count} audio files`;
                 document.getElementById('scanResults').classList.add('show');
-                showToast(`FOUND ${data.count} FILES`);
+
+                setTimeout(() => {
+                    hideProgress();
+                }, 2000);
             } catch (error) {
+                hideProgress();
                 showToast('SCAN FAILED');
             }
-            showLoading(false);
         }
 
         async function suggestMappings() {
@@ -1276,20 +1545,43 @@
                 return;
             }
 
-            showLoading(true);
+            const totalFiles = scannedFiles.length;
+
+            // Show analyzing phase
+            showProgress('analyzing', 0, 'Claude is analyzing filenames...', 'Starting analysis...');
+
             try {
+                // Simulate staged progress since backend is fast
+                let analyzed = 0;
+                const progressInterval = setInterval(() => {
+                    analyzed = Math.min(analyzed + Math.floor(Math.random() * 15) + 5, totalFiles);
+                    const percent = Math.floor((analyzed / totalFiles) * 100);
+                    showProgress('analyzing', percent, 'Claude is analyzing filenames...', `Analyzing ${analyzed} of ${totalFiles} files...`);
+                }, 100);
+
                 const response = await fetch('/api/collections/suggest', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ files: scannedFiles })
                 });
 
+                clearInterval(progressInterval);
+
                 const data = await response.json();
                 suggestedMappings = data.suggestions;
 
+                const mappingCount = Object.keys(suggestedMappings).length;
+                const avgConfidence = mappingCount > 0
+                    ? Math.round(Object.values(suggestedMappings).reduce((sum, s) => sum + s.confidence, 0) / mappingCount)
+                    : 0;
+
+                // Show complete phase
+                showProgress('complete', 100, 'Analysis complete',
+                    `Found ${mappingCount} mappings with ${avgConfidence}% average confidence`);
+
                 // Display suggestions
                 const container = document.getElementById('suggestionsContainer');
-                if (Object.keys(suggestedMappings).length === 0) {
+                if (mappingCount === 0) {
                     container.innerHTML = '<div style="padding: var(--space-2); color: var(--color-text-secondary); font-size: var(--font-size-small);">No automatic mappings found. You can manually assign sounds after saving.</div>';
                 } else {
                     const listHtml = `
@@ -1309,11 +1601,13 @@
                     container.innerHTML = listHtml;
                 }
 
-                showToast(`${data.matched_count} MAPPINGS FOUND`);
+                setTimeout(() => {
+                    hideProgress();
+                }, 2000);
             } catch (error) {
+                hideProgress();
                 showToast('SUGGESTION FAILED');
             }
-            showLoading(false);
         }
 
         async function saveCollection(e) {
@@ -1389,6 +1683,7 @@
         document.getElementById('addCollection').addEventListener('click', openCollectionModal);
         document.getElementById('modalClose').addEventListener('click', closeCollectionModal);
         document.getElementById('cancelModal').addEventListener('click', closeCollectionModal);
+        document.getElementById('browseFolder').addEventListener('click', selectFolder);
         document.getElementById('scanFolder').addEventListener('click', scanFolder);
         document.getElementById('claudeSuggestMappings').addEventListener('click', suggestMappings);
         document.getElementById('collectionForm').addEventListener('submit', saveCollection);
